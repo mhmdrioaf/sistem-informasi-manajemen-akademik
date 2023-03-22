@@ -1,0 +1,15 @@
+$primary: #363026;
+$onPrimary: #f2f2f2;
+$surface: #f2f2f2;
+$onSurface: #0a0a0a;
+$subtitleOnSurface: #5f5f5f;
+$border: #c9c9c9;
+
+:export {
+  primary: $primary;
+  onPrimary: $onPrimary;
+  surface: $surface;
+  onSurface: $onSurface;
+  subtitleOnSurface: $subtitleOnSurface;
+  borderColor: $border;
+}
