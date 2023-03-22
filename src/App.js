@@ -6,20 +6,17 @@ import {
   Navigate,
 } from "react-router-dom";
 import { HomePage, LoginPage, ResetPasswordPage } from "./pages";
+import IndexPage from "./pages/index";
 import { AuthProvider } from "./contexts/FirebaseContext";
 
 function App() {
-  // const [isAuthenticated, setIsAuthenticated] = useState(
-  //   () => JSON.parse(localStorage.getItem("user")) || false
-  // );
-
   const isAuthenticated = JSON.parse(localStorage.getItem("user")) || false;
 
   return (
     <AuthProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<IndexPage />} />
           <Route
             path="/login"
             element={
