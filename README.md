@@ -7,7 +7,7 @@ The idea of this project is basically to manage the school data. This project wa
 ## The main features of the application  
 **1. Authentication**  
 This feature contain all the function that related to the user authentications. The users itself are divided to 4 roles:  
-> note that the user roles could be more or less along with the development process.
+> note: the user roles could be more or less along with the development process.
   - Administrator  
   Administrator would be responsible on maintaining the applications.  
   - Lecturer  
