@@ -12,6 +12,9 @@ const PrimaryButton = styled(Button)({
   "&:hover": {
     backgroundColor: "rgba(54, 48, 38, 0.9)",
   },
+  "&:disabled": {
+    backgroundColor: "rgba(54, 48, 38, 0.5)",
+  },
 });
 
 export default PrimaryButton;
