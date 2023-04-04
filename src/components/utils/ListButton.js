@@ -3,16 +3,17 @@ import color from "../../styles/_color.scss";
 
 const ListButton = styled(ListItemButton)({
   "&.Mui-selected": {
-    backgroundColor: color.primary,
-    color: color.onPrimary,
+    backgroundColor: "transparent",
+    color: color.primary,
+    borderBottom: `.2vw solid ${color.primary}`,
     "&:hover": {
-      backgroundColor: color.primary,
-      color: color.onPrimary,
+      backgroundColor: "transparent",
+      color: color.primary,
     },
   },
   "&:hover": {
-    backgroundColor: color.primary,
-    color: color.onPrimary,
+    backgroundColor: "transparent",
+    color: "rgba(0, 0, 0, 0.7)",
   },
 });
 

@@ -26,7 +26,7 @@ function LoginContent() {
     password: "",
   });
 
-  const { login, currentUser, authErrorHandler } = useAuth();
+  const { login, authErrorHandler } = useAuth();
   const navigate = useNavigate();
 
   const onLoginClickHandler = async (e) => {
@@ -53,13 +53,9 @@ function LoginContent() {
 
   useEffect(() => {
     setTimeout(() => {
-      if (currentUser) {
-        setLoading(false);
-        navigate("/", "replace");
-      }
       setLoading(false);
     }, 1500);
-  }, [currentUser, navigate]);
+  }, []);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/layouts/Header";
 import { Stack } from "@mui/material";
@@ -8,6 +8,7 @@ import { Profile, Contact, Major } from "./foundation";
 function IndexPage() {
   const [page, setPage] = useState("home");
   const [activePage, setActivePage] = useState(0);
+  const [scrollValue, setScrollValue] = useState(0);
 
   const navigate = useNavigate();
 
@@ -15,6 +16,18 @@ function IndexPage() {
     setPage((prev) => (prev = page));
     setActivePage(index);
   };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollValue(window.scrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const pageList = () => {
     switch (page) {
@@ -32,13 +45,17 @@ function IndexPage() {
   };
 
   return (
-    <>
+    <div>
       <Stack>
-        <Header handlePageChange={handlePageChange} activePage={activePage} />
+        <Header
+          handlePageChange={handlePageChange}
+          activePage={activePage}
+          scrollValue={scrollValue}
+        />
 
         {pageList()}
       </Stack>
-    </>
+    </div>
   );
 }
 

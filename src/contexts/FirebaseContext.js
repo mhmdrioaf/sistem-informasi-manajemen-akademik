@@ -1,8 +1,7 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext } from "react";
 import {
   signInWithEmailAndPassword,
   signOut,
-  onAuthStateChanged,
   sendPasswordResetEmail,
 } from "firebase/auth";
 import { auth } from "../firebase";
@@ -14,22 +13,17 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
-  const [currentUser, setCurrentUser] = useState();
-
   async function login(email, password) {
     return signInWithEmailAndPassword(auth, email, password).then(
       (userCredential) => {
         const user = userCredential.user;
-
-        setCurrentUser(user);
-        localStorage.setItem("user", JSON.stringify(userCredential.user));
+        localStorage.setItem("user", JSON.stringify(user));
       }
     );
   }
 
   async function logout() {
     return signOut(auth).then((user) => {
-      setCurrentUser(user);
       localStorage.clear();
       window.location.pathname = "/login";
     });
@@ -62,18 +56,7 @@ export function AuthProvider({ children }) {
     }
   }
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setCurrentUser(user);
-      } else {
-        setCurrentUser(null);
-      }
-    });
-  }, [currentUser]);
-
   const value = {
-    currentUser,
     login,
     logout,
     resetPassword,

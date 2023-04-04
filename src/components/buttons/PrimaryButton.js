@@ -10,10 +10,10 @@ const PrimaryButton = styled(Button)({
   borderRadius: "2.2vw",
   fontFamily: `'Inter', sans-serif`,
   "&:hover": {
-    backgroundColor: "rgba(54, 48, 38, 0.9)",
+    backgroundColor: "rgba(61, 152, 70, 0.9)",
   },
   "&:disabled": {
-    backgroundColor: "rgba(54, 48, 38, 0.5)",
+    backgroundColor: "rgba(61, 152, 70, 0.5)",
   },
 });
 

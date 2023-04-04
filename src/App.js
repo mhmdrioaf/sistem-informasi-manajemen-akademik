@@ -1,16 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
 } from "react-router-dom";
-import { HomePage, LoginPage, ResetPasswordPage } from "./pages";
+import { LoginPage, ResetPasswordPage } from "./pages";
 import IndexPage from "./pages/index";
 import { AuthProvider } from "./contexts/FirebaseContext";
+import Dashboard from "./pages/user/Dashboard";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./firebase";
 
 function App() {
-  const isAuthenticated = JSON.parse(localStorage.getItem("user")) || false;
+  const [isAuthenticated, setIsAuthenticated] = useState();
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsAuthenticated(user);
+      } else {
+        setIsAuthenticated(null);
+      }
+    });
+  }, []);
 
   return (
     <AuthProvider>
@@ -20,7 +33,24 @@ function App() {
           <Route
             path="/login"
             element={
-              isAuthenticated ? <Navigate to="/" replace /> : <LoginPage />
+              isAuthenticated ? (
+                <Navigate to="/dashboard" replace />
+              ) : (
+                <LoginPage />
+              )
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              isAuthenticated ? <Dashboard /> : <Navigate to="/login" replace />
+            }
+          />
+
+          <Route
+            path="/lms"
+            element={
+              isAuthenticated ? <Dashboard /> : <Navigate to="/login" replace />
             }
           />
           <Route
