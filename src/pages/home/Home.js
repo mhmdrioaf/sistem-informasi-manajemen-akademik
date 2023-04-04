@@ -1,25 +1,17 @@
 import React from "react";
-import PrimaryButton from "../../components/buttons/PrimaryButton";
-import { useAuth } from "../../contexts/FirebaseContext";
-import { useNavigate } from "react-router-dom";
+import "./Home.scss";
+import Slider from "./components/Slider";
+import Speech from "./components/Speech";
+import About from "./components/About";
 
 function Home() {
-  const { logout } = useAuth();
-  const navigate = useNavigate();
-
-  const logoutHandler = async (e) => {
-    e.preventDefault();
-
-    logout()
-      .then(() => {
-        navigate("/login");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  return <PrimaryButton onClick={logoutHandler}>Logout</PrimaryButton>;
+  return (
+    <div className="home__container">
+      <Slider />
+      <Speech />
+      <About />
+    </div>
+  );
 }
 
 export default Home;

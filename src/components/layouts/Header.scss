@@ -1,0 +1,40 @@
+@import "../../styles/color";
+
+.sticky {
+  position: sticky;
+  backdrop-filter: "blur(10px)";
+  transition: position;
+  animation: myTransition 0.5s ease;
+  -moz-animation: myTransition 0.5s ease;
+  -webkit-animation: myTransition 0.5s ease;
+  background-color: $headerBackground;
+  top: 0;
+  box-shadow: 0 0 0.2vw rgba(0, 0, 0, 0.3);
+}
+
+@keyframes myTransition {
+  from {
+    top: -10%;
+  }
+  to {
+    top: 0;
+  }
+}
+
+@-moz-keyframes myTransition {
+  from {
+    top: -10%;
+  }
+  to {
+    top: 0;
+  }
+}
+
+@-webkit-keyframes myTransition {
+  from {
+    top: -10%;
+  }
+  to {
+    top: 0;
+  }
+}
