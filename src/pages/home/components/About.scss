@@ -38,8 +38,8 @@
     border-radius: 2vw;
     box-shadow: 0 0 0.2vw rgba(0, 0, 0, 0.3);
     @include sm {
-      width: 32vw;
-      height: 16vw;
+      width: 64vw;
+      height: 32vw;
     }
 
     @include md {
@@ -61,8 +61,8 @@
       @include sm {
         bottom: 0;
         right: 0;
-        width: 32vw;
-        height: 16vw;
+        width: 64vw;
+        height: 32vw;
       }
       @include md {
         bottom: 0;
