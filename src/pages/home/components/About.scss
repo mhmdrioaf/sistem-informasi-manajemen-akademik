@@ -1,0 +1,96 @@
+@import "../../../styles/mixins";
+
+.about {
+  &__images {
+    &__container {
+      display: flex;
+      @include sm {
+        flex-direction: row;
+        gap: 3.2vw;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+      }
+
+      @include md {
+        flex-direction: row;
+        gap: 3.2vw;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+      }
+
+      @include lg {
+        flex-direction: column;
+      }
+
+      @include xl {
+        flex-direction: column;
+      }
+      position: relative;
+      align-self: flex-start;
+    }
+  }
+  &__img {
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    border-radius: 2vw;
+    box-shadow: 0 0 0.2vw rgba(0, 0, 0, 0.3);
+    @include sm {
+      width: 32vw;
+      height: 16vw;
+    }
+
+    @include md {
+      width: 32vw;
+      height: 16vw;
+    }
+
+    @include lg {
+      width: 24vw;
+      height: 12vw;
+    }
+
+    @include xl {
+      width: 24vw;
+      height: 12vw;
+    }
+
+    &__second {
+      @include sm {
+        bottom: 0;
+        right: 0;
+        width: 32vw;
+        height: 16vw;
+      }
+      @include md {
+        bottom: 0;
+        right: 0;
+        width: 32vw;
+        height: 16vw;
+      }
+      @include lg {
+        bottom: -8vw;
+        right: -4vw;
+        width: 24vw;
+        height: 12vw;
+        position: absolute;
+        float: right;
+      }
+      @include xl {
+        bottom: -8vw;
+        right: -4vw;
+        width: 24vw;
+        height: 12vw;
+        position: absolute;
+        float: right;
+      }
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      border-radius: 2vw;
+      box-shadow: 0 0 0.2vw rgba(0, 0, 0, 0.3);
+    }
+  }
+}
