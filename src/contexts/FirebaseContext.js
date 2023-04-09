@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   signInWithEmailAndPassword,
   signOut,
@@ -13,6 +13,8 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
+  const [currentUser, setCurrentUser] = useState(null);
+
   async function login(email, password) {
     return signInWithEmailAndPassword(auth, email, password).then(
       (userCredential) => {
@@ -56,11 +58,16 @@ export function AuthProvider({ children }) {
     }
   }
 
+  useEffect(() => {
+    auth.onAuthStateChanged(setCurrentUser);
+  }, []);
+
   const value = {
     login,
     logout,
     resetPassword,
     authErrorHandler,
+    currentUser,
   };
 
   return (

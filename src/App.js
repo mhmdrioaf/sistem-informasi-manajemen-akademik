@@ -1,76 +1,32 @@
-import React, { useEffect, useState } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { LoginPage, ResetPasswordPage, DashboardPage } from "./pages";
 import IndexPage from "./pages/index";
 import { AuthProvider } from "./contexts/FirebaseContext";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./firebase";
+import { AuthenticatedRoute, NonAuthenticatedRoute } from "./routes";
 import * as ROUTES from "./constants/routes";
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState();
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setIsAuthenticated(user);
-      } else {
-        setIsAuthenticated(null);
-      }
-    });
-  }, []);
-
   return (
     <AuthProvider>
       <Router>
         <Routes>
           <Route exact path={ROUTES.LANDING} element={<IndexPage />} />
-          <Route
-            path={ROUTES.LOGIN}
-            element={
-              isAuthenticated ? (
-                <Navigate to="/dashboard" replace />
-              ) : (
-                <LoginPage />
-              )
-            }
-          />
-          <Route
-            path={ROUTES.DASHBOARD}
-            element={
-              isAuthenticated ? (
-                <DashboardPage />
-              ) : (
-                <Navigate to="/login" replace />
-              )
-            }
-          />
 
-          <Route
-            path={ROUTES.E_LEARNING}
-            element={
-              isAuthenticated ? (
-                <DashboardPage />
-              ) : (
-                <Navigate to="/login" replace />
-              )
-            }
-          />
-          <Route
-            path={ROUTES.PASSWORD_RESET}
-            element={
-              isAuthenticated ? (
-                <Navigate to="/" replace />
-              ) : (
-                <ResetPasswordPage />
-              )
-            }
-          />
+          {/* user not logged in routes */}
+          <Route element={<NonAuthenticatedRoute />}>
+            <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+            <Route
+              path={ROUTES.PASSWORD_RESET}
+              element={<ResetPasswordPage />}
+            />
+          </Route>
+
+          {/* user logged in routes */}
+          <Route element={<AuthenticatedRoute />}>
+            <Route path={ROUTES.DASHBOARD} element={<DashboardPage />} />
+            <Route path={ROUTES.E_LEARNING} element={<DashboardPage />} />
+          </Route>
         </Routes>
       </Router>
     </AuthProvider>
