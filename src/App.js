@@ -5,12 +5,12 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { LoginPage, ResetPasswordPage } from "./pages";
+import { LoginPage, ResetPasswordPage, DashboardPage } from "./pages";
 import IndexPage from "./pages/index";
 import { AuthProvider } from "./contexts/FirebaseContext";
-import Dashboard from "./pages/user/Dashboard";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
+import * as ROUTES from "./constants/routes";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState();
@@ -29,9 +29,9 @@ function App() {
     <AuthProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<IndexPage />} />
+          <Route exact path={ROUTES.LANDING} element={<IndexPage />} />
           <Route
-            path="/login"
+            path={ROUTES.LOGIN}
             element={
               isAuthenticated ? (
                 <Navigate to="/dashboard" replace />
@@ -41,20 +41,28 @@ function App() {
             }
           />
           <Route
-            path="/dashboard"
+            path={ROUTES.DASHBOARD}
             element={
-              isAuthenticated ? <Dashboard /> : <Navigate to="/login" replace />
+              isAuthenticated ? (
+                <DashboardPage />
+              ) : (
+                <Navigate to="/login" replace />
+              )
             }
           />
 
           <Route
-            path="/lms"
+            path={ROUTES.E_LEARNING}
             element={
-              isAuthenticated ? <Dashboard /> : <Navigate to="/login" replace />
+              isAuthenticated ? (
+                <DashboardPage />
+              ) : (
+                <Navigate to="/login" replace />
+              )
             }
           />
           <Route
-            path="/resetPassword"
+            path={ROUTES.PASSWORD_RESET}
             element={
               isAuthenticated ? (
                 <Navigate to="/" replace />

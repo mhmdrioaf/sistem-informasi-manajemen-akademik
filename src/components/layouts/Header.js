@@ -154,7 +154,12 @@ function Header({ handlePageChange, activePage, scrollValue }) {
             justifyContent: "space-between",
             alignItems: "center",
             backgroundColor: color.primary,
-            padding: ".8rem 8rem",
+            padding: {
+              xs: "1.2rem .4rem",
+              sm: "1.2rem .4rem",
+              md: ".4rem 4rem",
+              lg: ".4rem 8rem",
+            },
             display: {
               xs: "none",
               sm: "none",
