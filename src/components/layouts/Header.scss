@@ -1,4 +1,6 @@
 @import "../../styles/color";
+@import "../../styles/variables";
+@import "../../styles/mixins";
 
 .sticky {
   position: sticky;
@@ -37,4 +39,76 @@
   to {
     top: 0;
   }
+}
+
+.header {
+  &__container {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+    color: $onSurface;
+  }
+
+  &__menu {
+    &__container {
+      width: 100%;
+      justify-content: space-between;
+      align-items: center;
+      background-color: $primary;
+
+      @include sm {
+        display: none;
+      }
+
+      @include md {
+        display: none;
+      }
+
+      @include lg {
+        padding: $padding-lg;
+        display: flex;
+      }
+
+      @include xl {
+        padding: $padding-lg;
+        display: flex;
+      }
+    }
+  }
+
+  &__main {
+    &__container {
+      width: 100%;
+      justify-content: space-between;
+      align-items: center;
+      color: $onSurface;
+      display: flex;
+      flex-direction: row;
+      background-color: $headerBackground;
+      z-index: 10;
+
+      @include sm {
+        padding: $padding-sm;
+      }
+
+      @include md {
+        padding: $padding-md;
+      }
+
+      @include lg {
+        padding: $padding-lg;
+      }
+
+      @include xl {
+        padding: $padding-lg;
+      }
+    }
+  }
+}
+
+.link__container {
+  align-items: center;
+  color: $onPrimary;
 }

@@ -1,68 +1,46 @@
-import React, { useEffect, useState } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
-import { LoginPage, ResetPasswordPage } from "./pages";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { LoginPage, ResetPasswordPage, DashboardPage } from "./pages";
 import IndexPage from "./pages/index";
+import AdminIndexPage from "./pages/admin";
 import { AuthProvider } from "./contexts/FirebaseContext";
-import Dashboard from "./pages/user/Dashboard";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./firebase";
+import {
+  AuthenticatedRoute,
+  NonAuthenticatedRoute,
+  AdminRoute,
+} from "./routes";
+import * as ROUTES from "./constants/routes";
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState();
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setIsAuthenticated(user);
-      } else {
-        setIsAuthenticated(null);
-      }
-    });
-  }, []);
-
   return (
     <AuthProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<IndexPage />} />
-          <Route
-            path="/login"
-            element={
-              isAuthenticated ? (
-                <Navigate to="/dashboard" replace />
-              ) : (
-                <LoginPage />
-              )
-            }
-          />
-          <Route
-            path="/dashboard"
-            element={
-              isAuthenticated ? <Dashboard /> : <Navigate to="/login" replace />
-            }
-          />
+          <Route exact path={ROUTES.LANDING} element={<IndexPage />} />
 
-          <Route
-            path="/lms"
-            element={
-              isAuthenticated ? <Dashboard /> : <Navigate to="/login" replace />
-            }
-          />
-          <Route
-            path="/resetPassword"
-            element={
-              isAuthenticated ? (
-                <Navigate to="/" replace />
-              ) : (
-                <ResetPasswordPage />
-              )
-            }
-          />
+          {/* admin routes */}
+          <Route element={<AdminRoute />}>
+            <Route
+              exact
+              path={ROUTES.ADMIN_HOME}
+              element={<AdminIndexPage />}
+            />
+          </Route>
+
+          {/* user not logged in routes */}
+          <Route element={<NonAuthenticatedRoute />}>
+            <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+            <Route
+              path={ROUTES.PASSWORD_RESET}
+              element={<ResetPasswordPage />}
+            />
+          </Route>
+
+          {/* user logged in routes */}
+          <Route element={<AuthenticatedRoute />}>
+            <Route path={ROUTES.DASHBOARD} element={<DashboardPage />} />
+            <Route path={ROUTES.E_LEARNING} element={<DashboardPage />} />
+          </Route>
         </Routes>
       </Router>
     </AuthProvider>

@@ -1,4 +1,5 @@
 @import "../../../styles/color";
+@import "../../../styles/mixins";
 
 :root {
   .swiper-pagination-bullet {
@@ -40,7 +41,18 @@
 
 .mySwiper {
   width: 100%;
-  height: 100vh;
+  @include sm {
+    height: 100vh;
+  }
+  @include md {
+    height: 65vh;
+  }
+  @include lg {
+    height: 65vh;
+  }
+  @include xl {
+    height: 100vh;
+  }
 }
 
 .dim {

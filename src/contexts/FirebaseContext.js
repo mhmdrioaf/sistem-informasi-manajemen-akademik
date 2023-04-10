@@ -1,8 +1,9 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   signInWithEmailAndPassword,
   signOut,
   sendPasswordResetEmail,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { auth } from "../firebase";
 
@@ -13,6 +14,8 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
+  const [currentUser, setCurrentUser] = useState(null);
+
   async function login(email, password) {
     return signInWithEmailAndPassword(auth, email, password).then(
       (userCredential) => {
@@ -23,7 +26,7 @@ export function AuthProvider({ children }) {
   }
 
   async function logout() {
-    return signOut(auth).then((user) => {
+    return signOut(auth).then(() => {
       localStorage.clear();
       window.location.pathname = "/login";
     });
@@ -56,11 +59,23 @@ export function AuthProvider({ children }) {
     }
   }
 
+  useEffect(() => {
+    // auth.onAuthStateChanged(setCurrentUser);
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUser(user);
+      } else {
+        setCurrentUser(null);
+      }
+    });
+  });
+
   const value = {
     login,
     logout,
     resetPassword,
     authErrorHandler,
+    currentUser,
   };
 
   return (
