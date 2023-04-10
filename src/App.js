@@ -1,9 +1,18 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { LoginPage, ResetPasswordPage, DashboardPage } from "./pages";
+import {
+  LoginPage,
+  ResetPasswordPage,
+  DashboardPage,
+  AdminDashboardPage,
+} from "./pages";
 import IndexPage from "./pages/index";
 import { AuthProvider } from "./contexts/FirebaseContext";
-import { AuthenticatedRoute, NonAuthenticatedRoute } from "./routes";
+import {
+  AuthenticatedRoute,
+  NonAuthenticatedRoute,
+  AdminRoute,
+} from "./routes";
 import * as ROUTES from "./constants/routes";
 
 function App() {
@@ -12,6 +21,10 @@ function App() {
       <Router>
         <Routes>
           <Route exact path={ROUTES.LANDING} element={<IndexPage />} />
+
+          <Route element={<AdminRoute />}>
+            <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+          </Route>
 
           {/* user not logged in routes */}
           <Route element={<NonAuthenticatedRoute />}>

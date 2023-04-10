@@ -5,6 +5,7 @@ import * as ROUTES from "../constants/routes";
 
 const NonAuthenticatedRoute = () => {
   const { currentUser } = useAuth();
+
   if (currentUser) {
     return <Navigate to={ROUTES.DASHBOARD} replace />;
   }

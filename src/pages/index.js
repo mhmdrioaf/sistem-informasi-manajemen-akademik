@@ -65,3 +65,4 @@ export { default as HomePage } from "./home/Home";
 export { default as LoginPage } from "./login/Login";
 export { default as ResetPasswordPage } from "./reset_password/ResetPassword";
 export { default as DashboardPage } from "./user/Dashboard";
+export { default as AdminDashboardPage } from "./admin/dashboard/AdminDashboard";

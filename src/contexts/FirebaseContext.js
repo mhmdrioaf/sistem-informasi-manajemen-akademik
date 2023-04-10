@@ -3,6 +3,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   sendPasswordResetEmail,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { auth } from "../firebase";
 
@@ -25,7 +26,7 @@ export function AuthProvider({ children }) {
   }
 
   async function logout() {
-    return signOut(auth).then((user) => {
+    return signOut(auth).then(() => {
       localStorage.clear();
       window.location.pathname = "/login";
     });
@@ -59,8 +60,15 @@ export function AuthProvider({ children }) {
   }
 
   useEffect(() => {
-    auth.onAuthStateChanged(setCurrentUser);
-  }, []);
+    // auth.onAuthStateChanged(setCurrentUser);
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUser(user);
+      } else {
+        setCurrentUser(null);
+      }
+    });
+  });
 
   const value = {
     login,
