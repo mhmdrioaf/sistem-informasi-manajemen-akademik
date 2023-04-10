@@ -136,30 +136,12 @@ function Header({ handlePageChange, activePage, scrollValue }) {
 
   return (
     <>
-      <Box
-        sx={{
-          width: "100%",
-          display: "flex",
-          alignItems: "flex-start",
-          justifyContent: "flex-start",
-          flexDirection: "column",
-          color: color.onSurface,
-        }}
-      >
+      <Box className="header__container">
         {/* dashboard menu container */}
         <Stack
+          className="header__menu__container"
           direction="row"
           sx={{
-            width: "100%",
-            justifyContent: "space-between",
-            alignItems: "center",
-            backgroundColor: color.primary,
-            padding: {
-              xs: "1.2rem .4rem",
-              sm: "1.2rem .4rem",
-              md: ".4rem 4rem",
-              lg: ".4rem 8rem",
-            },
             display: {
               xs: "none",
               sm: "none",
@@ -171,45 +153,21 @@ function Header({ handlePageChange, activePage, scrollValue }) {
           {/* dashboard link */}
           <Stack direction={"row"} spacing={2}>
             <Link color={color.onPrimary} underline="none" href="/dashboard">
-              <Stack
-                direction={"row"}
-                spacing={1}
-                sx={{
-                  alignItems: "center",
-                  color: color.onPrimary,
-                  fontSize: "16px",
-                }}
-              >
+              <Stack className="link__container" direction={"row"} spacing={1}>
                 <BsPerson />
                 <Typography sx={{ fontSize: ".7em" }}>Dashboard</Typography>
               </Stack>
             </Link>
 
             <Link color={color.onPrimary} underline="none" href="/marketplace">
-              <Stack
-                direction={"row"}
-                spacing={1}
-                sx={{
-                  alignItems: "center",
-                  color: color.onPrimary,
-                  fontSize: "16px",
-                }}
-              >
+              <Stack className="link__container" direction={"row"} spacing={1}>
                 <BsShop />
                 <Typography sx={{ fontSize: ".7em" }}>Marketplace</Typography>
               </Stack>
             </Link>
 
             <Link color={color.onPrimary} underline="none" href="/lms">
-              <Stack
-                direction={"row"}
-                spacing={1}
-                sx={{
-                  alignItems: "center",
-                  color: color.onPrimary,
-                  fontSize: "16px",
-                }}
-              >
+              <Stack className="link__container" direction={"row"} spacing={1}>
                 <RiBook2Line />
                 <Typography sx={{ fontSize: ".7em" }}>E-Learning</Typography>
               </Stack>
@@ -248,23 +206,11 @@ function Header({ handlePageChange, activePage, scrollValue }) {
 
       {/* main header container */}
       <Box
-        className={scrollValue >= 75 ? "sticky" : ""}
-        sx={{
-          width: "100%",
-          justifyContent: "space-between",
-          alignItems: "center",
-          color: color.onSurface,
-          padding: {
-            xs: "1.2rem .4rem",
-            sm: "1.2rem .4rem",
-            md: ".4rem 4rem",
-            lg: ".4rem 8rem",
-          },
-          display: "flex",
-          flexDirection: "row",
-          backgroundColor: color.headerBackgroundColor,
-          zIndex: "10",
-        }}
+        className={
+          scrollValue >= 75
+            ? "header__main__container sticky"
+            : "header__main__container"
+        }
       >
         <Stack
           direction="row"
@@ -309,6 +255,7 @@ function Header({ handlePageChange, activePage, scrollValue }) {
           </Stack>
         </Stack>
 
+        {/* hamburger */}
         <IconButton
           onClick={toggleDrawer("bottom", true)}
           size="medium"
@@ -325,7 +272,7 @@ function Header({ handlePageChange, activePage, scrollValue }) {
           <GiHamburgerMenu />
         </IconButton>
 
-        {/* header logo container large device*/}
+        {/* header logo container*/}
         <Stack
           spacing={0}
           sx={{
@@ -365,7 +312,7 @@ function Header({ handlePageChange, activePage, scrollValue }) {
           </Typography>
         </Stack>
 
-        {/* navbar container large device*/}
+        {/* navbar container*/}
         <Stack
           spacing={2}
           direction="row"
