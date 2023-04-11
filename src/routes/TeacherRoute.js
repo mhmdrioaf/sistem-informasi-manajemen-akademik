@@ -1,29 +1,21 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { NoAccessPage } from "../pages";
 import FullPageLoading from "../components/indicators/PrimaryLoading";
 import * as ROUTES from "../constants/routes";
 import * as STATUS from "../constants/status";
 
-const AdminRoute = ({ userRole, status }) => {
-  const navigatePage = (navigateTo) => {
-    return <Navigate to={navigateTo} replace />;
-  };
-
+function TeacherRoute({ userRole, status }) {
   switch (status) {
     case STATUS.SUCCESS:
-      if (userRole === "admin") return <Outlet />;
-      else return <NoAccessPage />;
-
+      if (userRole === "teacher" || userRole === "admin") return <Outlet />;
+      else return <Navigate to={ROUTES.LANDING} />;
     case STATUS.FAILED:
-      return navigatePage(ROUTES.LANDING);
-
+      return <Navigate to={ROUTES.LANDING} />;
     case STATUS.AUTH_NOT_LOGGED_IN:
-      return navigatePage(ROUTES.LOGIN);
-
+      return <Navigate to={ROUTES.LOGIN} />;
     default:
       return <FullPageLoading />;
   }
-};
+}
 
-export default AdminRoute;
+export default TeacherRoute;

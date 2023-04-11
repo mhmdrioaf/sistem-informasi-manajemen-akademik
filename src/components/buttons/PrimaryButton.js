@@ -6,8 +6,9 @@ const PrimaryButton = styled(Button)({
   textAlign: "center",
   backgroundColor: color.primary,
   color: color.onPrimary,
+  padding: ".8rem",
   border: "none",
-  borderRadius: "2.2vw",
+  borderRadius: ".4vw",
   fontFamily: `'Inter', sans-serif`,
   "&:hover": {
     backgroundColor: "rgba(61, 152, 70, 0.9)",

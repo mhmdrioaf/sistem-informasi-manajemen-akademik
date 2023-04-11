@@ -5,7 +5,8 @@ import {
   sendPasswordResetEmail,
   onAuthStateChanged,
 } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
+import { getDoc, doc } from "firebase/firestore";
 
 const FirebaseContext = React.createContext();
 
@@ -52,15 +53,25 @@ export function AuthProvider({ children }) {
         return "Email tidak terdaftar.";
 
       case "auth/invalid-email":
-        return "Masukkan email dengan format 'example@email.com'";
+        return 'Masukkan email dengan format "email@email.com".';
 
       default:
         return "Proses masuk gagal, hubungi penyedia layanan.";
     }
   }
 
+  async function fetchData(dataCol, dataDoc) {
+    const dataRef = doc(db, dataCol, dataDoc);
+    const docSnap = await getDoc(dataRef);
+
+    if (docSnap.exists()) {
+      return docSnap.data();
+    } else {
+      return null;
+    }
+  }
+
   useEffect(() => {
-    // auth.onAuthStateChanged(setCurrentUser);
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setCurrentUser(user);
@@ -75,6 +86,7 @@ export function AuthProvider({ children }) {
     logout,
     resetPassword,
     authErrorHandler,
+    fetchData,
     currentUser,
   };
 

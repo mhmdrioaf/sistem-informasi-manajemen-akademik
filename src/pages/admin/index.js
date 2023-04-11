@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Stack } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import { AdminDashboardPage, AdminStudentPage } from "..";
 import Header from "../../components/layouts/global/Header";
 import * as ROUTES from "../../constants/routes";
@@ -29,7 +29,20 @@ function AdminIndexPage() {
 
   return (
     <Stack>
-      <Header handlePageChange={handlePageChange} activePage={activePage} />
+      <Header
+        handlePageChange={handlePageChange}
+        activePage={activePage}
+        tabs={[
+          { name: "Dashboard", route: ROUTES.ADMIN_DASHBOARD },
+          { name: "Students", route: ROUTES.ADMIN_STUDENTS },
+          { name: "Teachers", route: "/admin/teachers" },
+        ]}
+        logo={
+          <Typography sx={{ fontWeight: "bold", textTransform: "uppercase" }}>
+            Administrator
+          </Typography>
+        }
+      />
       {pagesList()}
     </Stack>
   );

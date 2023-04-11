@@ -1,16 +1,18 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "../contexts/FirebaseContext";
 import * as ROUTES from "../constants/routes";
+import * as STATUS from "../constants/status";
+import FullPageLoading from "../components/indicators/PrimaryLoading";
 
-const NonAuthenticatedRoute = () => {
-  const { currentUser } = useAuth();
-
-  if (currentUser) {
-    return <Navigate to={ROUTES.DASHBOARD} replace />;
+const NonAuthenticatedRoute = ({ status }) => {
+  switch (status) {
+    case STATUS.AUTH_NOT_LOGGED_IN:
+      return <Outlet />;
+    case STATUS.LOADING:
+      return <FullPageLoading />;
+    default:
+      return <Navigate to={ROUTES.DASHBOARD} />;
   }
-
-  return <Outlet />;
 };
 
 export default NonAuthenticatedRoute;

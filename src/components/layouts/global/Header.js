@@ -6,21 +6,13 @@ import {
   ListItem,
   ListItemText,
   Stack,
-  Typography,
 } from "@mui/material";
-import * as ROUTES from "../../../constants/routes";
 import "./GlobalHeader.scss";
 import ListButton from "../../utils/ListButton";
 import color from "../../../styles/_color.scss";
 import { GiHamburgerMenu } from "react-icons/gi";
 
-function Header({ handlePageChange, activePage }) {
-  const tabs = [
-    { name: "Dashboard", route: ROUTES.ADMIN_DASHBOARD },
-    { name: "Students", route: ROUTES.ADMIN_STUDENTS },
-    { name: "Lecturer", route: "/admin/lecturer" },
-  ];
-
+function Header({ handlePageChange, activePage, tabs, logo }) {
   const [state, setState] = useState({
     top: false,
     left: false,
@@ -73,9 +65,7 @@ function Header({ handlePageChange, activePage }) {
   return (
     <>
       <Stack className="global__header__container" direction="row">
-        <Typography sx={{ fontWeight: "bold", textTransform: "uppercase" }}>
-          Administrator
-        </Typography>
+        {logo}
         <Stack
           spacing={2}
           direction="row"

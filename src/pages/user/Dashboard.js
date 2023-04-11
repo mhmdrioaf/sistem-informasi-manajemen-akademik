@@ -1,10 +1,9 @@
 import React from "react";
-import PrimaryButton from "../../components/buttons/PrimaryButton";
 import { useAuth } from "../../contexts/FirebaseContext";
+import PrimaryButton from "../../components/buttons/PrimaryButton";
 
 function Dashboard() {
   const { logout } = useAuth();
-
   return (
     <>
       <PrimaryButton onClick={logout}>Logout</PrimaryButton>

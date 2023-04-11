@@ -67,3 +67,5 @@ export { default as ResetPasswordPage } from "./reset_password/ResetPassword";
 export { default as DashboardPage } from "./user/Dashboard";
 export { default as AdminDashboardPage } from "./admin/dashboard/AdminDashboard";
 export { default as AdminStudentPage } from "./admin/student/AdminStudent";
+export { default as PPDBPage } from "./ppdb/PPDB";
+export { default as NoAccessPage } from "./error/NoAccess";

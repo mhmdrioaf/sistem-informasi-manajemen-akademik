@@ -1,5 +1,11 @@
 import React, { useState } from "react";
+import { GiHamburgerMenu } from "react-icons/gi";
+import { RiBook2Line } from "react-icons/ri";
+import { logoTutWuri } from "../../img";
+import ListButton from "../utils/ListButton";
+import * as ROUTES from "../../constants/routes";
 import color from "../../styles/_color.scss";
+import "./Header.scss";
 import {
   BsFacebook,
   BsPerson,
@@ -8,10 +14,6 @@ import {
   BsYoutube,
   BsShop,
 } from "react-icons/bs";
-import { GiHamburgerMenu } from "react-icons/gi";
-
-import { RiBook2Line } from "react-icons/ri";
-
 import {
   Box,
   Divider,
@@ -25,9 +27,6 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import ListButton from "../utils/ListButton";
-import "./Header.scss";
-import { logoTutWuri } from "../../img";
 
 function Header({ handlePageChange, activePage, scrollValue }) {
   const [state, setState] = useState({
@@ -73,14 +72,14 @@ function Header({ handlePageChange, activePage, scrollValue }) {
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-      <Link href="/dashboard" color="inherit" underline="none">
+      <Link href={ROUTES.STUDENT_DASHBOARD} color="inherit" underline="none">
         <List>
           <ListItem disablePadding>
             <ListButton>
               <ListItemIcon>
                 <BsPerson />
               </ListItemIcon>
-              <ListItemText primary="Dashboard" />
+              <ListItemText primary="Dashboard Siswa" />
             </ListButton>
           </ListItem>
         </List>
@@ -99,7 +98,7 @@ function Header({ handlePageChange, activePage, scrollValue }) {
         </List>
       </Link>
 
-      <Link href="/lms" color="inherit" underline="none">
+      <Link href={ROUTES.E_LEARNING} color="inherit" underline="none">
         <List>
           <ListItem disablePadding>
             <ListButton>
@@ -151,11 +150,23 @@ function Header({ handlePageChange, activePage, scrollValue }) {
           }}
         >
           {/* dashboard link */}
+
+          {/* 
+              TODO: change the "dashboard" section based on user role that logged in.
+              If there was no user logged in, show the login button instead.
+          */}
+
           <Stack direction={"row"} spacing={2}>
-            <Link color={color.onPrimary} underline="none" href="/dashboard">
+            <Link
+              color={color.onPrimary}
+              underline="none"
+              href={ROUTES.STUDENT_DASHBOARD}
+            >
               <Stack className="link__container" direction={"row"} spacing={1}>
                 <BsPerson />
-                <Typography sx={{ fontSize: ".7em" }}>Dashboard</Typography>
+                <Typography sx={{ fontSize: ".7em" }}>
+                  Dashboard Siswa
+                </Typography>
               </Stack>
             </Link>
 
@@ -166,7 +177,11 @@ function Header({ handlePageChange, activePage, scrollValue }) {
               </Stack>
             </Link>
 
-            <Link color={color.onPrimary} underline="none" href="/lms">
+            <Link
+              color={color.onPrimary}
+              underline="none"
+              href={ROUTES.E_LEARNING}
+            >
               <Stack className="link__container" direction={"row"} spacing={1}>
                 <RiBook2Line />
                 <Typography sx={{ fontSize: ".7em" }}>E-Learning</Typography>
