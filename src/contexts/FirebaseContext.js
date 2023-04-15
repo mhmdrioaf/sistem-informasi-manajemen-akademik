@@ -4,9 +4,13 @@ import {
   signOut,
   sendPasswordResetEmail,
   onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
 import { auth, db } from "../firebase";
-import { getDoc, doc } from "firebase/firestore";
+import { getDoc, doc, setDoc } from "firebase/firestore";
+import { getDownloadURL, ref } from "firebase/storage";
+import { storage } from "../firebase";
 
 const FirebaseContext = React.createContext();
 
@@ -21,6 +25,28 @@ export function AuthProvider({ children }) {
     return signInWithEmailAndPassword(auth, email, password).then(
       (userCredential) => {
         const user = userCredential.user;
+        localStorage.setItem("user", JSON.stringify(user));
+      }
+    );
+  }
+
+  async function registerPPDB(email, password, displayName) {
+    return createUserWithEmailAndPassword(auth, email, password).then(
+      (userCredential) => {
+        const user = userCredential.user;
+
+        // TODO: Make the update displayName work
+        setDoc(doc(db, "users", user.uid), {
+          email: user.email,
+          displayName: user.displayName,
+          role: "ppdb",
+        });
+
+        updateProfile(auth.currentUser, {
+          displayName: displayName,
+        }).then(() => {
+          console.log("success gan");
+        });
         localStorage.setItem("user", JSON.stringify(user));
       }
     );
@@ -71,6 +97,22 @@ export function AuthProvider({ children }) {
     }
   }
 
+  /* TODO: fix fetch assets using parameter */
+
+  function fetchAssets(reference) {
+    const assetRef = ref(storage, "assets/img/tutwuri.png");
+
+    getDownloadURL(assetRef)
+      .then((url) => {
+        console.log(url);
+        return url;
+      })
+      .catch((error) => {
+        console.log(error.code);
+        return error?.code;
+      });
+  }
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -82,11 +124,13 @@ export function AuthProvider({ children }) {
   });
 
   const value = {
+    registerPPDB,
     login,
     logout,
     resetPassword,
     authErrorHandler,
     fetchData,
+    fetchAssets,
     currentUser,
   };
 

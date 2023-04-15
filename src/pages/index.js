@@ -69,3 +69,4 @@ export { default as AdminDashboardPage } from "./admin/dashboard/AdminDashboard"
 export { default as AdminStudentPage } from "./admin/student/AdminStudent";
 export { default as PPDBPage } from "./ppdb/PPDB";
 export { default as NoAccessPage } from "./error/NoAccess";
+export { default as PPDBRegisterPage } from "./ppdb/register/PPDBRegister";

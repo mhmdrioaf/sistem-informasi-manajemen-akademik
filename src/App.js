@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { LoginPage, ResetPasswordPage, DashboardPage } from "./pages";
+import {
+  LoginPage,
+  ResetPasswordPage,
+  DashboardPage,
+  PPDBRegisterPage,
+} from "./pages";
 import IndexPage from "./pages/index";
 import AdminIndexPage from "./pages/admin";
 import { AuthProvider } from "./contexts/FirebaseContext";
@@ -114,6 +119,7 @@ function App() {
           {/* user not logged in routes */}
           <Route element={<NonAuthenticatedRoute status={status} />}>
             <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+            <Route path={ROUTES.PPDB_REGISTER} element={<PPDBRegisterPage />} />
             <Route
               path={ROUTES.PASSWORD_RESET}
               element={<ResetPasswordPage />}

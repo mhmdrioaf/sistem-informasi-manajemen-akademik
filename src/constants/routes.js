@@ -4,7 +4,6 @@ export const E_LEARNING = "/e-learning";
 export const MARKETPLACE = "/marketplace";
 export const DASHBOARD = "/dashboard";
 export const PASSWORD_RESET = "/resetPassword";
-export const PPDB = "/ppdb";
 
 // admin routes
 export const ADMIN_HOME = "/admin";
@@ -24,3 +23,7 @@ export const STUDENT_PROFILE = (userId) => {
 // teacher routes
 export const TEACHER_HOME = "/guru";
 export const TEACHER_DASHBOARD = "/guru/dashboard";
+
+// ppdb routes
+export const PPDB = "/ppdb";
+export const PPDB_REGISTER = "/ppdb/register";
