@@ -30,26 +30,37 @@ export function AuthProvider({ children }) {
     );
   }
 
-  async function registerPPDB(email, password, displayName) {
-    return createUserWithEmailAndPassword(auth, email, password).then(
-      (userCredential) => {
+  async function register(email, password, displayName, address) {
+    const registerUser = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    )
+      .then((userCredential) => {
         const user = userCredential.user;
 
-        // TODO: Make the update displayName work
-        setDoc(doc(db, "users", user.uid), {
-          email: user.email,
-          displayName: user.displayName,
-          role: "ppdb",
-        });
-
-        updateProfile(auth.currentUser, {
+        updateProfile(user, {
           displayName: displayName,
         }).then(() => {
-          console.log("success gan");
+          setDoc(doc(db, "users", user.uid), {
+            displayName: user.displayName,
+            email: user.email,
+            address: address,
+            role: "guest",
+          }).catch((error) => {
+            return error.code;
+          });
         });
-        localStorage.setItem("user", JSON.stringify(user));
-      }
-    );
+
+        console.log(user);
+
+        return true;
+      })
+      .catch((error) => {
+        return error.code;
+      });
+
+    return registerUser;
   }
 
   async function logout() {
@@ -81,6 +92,9 @@ export function AuthProvider({ children }) {
       case "auth/invalid-email":
         return 'Masukkan email dengan format "email@email.com".';
 
+      case "auth/email-already-in-use":
+        return "Email telah terdaftar!";
+
       default:
         return "Proses masuk gagal, hubungi penyedia layanan.";
     }
@@ -97,20 +111,23 @@ export function AuthProvider({ children }) {
     }
   }
 
-  /* TODO: fix fetch assets using parameter */
+  async function fetchConstants(dataCol, dataDoc) {
+    const constantRef = await fetchData(dataCol, dataDoc);
 
-  function fetchAssets(reference) {
-    const assetRef = ref(storage, "assets/img/tutwuri.png");
+    if (constantRef) return constantRef;
+    else return null;
+  }
 
-    getDownloadURL(assetRef)
-      .then((url) => {
-        console.log(url);
-        return url;
-      })
-      .catch((error) => {
-        console.log(error.code);
-        return error?.code;
-      });
+  async function fetchAssets(path, child) {
+    const assetsRef = ref(storage, `${path}/${child}`);
+
+    const downloadUrl = await getDownloadURL(assetsRef);
+
+    if (downloadUrl) {
+      return downloadUrl;
+    } else {
+      return null;
+    }
   }
 
   useEffect(() => {
@@ -124,11 +141,12 @@ export function AuthProvider({ children }) {
   });
 
   const value = {
-    registerPPDB,
+    register,
     login,
     logout,
     resetPassword,
     authErrorHandler,
+    fetchConstants,
     fetchData,
     fetchAssets,
     currentUser,

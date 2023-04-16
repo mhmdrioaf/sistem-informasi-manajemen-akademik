@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useAuth } from "../../contexts/FirebaseContext";
 import { useNavigate } from "react-router-dom";
-import { logoTutWuri } from "../../img";
 import BasicTextField from "../../components/textfields/BasicTextField";
 import PrimaryButton from "../../components/buttons/PrimaryButton";
 import FullPageLoading from "../../components/indicators/PrimaryLoading";
+import * as ROUTES from "../../constants/routes";
 import color from "../../styles/_color.scss";
 import {
   Box,
@@ -22,13 +22,17 @@ function LoginContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [error, setError] = useState();
-  const [constants, setConstants] = useState([]);
+  const [loginConstants, setLoginConstants] = useState([]);
+  const [assets, setAssets] = useState({
+    image: "",
+  });
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
 
-  const { login, authErrorHandler, fetchData } = useAuth();
+  const { login, authErrorHandler, fetchData, fetchAssets, fetchConstants } =
+    useAuth();
   const navigate = useNavigate();
 
   const onLoginClickHandler = async (e) => {
@@ -56,19 +60,33 @@ function LoginContent() {
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const createMarkup = () => {
-    return { __html: constants?.LOGIN_INFO };
+    return { __html: loginConstants?.LOGIN_INFO };
   };
 
   useEffect(() => {
     const getConstants = async () => {
       const loginConstants = await fetchData("constants", "login");
 
-      setConstants(loginConstants);
-      setIsLoading(false);
+      setLoginConstants(loginConstants);
     };
 
     getConstants();
   }, [fetchData]);
+
+  useEffect(() => {
+    const getAssets = async () => {
+      const ref = await fetchConstants("constants", "global");
+
+      const assets = await fetchAssets("assets/img", ref?.logo);
+      setAssets((prev) => ({
+        ...prev,
+        image: assets,
+      }));
+      setIsLoading(false);
+    };
+
+    getAssets();
+  }, [fetchAssets, fetchConstants]);
 
   return (
     <>
@@ -105,7 +123,7 @@ function LoginContent() {
           >
             {/* login title */}
             <img
-              src={logoTutWuri}
+              src={assets.image}
               style={{
                 width: "164px",
                 height: "164px",
@@ -194,6 +212,22 @@ function LoginContent() {
             >
               Login
             </PrimaryButton>
+            <Typography
+              sx={{ alignSelf: "center" }}
+              color={color.subtitleOnSurface}
+              fontSize={".8em"}
+            >
+              Belum punya akun?{" "}
+              <strong>
+                <Link
+                  color={color.primary}
+                  underline="none"
+                  href={ROUTES.REGISTER}
+                >
+                  Klik disini.
+                </Link>
+              </strong>
+            </Typography>
           </Stack>
         </Box>
       )}

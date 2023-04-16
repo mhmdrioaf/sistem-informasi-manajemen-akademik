@@ -15,7 +15,7 @@ const AdminRoute = ({ userRole, status }) => {
       if (userRole === "admin") return <Outlet />;
       else return <NoAccessPage />;
 
-    case STATUS.FAILED:
+    case STATUS.AUTH_GUEST:
       return navigatePage(ROUTES.LANDING);
 
     case STATUS.AUTH_NOT_LOGGED_IN:

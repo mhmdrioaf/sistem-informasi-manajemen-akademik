@@ -11,7 +11,7 @@ const NonAuthenticatedRoute = ({ status }) => {
     case STATUS.LOADING:
       return <FullPageLoading />;
     default:
-      return <Navigate to={ROUTES.DASHBOARD} />;
+      return <Navigate to={ROUTES.PROFILE} />;
   }
 };
 

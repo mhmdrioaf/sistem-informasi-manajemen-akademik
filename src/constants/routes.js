@@ -4,6 +4,8 @@ export const E_LEARNING = "/e-learning";
 export const MARKETPLACE = "/marketplace";
 export const DASHBOARD = "/dashboard";
 export const PASSWORD_RESET = "/resetPassword";
+export const PROFILE = "/profile";
+export const REGISTER = "/register";
 
 // admin routes
 export const ADMIN_HOME = "/admin";

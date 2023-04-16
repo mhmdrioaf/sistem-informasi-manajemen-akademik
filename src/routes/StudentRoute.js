@@ -9,7 +9,7 @@ function StudentRoute({ userRole, status }) {
     case STATUS.SUCCESS:
       if (userRole === "student" || userRole === "admin") return <Outlet />;
       else return <Navigate to={ROUTES.LANDING} />;
-    case STATUS.FAILED:
+    case STATUS.AUTH_GUEST:
       return <Navigate to={ROUTES.LANDING} />;
     case STATUS.AUTH_NOT_LOGGED_IN:
       return <Navigate to={ROUTES.LOGIN} />;
