@@ -5,7 +5,7 @@ import { Stack } from "@mui/material";
 import Home from "./home/Home";
 import { Profile, Contact, Major } from "./foundation";
 
-function IndexPage() {
+function IndexPage({ currentUser }) {
   const [page, setPage] = useState("home");
   const [activePage, setActivePage] = useState(0);
   const [scrollValue, setScrollValue] = useState(0);
@@ -48,6 +48,7 @@ function IndexPage() {
     <div>
       <Stack>
         <Header
+          currentUser={currentUser}
           handlePageChange={handlePageChange}
           activePage={activePage}
           scrollValue={scrollValue}
@@ -67,6 +68,6 @@ export { default as ResetPasswordPage } from "./reset_password/ResetPassword";
 export { default as DashboardPage } from "./user/Dashboard";
 export { default as AdminDashboardPage } from "./admin/dashboard/AdminDashboard";
 export { default as AdminStudentPage } from "./admin/student/AdminStudent";
-export { default as PPDBPage } from "./ppdb/PPDB";
 export { default as NoAccessPage } from "./error/NoAccess";
-export { default as PPDBRegisterPage } from "./ppdb/register/PPDBRegister";
+export { default as RegisterPage } from "./register/Register";
+export { default as ProfilePage } from "./user/profile/UserProfile";

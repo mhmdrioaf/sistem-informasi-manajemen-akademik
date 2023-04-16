@@ -7,6 +7,7 @@ import FullPageLoading from "../components/indicators/PrimaryLoading";
 const AuthenticatedRoute = ({ status }) => {
   switch (status) {
     case STATUS.SUCCESS:
+    case STATUS.AUTH_GUEST:
       return <Outlet />;
     case STATUS.LOADING:
       return <FullPageLoading />;

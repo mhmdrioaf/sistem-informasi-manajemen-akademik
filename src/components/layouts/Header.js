@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { RiBook2Line } from "react-icons/ri";
 import { logoTutWuri } from "../../img";
 import ListButton from "../utils/ListButton";
 import * as ROUTES from "../../constants/routes";
@@ -28,7 +27,7 @@ import {
   Typography,
 } from "@mui/material";
 
-function Header({ handlePageChange, activePage, scrollValue }) {
+function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
   const [state, setState] = useState({
     top: false,
     left: false,
@@ -72,14 +71,18 @@ function Header({ handlePageChange, activePage, scrollValue }) {
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-      <Link href={ROUTES.STUDENT_DASHBOARD} color="inherit" underline="none">
+      <Link
+        href={currentUser ? ROUTES.PROFILE : ROUTES.DASHBOARD}
+        color="inherit"
+        underline="none"
+      >
         <List>
           <ListItem disablePadding>
             <ListButton>
               <ListItemIcon>
                 <BsPerson />
               </ListItemIcon>
-              <ListItemText primary="Dashboard Siswa" />
+              <ListItemText primary={currentUser ? "Profile" : "Login"} />
             </ListButton>
           </ListItem>
         </List>
@@ -93,19 +96,6 @@ function Header({ handlePageChange, activePage, scrollValue }) {
                 <BsShop />
               </ListItemIcon>
               <ListItemText primary="Marketplace" />
-            </ListButton>
-          </ListItem>
-        </List>
-      </Link>
-
-      <Link href={ROUTES.E_LEARNING} color="inherit" underline="none">
-        <List>
-          <ListItem disablePadding>
-            <ListButton>
-              <ListItemIcon>
-                <RiBook2Line />
-              </ListItemIcon>
-              <ListItemText primary="E-Learning" />
             </ListButton>
           </ListItem>
         </List>
@@ -151,21 +141,16 @@ function Header({ handlePageChange, activePage, scrollValue }) {
         >
           {/* dashboard link */}
 
-          {/* 
-              TODO: change the "dashboard" section based on user role that logged in.
-              If there was no user logged in, show the login button instead.
-          */}
-
           <Stack direction={"row"} spacing={2}>
             <Link
               color={color.onPrimary}
               underline="none"
-              href={ROUTES.STUDENT_DASHBOARD}
+              href={currentUser ? ROUTES.PROFILE : ROUTES.DASHBOARD}
             >
               <Stack className="link__container" direction={"row"} spacing={1}>
                 <BsPerson />
                 <Typography sx={{ fontSize: ".7em" }}>
-                  Dashboard Siswa
+                  {currentUser ? "Profile" : "Login"}
                 </Typography>
               </Stack>
             </Link>
@@ -174,17 +159,6 @@ function Header({ handlePageChange, activePage, scrollValue }) {
               <Stack className="link__container" direction={"row"} spacing={1}>
                 <BsShop />
                 <Typography sx={{ fontSize: ".7em" }}>Marketplace</Typography>
-              </Stack>
-            </Link>
-
-            <Link
-              color={color.onPrimary}
-              underline="none"
-              href={ROUTES.E_LEARNING}
-            >
-              <Stack className="link__container" direction={"row"} spacing={1}>
-                <RiBook2Line />
-                <Typography sx={{ fontSize: ".7em" }}>E-Learning</Typography>
               </Stack>
             </Link>
           </Stack>
