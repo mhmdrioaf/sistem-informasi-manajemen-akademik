@@ -72,7 +72,7 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <Link
-        href={currentUser ? ROUTES.PROFILE : ROUTES.DASHBOARD}
+        href={currentUser ? ROUTES.PROFILE : ROUTES.LOGIN}
         color="inherit"
         underline="none"
       >

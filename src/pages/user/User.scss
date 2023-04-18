@@ -1,0 +1,48 @@
+@import "../../styles/variables";
+@import "../../styles/mixins";
+
+.user {
+  &__profile {
+    &__container {
+      @include sm {
+        padding: $padding-sm;
+      }
+
+      @include md {
+        padding: $padding-md;
+      }
+
+      @include lg {
+        padding: $padding-lg;
+      }
+
+      @include xl {
+        padding: $padding-lg;
+      }
+    }
+
+    &__body {
+      width: 100%;
+    }
+
+    &__table {
+      td {
+        @include sm {
+          padding: $padding-sm;
+        }
+
+        @include md {
+          padding: $padding-md;
+        }
+
+        @include lg {
+          padding: $padding-lg;
+        }
+
+        @include xl {
+          padding: $padding-lg;
+        }
+      }
+    }
+  }
+}

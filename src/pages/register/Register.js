@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Alert, Box, Link, Stack, Typography } from "@mui/material";
+import { Alert, Box, InputAdornment, Link, Stack, Typography } from "@mui/material";
 import { useAuth } from "../../contexts/FirebaseContext";
+import { useNavigate } from "react-router-dom";
 import BasicTextField from "../../components/textfields/BasicTextField";
 import PrimaryButton from "../../components/buttons/PrimaryButton";
 import FullPageLoading from "../../components/indicators/PrimaryLoading";
@@ -17,6 +18,7 @@ function Register() {
   const [buttonLoading, setButtonLoading] = useState(false);
   const [data, setData] = useState({});
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const { register, fetchAssets, fetchConstants, authErrorHandler } = useAuth();
 
@@ -41,6 +43,7 @@ function Register() {
     } else {
       setError(null);
       setButtonLoading(false);
+      navigate("/", "replace");
     }
   };
 
@@ -113,6 +116,27 @@ function Register() {
                   displayName: e.target.value,
                 }))
               }
+            />
+
+            {/* phone number input */}
+            <BasicTextField
+              required
+              type="number"
+              variant="standard"
+              label="Nomor Telepon"
+              placeholder="812345678"
+              className="register__inputNumber"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment sx={{ mr: 2 }}>
+                    <Typography>+62</Typography>
+                  </InputAdornment>
+                )
+              }}
+              onChange={(e) => setData((prev) => ({
+                ...prev,
+                phoneNumber: e.target.value,
+              }))}
             />
 
             {/* address input */}

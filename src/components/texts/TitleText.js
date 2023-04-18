@@ -4,10 +4,10 @@ import color from "../../styles/_color.scss";
 
 function TitleText({ title, subtitle }) {
   return (
-    <Stack spacing={2}>
+    <Stack>
       <Typography
         sx={{
-          fontSize: "2em",
+          fontSize: "1.4em",
           color: color.onSurface,
         }}
       >
@@ -15,7 +15,7 @@ function TitleText({ title, subtitle }) {
       </Typography>
       <Typography
         sx={{
-          fontSize: "1em",
+          fontSize: ".8em",
           color: color.subtitleOnSurface,
         }}
       >

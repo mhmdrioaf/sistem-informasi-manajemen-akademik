@@ -6,6 +6,7 @@ import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
   updateProfile,
+  sendEmailVerification,
 } from "firebase/auth";
 import { auth, db } from "../firebase";
 import { getDoc, doc, setDoc } from "firebase/firestore";
@@ -30,7 +31,7 @@ export function AuthProvider({ children }) {
     );
   }
 
-  async function register(email, password, displayName, address) {
+  async function register(email, password, displayName, address, phoneNumber) {
     const registerUser = await createUserWithEmailAndPassword(
       auth,
       email,
@@ -40,12 +41,13 @@ export function AuthProvider({ children }) {
         const user = userCredential.user;
 
         updateProfile(user, {
-          displayName: displayName,
+          displayName: displayName
         }).then(() => {
           setDoc(doc(db, "users", user.uid), {
             displayName: user.displayName,
             email: user.email,
             address: address,
+            phoneNumber: `0${phoneNumber}`,
             role: "guest",
           }).catch((error) => {
             return error.code;
@@ -61,6 +63,32 @@ export function AuthProvider({ children }) {
       });
 
     return registerUser;
+  }
+
+  async function verifyEmail() {
+    return sendEmailVerification(currentUser).then(() => {
+      return true
+    }).catch((error) => {
+      console.log(error.code)
+      return error.code;
+    })
+  }
+
+  async function editUserData(editedUser) {
+    const updateUserData = await updateProfile(currentUser, {
+      displayName: editedUser?.displayName
+    }).then(() => {
+      return true;
+    }).catch((error) => {
+      return error.code
+    })
+
+    if (updateUserData === true) {
+      const userRef = doc(db, "users", currentUser.uid);
+      setDoc(userRef, editedUser, { merge: true });
+    }
+
+    return updateUserData;
   }
 
   async function logout() {
@@ -145,7 +173,9 @@ export function AuthProvider({ children }) {
     login,
     logout,
     resetPassword,
+    editUserData,
     authErrorHandler,
+    verifyEmail,
     fetchConstants,
     fetchData,
     fetchAssets,

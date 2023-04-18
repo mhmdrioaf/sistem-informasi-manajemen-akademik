@@ -24,6 +24,7 @@ import { doc, getDoc } from "firebase/firestore";
 
 function App() {
   const [userRole, setUserRole] = useState("guest");
+  const [userDesc, setUserDesc] = useState({});
   const [currentUser, setCurrentUser] = useState(null);
   const [status, setStatus] = useState(STATUS.LOADING);
 
@@ -38,6 +39,7 @@ function App() {
 
           if (docSnap.exists()) {
             setUserRole(docSnap.data().role);
+            setUserDesc(docSnap.data());
             setStatus(STATUS.SUCCESS);
           } else {
             setUserRole("guest");
@@ -93,7 +95,7 @@ function App() {
           <Route element={<AuthenticatedRoute status={status} />}>
             <Route
               path={ROUTES.PROFILE}
-              element={<ProfilePage currentUser={currentUser} />}
+              element={<ProfilePage currentUser={currentUser} userDesc={userDesc} />}
             />
           </Route>
 
