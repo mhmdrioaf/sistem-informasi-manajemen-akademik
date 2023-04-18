@@ -60,6 +60,7 @@ function UserProfile({ currentUser, userDesc }) {
         message: "Profil telah di edit, sistem akan memuat ulang...",
         status: "success",
       })
+      console.log(editedUser?.phoneNumber);
       setButtonLoading(true);
       setTimeout(() => {
         window.location.reload();
@@ -167,13 +168,14 @@ function UserProfile({ currentUser, userDesc }) {
                             {data.type !== "email" && data.type !== "user-id" && (
                               <>
                                 <BasicTextField
+                                  fullWidth
                                   type={data.type}
                                   label={data.name}
                                   InputProps={{
                                     startAdornment: (
                                       <>
                                         {data.type === "number" && (
-                                          <InputAdornment sx={{ mr: 2 }}>
+                                          <InputAdornment position="start">
                                             +62
                                           </InputAdornment>
                                         )}
@@ -184,8 +186,10 @@ function UserProfile({ currentUser, userDesc }) {
                                     data.value === false && data.type !== "number"
                                       ? `Masukkan ${data.name}`
                                       : (data.value === false && data.type === "number")
-                                        ? "8515815815"
-                                        : data.value
+                                        ? "8123456789"
+                                        : (data.type === "number")
+                                          ? parseInt(data.value.toString().substring(2))
+                                          : data.value
                                   }
                                   onChange={(e) => {
                                     switch (data.name) {
@@ -212,7 +216,7 @@ function UserProfile({ currentUser, userDesc }) {
                                         } else {
                                           return setEditedUser((prev) => ({
                                             ...prev,
-                                            phoneNumber: e.target.value,
+                                            phoneNumber: Number(`+62${parseInt(e.target.value)}`),
                                           }))
                                         }
                                       case "Alamat":
