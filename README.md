@@ -1,20 +1,17 @@
-> **⚠️⚠️The project is still under development process:warning:⚠️**    
-# Academic Management System Information (_Sistem Informasi Manajemen Akademik_)
+> **⚠️⚠️The project is still under development process:warning:⚠️**   
+> **:recycle: :recycle: The project in this branch has its scope minimized to just Marketplace scopes. :recycle: :recycle:**
+# Product Distribution Information System (_Sistem Informasi Distribusi Product_)
 
-This project was created with ReactJS Framework and using Firebase for the authorization and/or authentication system.  
-The idea of this project is basically to manage the school data. This project was also created to fulfill my thesis project and is intended for Yayasan Pendidikan Galeuh Pakuan.  
-
-## The main features of the application  
-**1. Authentication**  
-This feature contain all the function that related to the user authentications. The users itself are divided to 4 roles:  
-> note: the user roles could be more or less along with the development process.
-  - Administrator  
-  Administrator would be responsible on maintaining the applications.  
-  - Lecturer  
-  Lecturer would be given access to accessing the report of the student, learning materials, etc.  
-  - Student  
-  Student would be given read-only access to their reports, learning materials, etc.
-  - Regular user  
-  Regular user would not be given access to edit the database. Regular user just an user that could see the information of Yayasan Pendidikan Galeuh Pakuan.  
-  ___  
-  *will added more after the user requirements analysis is done...*
+This project was created with the ReactJS Framework and Firebase for the authorization and/or authentication systems.
+The purpose of this project was to fulfill my theses project and was made for the SMK Korporasi Garut to make it easier for students and/or teachers to market the products they have produced.
+  
+## Application Features
+### Marketplace  
+#### Descriptions
+In the marketplace, sellers (students and teachers) could post their products to market them to the system. Sellers could also see their list of products that have been posted and could edit the posts. Marketplace is accessible by every user role even if the user has not signed up yet (guest user). But only registered users can place orders for the products.
+In the marketplace, sellers will have their own store pages. The store page was used for sharing their seller identity, such as what products they've produced and many more.  
+#### Payment Methods
+The payment method for the marketplace is going to be using GoPay payment methods and/or bank transfer payment methods. But if the stakeholder is willing to provide the requirements for creating a QRIS account, then the payment method is going to be using QRIS.  
+  
+  
+**_will be added more along with the development process._**
