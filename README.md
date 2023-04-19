@@ -1,5 +1,6 @@
-> **⚠️⚠️The project is still under development process:warning:⚠️**    
-# Academic Management System Information (_Sistem Informasi Manajemen Akademik_)
+> # :no_entry:The development of this project in this branch was suspended. The currently active development branch is [theses-development](https://github.com/mhmdrioaf/sistem-informasi-manajemen-akademik/tree/theses-development):no_entry:
+
+# Academic Management System Information (_Sistem Informasi Manajemen Akademik_)  
 
 This project was created with ReactJS Framework and using Firebase for the authorization and/or authentication system.  
 The idea of this project is basically to manage the school data. This project was also created to fulfill my thesis project and is intended for Yayasan Pendidikan Galeuh Pakuan.  
