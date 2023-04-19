@@ -72,7 +72,7 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <Link
-        href={currentUser ? ROUTES.PROFILE : ROUTES.LOGIN}
+        href={currentUser ? ROUTES.USER_HOME : ROUTES.LOGIN}
         color="inherit"
         underline="none"
       >
@@ -145,7 +145,7 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
             <Link
               color={color.onPrimary}
               underline="none"
-              href={currentUser ? ROUTES.PROFILE : ROUTES.DASHBOARD}
+              href={currentUser ? ROUTES.USER_HOME : ROUTES.LOGIN}
             >
               <Stack className="link__container" direction={"row"} spacing={1}>
                 <BsPerson />

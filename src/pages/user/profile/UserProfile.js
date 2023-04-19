@@ -28,9 +28,10 @@ function UserProfile({ currentUser, userDesc }) {
       type: "text"
     },
     { name: "Email", value: currentUser.email, verified: currentUser.emailVerified, type: "email" },
-    { name: "Nomor telepon", value: userDesc.phoneNumber ? userDesc.phoneNumber : false, type: "number" },
+    { name: "Nomor telepon", value: userDesc.phone_number ? userDesc.phone_number : false, type: "number" },
     { name: "User ID", value: currentUser.uid, type: "user-id" },
-    { name: "Alamat", value: userDesc.address ? userDesc.address : false, type: "text" }
+    { name: "Alamat Pengiriman", value: userDesc.addresses.delivery_address ? userDesc.addresses.delivery_address : false, type: "text" },
+    { name: "Kota", value: userDesc.addresses.public_address ? userDesc.addresses.public_address : false, type: "text" }
   ];
 
   const verifyEmailHandler = async (e) => {
@@ -60,7 +61,6 @@ function UserProfile({ currentUser, userDesc }) {
         message: "Profil telah di edit, sistem akan memuat ulang...",
         status: "success",
       })
-      console.log(editedUser?.phoneNumber);
       setButtonLoading(true);
       setTimeout(() => {
         window.location.reload();
@@ -111,7 +111,7 @@ function UserProfile({ currentUser, userDesc }) {
                     alignItems: "flex-start",
                   }}
                 >
-                  <table className="user__profile__table">
+                  <table className="user__profile__table" style={{ tableLayout: "fixed" }}>
                     <tbody>
                       {userData.map((data) => (
                         <tr key={data.name}>
@@ -120,7 +120,7 @@ function UserProfile({ currentUser, userDesc }) {
                               {data.name}
                             </Typography>
                           </td>
-                          <td key={data.value}>
+                          <td key={data.value} style={{ wordWrap: "break-word" }}>
                             <Stack direction="row" spacing={4} sx={{
                               alignItems: "center"
                             }}>
@@ -211,25 +211,50 @@ function UserProfile({ currentUser, userDesc }) {
                                           e.target.value = ""
                                           return setEditedUser((prev) => ({
                                             ...prev,
-                                            phoneNumber: userDesc?.phoneNumber
+                                            phone_number: userDesc?.phone_number
                                           }))
                                         } else {
                                           return setEditedUser((prev) => ({
                                             ...prev,
-                                            phoneNumber: Number(`+62${parseInt(e.target.value)}`),
+                                            phone_number: Number(`+62${parseInt(e.target.value)}`),
                                           }))
                                         }
-                                      case "Alamat":
+                                      case "Alamat Pengiriman":
                                         if (e.target.value === "") {
                                           e.target.value = ""
                                           return setEditedUser((prev) => ({
                                             ...prev,
-                                            address: userDesc?.address
+                                            addresses: {
+                                              ...prev?.addresses,
+                                              delivery_address: userDesc?.addresses?.delivery_address
+                                            }
                                           }))
                                         } else {
                                           return setEditedUser((prev) => ({
                                             ...prev,
-                                            address: e.target.value,
+                                            addresses: {
+                                              ...prev?.addresses,
+                                              delivery_address: e.target.value
+                                            }
+                                          }))
+                                        }
+                                      case "Kota":
+                                        if (e.target.value === "") {
+                                          e.target.value = ""
+                                          return setEditedUser((prev) => ({
+                                            ...prev,
+                                            addresses: {
+                                              ...prev?.addresses,
+                                              public_address: userDesc?.addresses?.public_address
+                                            }
+                                          }))
+                                        } else {
+                                          return setEditedUser((prev) => ({
+                                            ...prev,
+                                            addresses: {
+                                              ...prev?.addresses,
+                                              public_address: e.target.value
+                                            }
                                           }))
                                         }
                                       default:

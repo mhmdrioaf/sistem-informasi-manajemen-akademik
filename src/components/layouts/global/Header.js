@@ -7,10 +7,10 @@ import {
   ListItemText,
   Stack,
 } from "@mui/material";
-import "./GlobalHeader.scss";
+import { GiHamburgerMenu } from "react-icons/gi";
 import ListButton from "../../utils/ListButton";
 import color from "../../../styles/_color.scss";
-import { GiHamburgerMenu } from "react-icons/gi";
+import "./GlobalHeader.scss";
 
 function Header({ handlePageChange, activePage, tabs, logo }) {
   const [state, setState] = useState({

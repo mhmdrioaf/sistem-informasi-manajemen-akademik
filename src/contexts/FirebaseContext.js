@@ -9,7 +9,7 @@ import {
   sendEmailVerification,
 } from "firebase/auth";
 import { auth, db } from "../firebase";
-import { getDoc, doc, setDoc } from "firebase/firestore";
+import { getDoc, doc, setDoc, collection, getDocs } from "firebase/firestore";
 import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "../firebase";
 
@@ -31,31 +31,39 @@ export function AuthProvider({ children }) {
     );
   }
 
-  async function register(email, password, displayName, address, phoneNumber) {
+  async function register(newEmail, newPassword, newName, newAddresses, newPhoneNumber) {
     const registerUser = await createUserWithEmailAndPassword(
       auth,
-      email,
-      password
+      newEmail,
+      newPassword
     )
       .then((userCredential) => {
         const user = userCredential.user;
 
         updateProfile(user, {
-          displayName: displayName
+          displayName: newName
         }).then(() => {
           setDoc(doc(db, "users", user.uid), {
-            displayName: user.displayName,
+            id: user.uid,
+            name: user.displayName,
             email: user.email,
-            address: address,
-            phoneNumber: `0${phoneNumber}`,
+            addresses: newAddresses,
+            phone_number: newPhoneNumber,
+            profile_picture: "",
+            cart: [],
+            wishlist: [],
             role: "guest",
+          }).then(() => {
+            setDoc(doc(db, "users", user.uid, "orders", "order_status"), {
+              finished: [],
+              processed: [],
+            }).catch((error) => {
+              return error.code;
+            })
           }).catch((error) => {
             return error.code;
           });
         });
-
-        console.log(user);
-
         return true;
       })
       .catch((error) => {
@@ -69,7 +77,6 @@ export function AuthProvider({ children }) {
     return sendEmailVerification(currentUser).then(() => {
       return true
     }).catch((error) => {
-      console.log(error.code)
       return error.code;
     })
   }
@@ -146,6 +153,31 @@ export function AuthProvider({ children }) {
     else return null;
   }
 
+  async function fetchCollection(dataCol) {
+    const events = getDocs(collection(db, dataCol))
+      .then((querySnapshot) => {
+        const tempDoc = []
+        querySnapshot.forEach((doc) => {
+          tempDoc.push({ id: doc.id, ...doc.data() })
+        })
+
+        return tempDoc;
+      });
+
+    return events;
+  }
+
+  async function fetchSubDoc(dataCol, dataDoc, dataSubCol, dataSubDoc) {
+    const dataRef = doc(db, dataCol, dataDoc, dataSubCol, dataSubDoc);
+    const docSnap = await getDoc(dataRef);
+
+    if (docSnap.exists()) {
+      return docSnap.data();
+    } else {
+      return null;
+    }
+  }
+
   async function fetchAssets(path, child) {
     const assetsRef = ref(storage, `${path}/${child}`);
 
@@ -179,6 +211,8 @@ export function AuthProvider({ children }) {
     fetchConstants,
     fetchData,
     fetchAssets,
+    fetchCollection,
+    fetchSubDoc,
     currentUser,
   };
 

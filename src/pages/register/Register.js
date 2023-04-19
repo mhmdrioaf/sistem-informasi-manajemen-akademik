@@ -29,13 +29,7 @@ function Register() {
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     setButtonLoading(true);
-    const registerUser = await register(
-      data?.email,
-      data?.password,
-      data?.displayName,
-      data?.address,
-      data?.phoneNumber
-    );
+    const registerUser = await register(data.email, data.password, data.name, data.addresses, data.phone_number);
 
     if (registerUser !== true) {
       setError(registerUser);
@@ -113,7 +107,7 @@ function Register() {
               onChange={(e) =>
                 setData((prev) => ({
                   ...prev,
-                  displayName: e.target.value,
+                  name: e.target.value,
                 }))
               }
             />
@@ -128,14 +122,14 @@ function Register() {
               className="register__inputNumber"
               InputProps={{
                 startAdornment: (
-                  <InputAdornment sx={{ mr: 2 }}>
+                  <InputAdornment position="start">
                     <Typography>+62</Typography>
                   </InputAdornment>
                 )
               }}
               onChange={(e) => setData((prev) => ({
                 ...prev,
-                phoneNumber: e.target.value,
+                phone_number: Number(`+62${parseInt(e.target.value)}`),
               }))}
             />
 
@@ -144,13 +138,16 @@ function Register() {
               required
               type="text"
               variant="standard"
-              label="Alamat Lengkap"
+              label="Alamat"
               maxRows={4}
               multiline
               onChange={(e) =>
                 setData((prev) => ({
                   ...prev,
-                  address: e.target.value,
+                  addresses: {
+                    delivery_address: "",
+                    public_address: e.target.value,
+                  }
                 }))
               }
             />

@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import {
   LoginPage,
   ResetPasswordPage,
-  ProfilePage,
   RegisterPage,
+  UserPage,
 } from "./pages";
 import IndexPage from "./pages/index";
 import AdminIndexPage from "./pages/admin";
@@ -91,11 +91,11 @@ function App() {
             />
           </Route>
 
-          {/* guest user routes */}
+          {/* auntheticated user routes */}
           <Route element={<AuthenticatedRoute status={status} />}>
             <Route
-              path={ROUTES.PROFILE}
-              element={<ProfilePage currentUser={currentUser} userDesc={userDesc} />}
+              path={ROUTES.USER_HOME}
+              element={<UserPage currentUser={currentUser} userDesc={userDesc} />}
             />
           </Route>
 
