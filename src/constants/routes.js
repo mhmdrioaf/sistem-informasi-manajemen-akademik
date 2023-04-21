@@ -1,5 +1,6 @@
 export const LANDING = "/";
 export const MARKETPLACE = "/marketplace";
+export const MARKETPLACE_CATEGORY = "/marketplace/category/";
 export const LOGIN = "/login";
 export const E_LEARNING = "/e-learning";
 export const DASHBOARD = "/dashboard";
@@ -25,3 +26,6 @@ export const TEACHER_DASHBOARD = "/guru/dashboard";
 export const USER_HOME = "/user"
 export const USER_CART = "/user/cart"
 export const USER_PROFILE = "/user/profile"
+
+// seller routes
+export const SELLER_DASHBOARD = "/seller/dashboard";

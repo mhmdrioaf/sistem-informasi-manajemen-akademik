@@ -1,10 +1,11 @@
-import react from "react";
+import React from "react";
 import { MarketplaceHeader } from "../../components/layouts";
 
-function Marketplace() {
+function Marketplace({ currentUser, userDesc }) {
+
     return (
         <>
-            <MarketplaceHeader />
+            <MarketplaceHeader currentUser={currentUser} userDesc={userDesc} />
         </>
     )
 }

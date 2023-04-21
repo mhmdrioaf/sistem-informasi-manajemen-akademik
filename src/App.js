@@ -65,7 +65,7 @@ function App() {
             path={ROUTES.LANDING}
             element={<IndexPage currentUser={currentUser} />}
           />
-          <Route path={ROUTES.MARKETPLACE} element={<MarketplacePage />} />
+          <Route path={ROUTES.MARKETPLACE} element={<MarketplacePage currentUser={currentUser} userDesc={userDesc} />} />
 
           {/* admin routes */}
           <Route element={<AdminRoute userRole={userRole} status={status} />}>
