@@ -9,7 +9,8 @@
   animation: myTransition 0.5s ease;
   -moz-animation: myTransition 0.5s ease;
   -webkit-animation: myTransition 0.5s ease;
-  background-color: $headerBackground;
+  background-color: $backgroundColor;
+  color: $onBackgroundColor;
   top: 0;
   box-shadow: 0 0 0.2vw rgba(0, 0, 0, 0.3);
 }
@@ -48,7 +49,7 @@
     align-items: flex-start;
     justify-content: flex-start;
     flex-direction: column;
-    color: $onSurface;
+    color: $onBackgroundColor;
   }
 
   &__menu {
@@ -57,6 +58,18 @@
       justify-content: space-between;
       align-items: center;
       background-color: $primary;
+
+      a:link {
+        color: $onPrimary;
+      }
+
+      a:visited {
+        color: $onPrimary;
+      }
+
+      a:active {
+        color: $onPrimary;
+      }
 
       @include sm {
         display: none;
@@ -83,10 +96,10 @@
       width: 100%;
       justify-content: space-between;
       align-items: center;
-      color: $onSurface;
+      color: $onBackgroundColor;
       display: flex;
       flex-direction: row;
-      background-color: $headerBackground;
+      background-color: $backgroundColor;
       z-index: 10;
 
       @include sm {

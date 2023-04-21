@@ -28,14 +28,14 @@ function About() {
           md: "6.4rem",
           lg: "6.4rem",
         },
-        borderBottom: `.1vw solid ${color.subtitleOnSurface}`,
+        borderBottom: `.1vw solid ${color.outline}`,
       }}
     >
       <Stack direction="column" spacing={2} data-aos="zoom-in">
         <Typography
           sx={{
             fontSize: "1.6em",
-            color: color.onSurface,
+            color: color.onBackgroundColor,
             whiteSpace: "pre-line",
             fontWeight: "bold",
           }}
@@ -70,7 +70,7 @@ function About() {
             <Typography
               sx={{
                 fontSize: "1em",
-                color: color.subtitleOnSurface,
+                color: color.outline,
                 whiteSpace: "pre-line",
                 width: "100%",
                 textAlign: "justify",

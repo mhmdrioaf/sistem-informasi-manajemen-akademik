@@ -15,7 +15,7 @@ function FullPageLoading() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: color.surface,
+        backgroundColor: color.background,
       }}
     >
       <PrimaryLoading />

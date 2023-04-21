@@ -27,7 +27,7 @@ function Speech() {
           md: "6.4rem",
           lg: "6.4rem",
         },
-        borderBottom: `.1vw solid ${color.subtitleOnSurface}`,
+        borderBottom: `.1vw solid ${color.outline}`,
       }}
     >
       {/* speech title */}
@@ -43,7 +43,7 @@ function Speech() {
           sx={{
             fontSize: "1.6em",
             textAlign: "left",
-            color: color.onSurface,
+            color: color.onBackgroundColor,
             whiteSpace: "pre-line",
             fontWeight: "bold",
           }}
@@ -89,7 +89,7 @@ function Speech() {
               lg: "24vw",
             },
             borderRadius: "1.6vw",
-            boxShadow: `0 0 .4vw ${color.subtitleOnSurface}`,
+            boxShadow: `0 0 .4vw ${color.outline}`,
           }}
         />
 
@@ -97,7 +97,7 @@ function Speech() {
           <Typography
             sx={{
               fontSize: "1em",
-              color: color.subtitleOnSurface,
+              color: color.outline,
               whiteSpace: "pre-line",
               width: "100%",
               textAlign: {
@@ -114,7 +114,7 @@ function Speech() {
           <Typography
             sx={{
               fontSize: "1em",
-              color: color.subtitleOnSurface,
+              color: color.outline,
               whiteSpace: "pre-line",
               width: "100%",
               fontWeight: "bold",

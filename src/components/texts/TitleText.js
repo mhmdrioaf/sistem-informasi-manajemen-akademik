@@ -8,7 +8,7 @@ function TitleText({ title, subtitle }) {
       <Typography
         sx={{
           fontSize: "1.4em",
-          color: color.onSurface,
+          color: color.onBackground,
         }}
       >
         {title}
@@ -16,7 +16,7 @@ function TitleText({ title, subtitle }) {
       <Typography
         sx={{
           fontSize: ".8em",
-          color: color.subtitleOnSurface,
+          color: color.outline,
         }}
       >
         {subtitle}

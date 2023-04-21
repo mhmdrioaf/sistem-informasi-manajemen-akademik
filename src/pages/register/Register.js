@@ -185,7 +185,7 @@ function Register() {
             </PrimaryButton>
             <Typography
               sx={{ alignSelf: "center" }}
-              color={color.subtitleOnSurface}
+              color={color.outline}
               fontSize={".8em"}
             >
               Sudah punya akun?{" "}

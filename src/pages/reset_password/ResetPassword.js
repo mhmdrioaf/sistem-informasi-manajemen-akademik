@@ -57,8 +57,8 @@ function ResetPassword() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            backgroundColor: color.surface,
-            color: color.onSurface,
+            backgroundColor: color.backgroundColor,
+            color: color.onBackgroundColor,
           }}
         >
           <Stack

@@ -116,7 +116,7 @@ function UserProfile({ currentUser, userDesc }) {
                       {userData.map((data) => (
                         <tr key={data.name}>
                           <td key={data.name}>
-                            <Typography color={color.subtitleOnSurface}>
+                            <Typography color={color.outline}>
                               {data.name}
                             </Typography>
                           </td>
@@ -160,7 +160,7 @@ function UserProfile({ currentUser, userDesc }) {
                       {userData.map((data) => (
                         <tr key={data.name}>
                           <td key={data.name}>
-                            <Typography color={color.subtitleOnSurface}>
+                            <Typography color={color.outline}>
                               {data.name}
                             </Typography>
                           </td>

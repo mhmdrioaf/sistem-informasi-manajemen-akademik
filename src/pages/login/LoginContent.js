@@ -97,7 +97,7 @@ function LoginContent() {
           sx={{
             width: "100%",
             minHeight: "100vh",
-            backgroundColor: color.surface,
+            backgroundColor: color.backgroundColor,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -214,7 +214,7 @@ function LoginContent() {
             </PrimaryButton>
             <Typography
               sx={{ alignSelf: "center" }}
-              color={color.subtitleOnSurface}
+              color={color.outline}
               fontSize={".8em"}
             >
               Belum punya akun?{" "}

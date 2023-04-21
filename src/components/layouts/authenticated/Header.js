@@ -97,7 +97,7 @@ function Header({ handlePageChange, activePage, tabs, logo }) {
                             md: "none",
                             lg: "none",
                         },
-                        color: color.onSurface,
+                        color: color.onBackgroundColor,
                     }}
                 >
                     <GiHamburgerMenu />

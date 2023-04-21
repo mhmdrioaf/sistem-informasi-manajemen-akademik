@@ -5,6 +5,7 @@ import {
   ResetPasswordPage,
   RegisterPage,
   UserPage,
+  MarketplacePage,
 } from "./pages";
 import IndexPage from "./pages/index";
 import AdminIndexPage from "./pages/admin";
@@ -64,7 +65,7 @@ function App() {
             path={ROUTES.LANDING}
             element={<IndexPage currentUser={currentUser} />}
           />
-          <Route path={ROUTES.MARKETPLACE} element={<h1>Marketplace</h1>} />
+          <Route path={ROUTES.MARKETPLACE} element={<MarketplacePage />} />
 
           {/* admin routes */}
           <Route element={<AdminRoute userRole={userRole} status={status} />}>

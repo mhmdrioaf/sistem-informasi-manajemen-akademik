@@ -6,15 +6,16 @@ const PrimaryButton = styled(Button)({
   textAlign: "center",
   backgroundColor: color.primary,
   color: color.onPrimary,
-  padding: ".8rem",
+  padding: ".4rem 1.6rem",
   border: "none",
   borderRadius: ".4vw",
   fontFamily: `'Inter', sans-serif`,
   "&:hover": {
-    backgroundColor: "rgba(61, 152, 70, 0.9)",
+    backgroundColor: color.primaryHover,
+    transform: "none",
   },
   "&:disabled": {
-    backgroundColor: "rgba(61, 152, 70, 0.5)",
+    backgroundColor: color.primaryDisabled,
   },
 });
 

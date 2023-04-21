@@ -167,12 +167,6 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
           <Stack
             spacing={2}
             direction="row"
-            sx={{
-              color: color.onPrimary,
-              a: {
-                color: color.onPrimary,
-              },
-            }}
           >
             <Link href={socialLink.facebook} target="_blank">
               <BsFacebook />
@@ -227,7 +221,7 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
               sx={{
                 fontSize: ".8em",
                 fontWeight: "bold",
-                color: color.onSurface,
+                color: color.onBackgroundColor,
               }}
             >
               Yayasan Pendidikan Galeuh Pakuan
@@ -236,7 +230,7 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
               sx={{
                 fontSize: "1em",
                 fontWeight: "normal",
-                color: color.onSurface,
+                color: color.onBackgroundColor,
               }}
             >
               SMKS Korporasi Garut
@@ -255,7 +249,7 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
               md: "none",
               lg: "none",
             },
-            color: color.onSurface,
+            color: color.onBackgroundColor,
           }}
         >
           <GiHamburgerMenu />
@@ -278,7 +272,7 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
               fontSize: "1em",
               textTransform: "uppercase",
               fontWeight: "bold",
-              color: color.onSurface,
+              color: color.onBackgroundColor,
             }}
           >
             SMKs Korporasi Garut
@@ -288,7 +282,7 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
               fontSize: "1em",
               textTransform: "uppercase",
               fontWeight: "bold",
-              color: color.onSurface,
+              color: color.onBackgroundColor,
               display: {
                 xs: "none",
                 sm: "none",
