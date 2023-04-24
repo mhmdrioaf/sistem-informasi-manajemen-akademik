@@ -1,4 +1,6 @@
 @import "../../../styles/mixins";
+@import "../../../styles/color";
+@import "../../../styles/variables";
 
 .about {
   &__images {
@@ -91,6 +93,39 @@
       background-repeat: no-repeat;
       border-radius: 2vw;
       box-shadow: 0 0 0.2vw rgba(0, 0, 0, 0.3);
+    }
+  }
+}
+
+#about-section {
+  &-container {
+    width: 100%;
+    min-height: 100vh;
+    width: 100%;
+    min-height: 100vh;
+    border-bottom: 0.1vw solid $outlineColor;
+    justify-content: center;
+    color: $onSurface;
+    white-space: pre-line;
+    @include sm {
+      padding: $padding-sm;
+      padding-top: $dimension-sm;
+      padding-bottom: $dimension-sm;
+    }
+    @include md {
+      padding: $padding-md;
+      padding-top: $dimension-md;
+      padding-bottom: $dimension-md;
+    }
+    @include lg {
+      padding: $padding-lg;
+      padding-top: $dimension-lg;
+      padding-bottom: $dimension-lg;
+    }
+    @include xl {
+      padding: $padding-lg;
+      padding-top: $dimension-lg;
+      padding-bottom: $dimension-lg;
     }
   }
 }

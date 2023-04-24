@@ -22,6 +22,7 @@ import * as STATUS from "./constants/status";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "./firebase";
 import { doc, getDoc } from "firebase/firestore";
+import "./App.scss";
 
 function App() {
   const [userRole, setUserRole] = useState("guest");

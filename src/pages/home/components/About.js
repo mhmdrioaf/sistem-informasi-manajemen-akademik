@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
-import color from "../../../styles/_color.scss";
 import { Box, Stack, Typography } from "@mui/material";
-import "./Speech.scss";
-import AOS from "aos";
-import "aos/dist/aos.css";
 import { carousel_1, carousel_5 } from "../../../img";
+import AOS from "aos";
+import color from "../../../styles/_color.scss";
+import "aos/dist/aos.css";
 import "./About.scss";
+import "./Speech.scss";
 
 function About() {
   const aboutText =
@@ -16,30 +16,12 @@ function About() {
   }, []);
 
   return (
-    <Stack
+    <Stack id="about-section-container"
       direction="column"
       spacing={4}
-      sx={{
-        width: "100%",
-        minHeight: "100vh",
-        padding: {
-          xs: "1.6rem",
-          sm: "1.6rem",
-          md: "6.4rem",
-          lg: "6.4rem",
-        },
-        borderBottom: `.1vw solid ${color.outline}`,
-      }}
     >
       <Stack direction="column" spacing={2} data-aos="zoom-in">
-        <Typography
-          sx={{
-            fontSize: "1.6em",
-            color: color.onBackgroundColor,
-            whiteSpace: "pre-line",
-            fontWeight: "bold",
-          }}
-        >
+        <Typography fontWeight="bold" fontSize="1.6em">
           {"Tentang \n SMKS Korporasi Garut"}
         </Typography>
         <div className="divider" />
@@ -59,8 +41,7 @@ function About() {
             gap: "3.2vw",
           }}
         >
-          {/* about text container */}
-          <Stack
+          <Stack id="about-section-text"
             direction="column"
             spacing={2}
             sx={{ width: "100%" }}

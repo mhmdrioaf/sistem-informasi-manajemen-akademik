@@ -15,23 +15,11 @@ function Speech() {
   }, []);
 
   return (
-    <Stack
+    <Stack id="speech-container"
       direction="column"
-      spacing={4}
-      sx={{
-        width: "100%",
-        minHeight: "100vh",
-        padding: {
-          xs: "1.6rem",
-          sm: "1.6rem",
-          md: "6.4rem",
-          lg: "6.4rem",
-        },
-        borderBottom: `.1vw solid ${color.outline}`,
-      }}
+      spacing={8}
     >
-      {/* speech title */}
-      <Stack
+      <Stack id="speech-title"
         direction="column"
         data-aos="zoom-in"
         spacing={2}
@@ -53,8 +41,7 @@ function Speech() {
         <div className="divider" />
       </Stack>
 
-      {/* speech container */}
-      <Stack
+      <Stack id="speech-value"
         data-aos="fade-zoom-in"
         data-aos-easing="ease-in-sine"
         data-aos-delay="300"

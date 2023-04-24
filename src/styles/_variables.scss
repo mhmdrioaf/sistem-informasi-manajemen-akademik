@@ -3,7 +3,11 @@ $screen-md-min: 768px;
 $screen-lg-min: 992px;
 $screen-xl-min: 1200px;
 
-$padding-sm: 1.2rem 0.4rem;
+$dimension-sm: 1.6rem;
+$dimension-md: 4rem;
+$dimension-lg: 8rem;
+
+$padding-sm: 1.6rem;
 $padding-md: 0.4rem 4rem;
 $padding-lg: 0.4rem 8rem;
 
@@ -12,6 +16,9 @@ $padding-lg: 0.4rem 8rem;
   $screen-md-min: $screen-md-min;
   $screen-lg-min: $screen-lg-min;
   $screen-xl-min: $screen-xl-min;
+  $dimension-sm: $dimension-sm;
+  $dimension-md: $dimension-md;
+  $dimension-lg: $dimension-lg;
   $padding-sm: $padding-sm;
   $padding-md: $padding-md;
   $padding-lg: $padding-lg;

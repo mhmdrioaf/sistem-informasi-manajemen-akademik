@@ -4,7 +4,6 @@
 
 .sticky {
   position: sticky;
-  backdrop-filter: "blur(10px)";
   transition: position;
   animation: myTransition 0.5s ease;
   -moz-animation: myTransition 0.5s ease;
@@ -12,7 +11,7 @@
   background-color: $backgroundColor;
   color: $onBackgroundColor;
   top: 0;
-  box-shadow: 0 0 0.2vw rgba(0, 0, 0, 0.3);
+  border-bottom: 0.1vw solid $outlineColor;
 }
 
 @keyframes myTransition {
@@ -43,63 +42,16 @@
 }
 
 .header {
-  &__container {
-    width: 100%;
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    flex-direction: column;
-    color: $onBackgroundColor;
-  }
-
-  &__menu {
-    &__container {
-      width: 100%;
-      justify-content: space-between;
-      align-items: center;
-      background-color: $primary;
-
-      a:link {
-        color: $onPrimary;
-      }
-
-      a:visited {
-        color: $onPrimary;
-      }
-
-      a:active {
-        color: $onPrimary;
-      }
-
-      @include sm {
-        display: none;
-      }
-
-      @include md {
-        display: none;
-      }
-
-      @include lg {
-        padding: $padding-lg;
-        display: flex;
-      }
-
-      @include xl {
-        padding: $padding-lg;
-        display: flex;
-      }
-    }
-  }
-
   &__main {
     &__container {
       width: 100%;
       justify-content: space-between;
       align-items: center;
-      color: $onBackgroundColor;
       display: flex;
       flex-direction: row;
       background-color: $backgroundColor;
+      color: $onBackgroundColor;
+
       z-index: 10;
 
       @include sm {
@@ -121,7 +73,44 @@
   }
 }
 
+#sub-header {
+  &-container {
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $primary;
+
+    a {
+      color: $onPrimary;
+    }
+
+    @include sm {
+      display: none;
+    }
+
+    @include md {
+      display: none;
+    }
+
+    @include lg {
+      padding: $padding-lg;
+      display: flex;
+    }
+
+    @include xl {
+      padding: $padding-lg;
+      display: flex;
+    }
+  }
+}
+
 .link__container {
   align-items: center;
   color: $onPrimary;
+}
+
+.small-devices-title {
+  @include sm {
+    display: none;
+  }
 }

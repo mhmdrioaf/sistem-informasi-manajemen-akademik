@@ -1,7 +1,38 @@
 @import "../../../styles/color";
+@import "../../../styles/mixins";
+@import "../../../styles/variables";
 
 .divider {
   width: 8vw;
   height: 0.4vw;
   background-color: $primary;
+}
+
+#speech {
+  &-container {
+    width: 100%;
+    min-height: 100vh;
+    border-bottom: 0.1vw solid $outlineColor;
+    justify-content: center;
+    @include sm {
+      padding: $padding-sm;
+      padding-top: $dimension-sm;
+      padding-bottom: $dimension-sm;
+    }
+    @include md {
+      padding: $padding-md;
+      padding-top: $dimension-md;
+      padding-bottom: $dimension-md;
+    }
+    @include lg {
+      padding: $padding-lg;
+      padding-top: $dimension-lg;
+      padding-bottom: $dimension-lg;
+    }
+    @include xl {
+      padding: $padding-lg;
+      padding-top: $dimension-lg;
+      padding-bottom: $dimension-lg;
+    }
+  }
 }

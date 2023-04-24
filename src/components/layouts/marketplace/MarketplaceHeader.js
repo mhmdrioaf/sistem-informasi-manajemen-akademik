@@ -9,6 +9,7 @@ import {
     ListItemText,
     SwipeableDrawer,
     Divider,
+    Popover,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { GiHamburgerMenu, GiShop } from 'react-icons/gi';
@@ -27,19 +28,28 @@ import './MarketplaceHeader.scss';
 function MarketplaceHeader({ currentUser, userDesc }) {
 
     const [state, setState] = useState(false);
+    const [anchorElement, setAnchorElement] = useState(null);
+    const [searchQuery, setSearchQuery] = useState("");
     const navigate = useNavigate();
+    const searchInputOpen = Boolean(anchorElement);
+    const searchInputId = searchInputOpen ? "simple-popover" : undefined;
+    const searchSubmitHandler = (query) => {
+        if (query !== "") {
+            return navigate(`?search=${query}`)
+        }
+    }
     const navigationTabs = [
-        { name: "Home", value: <HiHome />, link: ROUTES.LANDING },
-        { name: "Profile", value: <BsFillPersonFill />, link: ROUTES.USER_HOME },
-        { name: "Marketplace", value: <AiFillShopping />, link: ROUTES.MARKETPLACE }
+        { name: "Home", value: <HiHome />, link: ROUTES.LANDING, id: "nav-tab-home" },
+        { name: "Profile", value: <BsFillPersonFill />, link: ROUTES.USER_HOME, id: "nav-tab-profile" },
+        { name: "Marketplace", value: <AiFillShopping />, link: ROUTES.MARKETPLACE, id: "nav-tab-marketplace" }
     ]
     const categoriesList = [
-        { name: "Olerikultura", value: "olerikultura" },
-        { name: "Frutikultura", value: "frutikultura" },
-        { name: "Florikultura", value: "florikultura" },
-        { name: "Biofarmaka", value: "biofarmaka" },
-        { name: "Makanan", value: "makanan" },
-        { name: "Minuman", value: "minuman" },
+        { name: "Olerikultura", value: "olerikultura", id: "olerikultura" },
+        { name: "Frutikultura", value: "frutikultura", id: "frutikultura" },
+        { name: "Florikultura", value: "florikultura", id: "florikultura" },
+        { name: "Biofarmaka", value: "biofarmaka", id: "biofarmaka" },
+        { name: "Makanan", value: "makanan", id: "makanan" },
+        { name: "Minuman", value: "minuman", id: "minuman" },
     ]
     const toggleDrawer = (open) => (event) => {
         if (
@@ -51,9 +61,10 @@ function MarketplaceHeader({ currentUser, userDesc }) {
 
         setState(open);
     };
-
-    // drawer menu list
-    const list = () => (
+    const handleSearchInputClick = (event) => {
+        setAnchorElement(event.currentTarget);
+    }
+    const drawerList = () => (
         <Stack
             alignItems="center"
             justifyContent="space-around"
@@ -64,10 +75,10 @@ function MarketplaceHeader({ currentUser, userDesc }) {
             gap={8}
         >
             <List>
-                {/* nav tabs */}
                 {navigationTabs.map((tab) => (
-                    <ListItem key={tab.name} sx={{ width: "100%" }}>
+                    <ListItem key={tab.id} sx={{ width: "100%" }}>
                         <Stack
+                            key={tab.id}
                             direction="row"
                             alignItems="center"
                             justifyContent="center"
@@ -87,11 +98,10 @@ function MarketplaceHeader({ currentUser, userDesc }) {
                             onClick={() => navigate(tab.link)}
                         >
                             {tab.value}
-                            <ListItemText primary={tab.name} />
+                            <ListItemText key={tab.id} primary={tab.name} />
                         </Stack>
                     </ListItem>
                 ))}
-                {/* if the user is seller, show seller dashboard menu */}
                 {userDesc?.role === ("admin" || "student" || "teacher") && (
                     <ListItem sx={{ width: "100%" }}>
                         <Stack
@@ -122,9 +132,8 @@ function MarketplaceHeader({ currentUser, userDesc }) {
                 <ListItem sx={{ width: "100%", alignItems: "center", justifyContent: "center" }}>
                     <Typography fontSize="1.6em" fontWeight="bold">Kategori</Typography>
                 </ListItem>
-                {/* categories tab */}
                 {categoriesList.map((category) => (
-                    <ListItem>
+                    <ListItem key={category.id}>
                         <Stack
                             direction="column"
                             gap={2}
@@ -155,16 +164,33 @@ function MarketplaceHeader({ currentUser, userDesc }) {
 
     return (
         <>
-            {/* header */}
-            <Stack direction="row" alignItems="center" justifyContent="space-between" gap={8} className="marketplace__header__container">
-                {/* logo container */}
-                <Stack direction="row" alignItems="center" justifyContent="start" gap={2} flexGrow={1}>
-                    {/* hamburger */}
-                    <IconButton disableRipple size="medium" className="icon" onClick={toggleDrawer(true)}>
+            <Stack id="header-container"
+                direction="row"
+                alignItems="center"
+                justifyContent="space-between"
+                gap={8}
+                className="marketplace__header__container"
+            >
+                <Stack id="logo-container"
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="start"
+                    gap={2}
+                    flexGrow={1}
+                >
+                    <IconButton id="icon-hamburger"
+                        disableRipple
+                        size="medium"
+                        className="icon"
+                        onClick={toggleDrawer(true)}
+                    >
                         <GiHamburgerMenu />
                     </IconButton>
-                    {/* logo */}
-                    <Stack direction="column" alignItems="start" justifyContent="center">
+                    <Stack id="header-logo"
+                        direction="column"
+                        alignItems="start"
+                        justifyContent="center"
+                    >
                         <Typography sx={{
                             display: {
                                 xs: "none",
@@ -176,32 +202,40 @@ function MarketplaceHeader({ currentUser, userDesc }) {
                         <Typography fontWeight="bold">Marketplace</Typography>
                     </Stack>
                 </Stack>
-                {/* search-bar container */}
-                <Stack alignItems="center" justifyContent="center" flexGrow={3} sx={{
-                    display: {
-                        xs: "none",
-                        sm: "none",
-                        md: "none",
-                        lg: "flex",
-                    }
-                }}>
+                <Stack id="search-bar-container"
+                    alignItems="center"
+                    justifyContent="center"
+                    flexGrow={3}
+                    sx={{
+                        display: {
+                            xs: "none",
+                            sm: "none",
+                            md: "none",
+                            lg: "flex",
+                        }
+                    }}
+                >
                     <BasicTextField
                         fullWidth
                         hiddenLabel
                         placeholder="Cari apa saja..."
                         variant="outlined"
-                        onChange={(e) => console.log(e.target.value)}
+                        onChange={(event) => setSearchQuery(event.target.value)}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
                                     <FaSearch />
                                 </InputAdornment>
+                            ),
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <PrimaryButton onClick={() => searchSubmitHandler(searchQuery)}>Cari</PrimaryButton>
+                                </InputAdornment>
                             )
                         }}
                     />
                 </Stack>
-                {/* nav container */}
-                <Stack
+                <Stack id="nav-container"
                     direction="row"
                     alignItems="center"
                     justifyContent="flex-end"
@@ -213,24 +247,56 @@ function MarketplaceHeader({ currentUser, userDesc }) {
                     }}
                     flexGrow={1}
                 >
-                    {/* TODO: show search-bar text input on icon click */}
-                    { /* search icon */}
-                    <IconButton disableRipple size="medium" onClick={() => console.log("cart")} className="icon" sx={{
-                        display: {
-                            xs: "flex",
-                            sm: "flex",
-                            md: "flex",
-                            lg: "none"
-                        }
-                    }}>
+                    <Popover
+                        id={searchInputId}
+                        open={searchInputOpen}
+                        anchorEl={anchorElement}
+                        onClose={() => setAnchorElement(null)}
+                        anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "left"
+                        }}
+                    >
+                        <BasicTextField
+                            hiddenLabel
+                            placeholder="Cari apa saja..."
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton onClick={() => searchSubmitHandler(searchQuery)}>
+                                            <FaSearch />
+                                        </IconButton>
+                                    </InputAdornment>
+                                )
+                            }}
+                            onChange={(event) => setSearchQuery(event.target.value)}
+                        />
+                    </Popover>
+                    <IconButton id="search-icon"
+                        disableRipple
+                        size="medium"
+                        onClick={(event) => handleSearchInputClick(event)}
+                        className="icon"
+                        sx={{
+                            display: {
+                                xs: "flex",
+                                sm: "flex",
+                                md: "flex",
+                                lg: "none"
+                            }
+                        }}
+                    >
                         <FaSearch />
                     </IconButton>
-                    {/* cart icon */}
-                    <IconButton disableRipple size="medium" onClick={() => console.log("cart")} className="icon">
+                    <IconButton id="cart-icon"
+                        disableRipple
+                        size="medium"
+                        onClick={() => console.log("cart")}
+                        className="icon"
+                    >
                         <FaShoppingCart />
                     </IconButton>
                     <div className="divider">d</div>
-                    {/* if the user isn't signed in */}
                     {!currentUser && (
                         <Stack direction="row" gap={2} sx={{
                             display: {
@@ -244,11 +310,9 @@ function MarketplaceHeader({ currentUser, userDesc }) {
                             <OutlinedButton variant="standard" onClick={() => navigate(ROUTES.REGISTER)}>Daftar</OutlinedButton>
                         </Stack>
                     )}
-                    {/* if the user is signed in */}
                     {currentUser && (
                         <Stack direction="row" alignItems="center" justifyContent="center">
-                            {/* notifications icon */}
-                            <IconButton
+                            <IconButton id="icon-notifications"
                                 disableRipple
                                 onClick={() => "profile"}
                                 className="icon"
@@ -260,14 +324,13 @@ function MarketplaceHeader({ currentUser, userDesc }) {
                     )}
                 </Stack>
             </Stack>
-            {/* drawer */}
             <SwipeableDrawer
                 anchor="left"
                 open={state}
                 onClose={toggleDrawer(false)}
                 onOpen={toggleDrawer(true)}
             >
-                {list()}
+                {drawerList()}
             </SwipeableDrawer>
         </>
     )

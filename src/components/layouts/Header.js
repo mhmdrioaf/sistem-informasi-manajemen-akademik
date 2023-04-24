@@ -60,7 +60,7 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
     setState({ ...state, [anchor]: open });
   };
 
-  const list = (anchor) => (
+  const drawerList = (anchor) => (
     <Stack
       sx={{
         width: anchor === "top" || anchor === "bottom" ? "auto" : 250,
@@ -71,7 +71,7 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-      <Link
+      <Link id="drawer-profile-link"
         href={currentUser ? ROUTES.USER_HOME : ROUTES.LOGIN}
         color="inherit"
         underline="none"
@@ -88,7 +88,10 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
         </List>
       </Link>
 
-      <Link href="/marketplace" color="inherit" underline="none">
+      <Link id="drawer-marketplace-link"
+        href={ROUTES.MARKETPLACE}
+        color="inherit"
+        underline="none">
         <List>
           <ListItem disablePadding>
             <ListButton>
@@ -125,10 +128,8 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
 
   return (
     <>
-      <Box className="header__container">
-        {/* dashboard menu container */}
-        <Stack
-          className="header__menu__container"
+      <Box className="sub-header-container">
+        <Stack id="sub-header-container"
           direction="row"
           sx={{
             display: {
@@ -139,11 +140,13 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
             },
           }}
         >
-          {/* dashboard link */}
 
-          <Stack direction={"row"} spacing={2}>
-            <Link
-              color={color.onPrimary}
+          <Stack id="sub-header-nav-links"
+            color="inherit"
+            direction="row"
+            spacing={2}
+          >
+            <Link id="sub-header-profile-link"
               underline="none"
               href={currentUser ? ROUTES.USER_HOME : ROUTES.LOGIN}
             >
@@ -155,7 +158,11 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
               </Stack>
             </Link>
 
-            <Link color={color.onPrimary} underline="none" href="/marketplace">
+            <Link id="sub-header-marketplace-link"
+              color={color.onPrimary}
+              underline="none"
+              href={ROUTES.MARKETPLACE}
+            >
               <Stack className="link__container" direction={"row"} spacing={1}>
                 <BsShop />
                 <Typography sx={{ fontSize: ".7em" }}>Marketplace</Typography>
@@ -163,8 +170,7 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
             </Link>
           </Stack>
 
-          {/* social media link */}
-          <Stack
+          <Stack id="sub-header-social-media-links"
             spacing={2}
             direction="row"
           >
@@ -187,15 +193,14 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
         </Stack>
       </Box>
 
-      {/* main header container */}
-      <Box
+      <Box id="header-container"
         className={
           scrollValue >= 75
             ? "header__main__container sticky"
             : "header__main__container"
         }
       >
-        <Stack
+        <Stack id="header-logo-container-small-devices"
           direction="row"
           spacing={2}
           sx={{
@@ -212,16 +217,16 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
             src={logoTutWuri}
             alt="logo tut wuri"
             style={{
-              width: "6vw",
-              height: "6vw",
+              minWidth: "4vw",
+              maxWidth: "8vw",
+              height: "auto",
             }}
           />
           <Stack direction="column" spacing={0}>
-            <Typography
+            <Typography className="small-devices-title"
               sx={{
                 fontSize: ".8em",
                 fontWeight: "bold",
-                color: color.onBackgroundColor,
               }}
             >
               Yayasan Pendidikan Galeuh Pakuan
@@ -230,7 +235,6 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
               sx={{
                 fontSize: "1em",
                 fontWeight: "normal",
-                color: color.onBackgroundColor,
               }}
             >
               SMKS Korporasi Garut
@@ -238,8 +242,7 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
           </Stack>
         </Stack>
 
-        {/* hamburger */}
-        <IconButton
+        <IconButton id="icon-hamburger"
           onClick={toggleDrawer("bottom", true)}
           size="medium"
           sx={{
@@ -255,8 +258,7 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
           <GiHamburgerMenu />
         </IconButton>
 
-        {/* header logo container*/}
-        <Stack
+        <Stack id="header-logo-container"
           spacing={0}
           sx={{
             display: {
@@ -272,7 +274,6 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
               fontSize: "1em",
               textTransform: "uppercase",
               fontWeight: "bold",
-              color: color.onBackgroundColor,
             }}
           >
             SMKs Korporasi Garut
@@ -282,7 +283,6 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
               fontSize: "1em",
               textTransform: "uppercase",
               fontWeight: "bold",
-              color: color.onBackgroundColor,
               display: {
                 xs: "none",
                 sm: "none",
@@ -295,8 +295,7 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
           </Typography>
         </Stack>
 
-        {/* navbar container*/}
-        <Stack
+        <Stack id="navbar-container"
           spacing={2}
           direction="row"
           sx={{
@@ -332,7 +331,7 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
           open={state["bottom"]}
           onClose={toggleDrawer("bottom", false)}
         >
-          {list("bottom")}
+          {drawerList("bottom")}
         </Drawer>
       </Box>
     </>
