@@ -1,28 +1,28 @@
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import {
-  LoginPage,
-  ResetPasswordPage,
-  RegisterPage,
-  UserPage,
-  MarketplacePage,
-} from "./pages";
-import IndexPage from "./pages/index";
-import AdminIndexPage from "./pages/admin";
-import { AuthProvider } from "./contexts/FirebaseContext";
-import {
-  AuthenticatedRoute,
-  NonAuthenticatedRoute,
-  AdminRoute,
-  StudentRoute,
-  TeacherRoute,
-} from "./routes";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import "./App.scss";
 import * as ROUTES from "./constants/routes";
 import * as STATUS from "./constants/status";
-import { onAuthStateChanged } from "firebase/auth";
+import { AuthProvider } from "./contexts/FirebaseContext";
 import { auth, db } from "./firebase";
-import { doc, getDoc } from "firebase/firestore";
-import "./App.scss";
+import {
+  LoginPage,
+  MarketplacePage,
+  RegisterPage,
+  ResetPasswordPage,
+  SellerPage,
+  UserPage,
+} from "./pages";
+import AdminIndexPage from "./pages/admin";
+import IndexPage from "./pages/index";
+import {
+  AdminRoute,
+  AuthenticatedRoute,
+  NonAuthenticatedRoute,
+  SellerRoute,
+} from "./routes";
 
 function App() {
   const [userRole, setUserRole] = useState("guest");
@@ -68,7 +68,6 @@ function App() {
           />
           <Route path={ROUTES.MARKETPLACE} element={<MarketplacePage currentUser={currentUser} userDesc={userDesc} />} />
 
-          {/* admin routes */}
           <Route element={<AdminRoute userRole={userRole} status={status} />}>
             <Route
               exact
@@ -77,23 +76,13 @@ function App() {
             />
           </Route>
 
-          {/* student routes */}
-          <Route element={<StudentRoute userRole={userRole} status={status} />}>
+          <Route element={<SellerRoute userRole={userRole} status={status} />}>
             <Route
-              path={ROUTES.STUDENT_DASHBOARD}
-              element={<h1>Student dashboard</h1>}
+              path={ROUTES.SELLER_HOME}
+              element={<SellerPage currentUser={currentUser} userDesc={userDesc} />}
             />
           </Route>
 
-          {/* teacher routes */}
-          <Route element={<TeacherRoute userRole={userRole} status={status} />}>
-            <Route
-              path={ROUTES.TEACHER_DASHBOARD}
-              element={<h1>Teacher dashboard</h1>}
-            />
-          </Route>
-
-          {/* auntheticated user routes */}
           <Route element={<AuthenticatedRoute status={status} />}>
             <Route
               path={ROUTES.USER_HOME}
@@ -101,7 +90,6 @@ function App() {
             />
           </Route>
 
-          {/* user not logged in routes */}
           <Route element={<NonAuthenticatedRoute status={status} />}>
             <Route path={ROUTES.LOGIN} element={<LoginPage />} />
             <Route path={ROUTES.REGISTER} element={<RegisterPage />} />

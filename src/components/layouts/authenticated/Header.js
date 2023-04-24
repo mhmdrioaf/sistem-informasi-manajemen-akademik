@@ -19,7 +19,7 @@ function Header({ handlePageChange, activePage, tabs, logo }) {
         setState(open)
     }
 
-    const menuList = (anchor) => (
+    const menuList = () => (
         <Stack
             sx={{
                 width: "auto",
@@ -72,7 +72,7 @@ function Header({ handlePageChange, activePage, tabs, logo }) {
                             <List key={tab.name}>
                                 <ListItem disablePadding>
                                     <IconButton
-
+                                        color="inherit"
                                         onClick={() => {
                                             handlePageChange(tab.value, index)
                                         }}
@@ -108,7 +108,7 @@ function Header({ handlePageChange, activePage, tabs, logo }) {
                     open={state}
                     onClose={toggleDrawer(false)}
                 >
-                    {menuList("bottom")}
+                    {menuList()}
                 </Drawer>
             </Stack>
         </>

@@ -1,8 +1,8 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
+import FullPageLoading from "../components/indicators/PrimaryLoading";
 import * as ROUTES from "../constants/routes";
 import * as STATUS from "../constants/status";
-import FullPageLoading from "../components/indicators/PrimaryLoading";
 
 const NonAuthenticatedRoute = ({ status }) => {
   switch (status) {
@@ -11,7 +11,7 @@ const NonAuthenticatedRoute = ({ status }) => {
     case STATUS.LOADING:
       return <FullPageLoading />;
     default:
-      return <Navigate to={ROUTES.PROFILE} />;
+      return <Navigate to={ROUTES.USER_HOME} />;
   }
 };
 

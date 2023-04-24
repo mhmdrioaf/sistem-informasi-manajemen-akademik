@@ -3,14 +3,15 @@ import { Navigate, Outlet } from "react-router-dom";
 import FullPageLoading from "../components/indicators/PrimaryLoading";
 import * as ROUTES from "../constants/routes";
 import * as STATUS from "../constants/status";
+import { NoAccessPage } from "../pages";
 
-function TeacherRoute({ userRole, status }) {
+function SellerRoute({ userRole, status }) {
   switch (status) {
     case STATUS.SUCCESS:
-      if (userRole === "teacher" || userRole === "admin") return <Outlet />;
-      else return <Navigate to={ROUTES.LANDING} />;
+      if (userRole === ("admin" || "student" || "teacher")) return <Outlet />;
+      else return <NoAccessPage />;
     case STATUS.AUTH_GUEST:
-      return <Navigate to={ROUTES.LANDING} />;
+      return <NoAccessPage />
     case STATUS.AUTH_NOT_LOGGED_IN:
       return <Navigate to={ROUTES.LOGIN} />;
     default:
@@ -18,4 +19,4 @@ function TeacherRoute({ userRole, status }) {
   }
 }
 
-export default TeacherRoute;
+export default SellerRoute;

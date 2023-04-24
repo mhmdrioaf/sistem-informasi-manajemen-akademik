@@ -121,7 +121,7 @@ function MarketplaceHeader({ currentUser, userDesc }) {
                                     color: color.onPrimary,
                                 }
                             }}
-                            onClick={() => navigate(ROUTES.SELLER_DASHBOARD)}
+                            onClick={() => navigate(ROUTES.SELLER_HOME)}
                         >
                             <GiShop />
                             <ListItemText primary="Seller Dashboard" />

@@ -73,3 +73,4 @@ export { default as ProfilePage } from "./user/profile/UserProfile";
 export { default as CartPage } from "./user/cart/UserCart";
 export { default as UserPage } from './user/User';
 export { default as MarketplacePage } from './marketplace/Marketplace';
+export { default as SellerPage } from "./user/seller";
