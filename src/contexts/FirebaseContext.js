@@ -10,7 +10,7 @@ import {
 } from "firebase/auth";
 import { auth, db } from "../firebase";
 import { getDoc, doc, setDoc, collection, getDocs } from "firebase/firestore";
-import { getDownloadURL, ref } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../firebase";
 
 const FirebaseContext = React.createContext();
@@ -96,6 +96,10 @@ export function AuthProvider({ children }) {
     }
 
     return updateUserData;
+  }
+
+  async function uploadImage(imageRef, imageFile) {
+    return uploadBytes(ref(storage, imageRef), imageFile)
   }
 
   async function logout() {
@@ -213,6 +217,7 @@ export function AuthProvider({ children }) {
     fetchAssets,
     fetchCollection,
     fetchSubDoc,
+    uploadImage,
     currentUser,
   };
 

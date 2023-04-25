@@ -20,12 +20,12 @@ function User({ currentUser, userDesc }) {
     const tabs = [
         {
             value: "profile",
-            name: "profil",
+            name: "Profil",
             element: <IoMdPerson />
         },
         {
             value: "cart",
-            name: "keranjang",
+            name: "Keranjang",
             element: <IoMdCart />
         },
     ]

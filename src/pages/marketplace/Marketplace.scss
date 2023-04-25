@@ -1,0 +1,28 @@
+@import "../../styles/color";
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+#marketplace {
+  &-body {
+    width: 100%;
+    min-height: 100vh;
+    background-color: $backgroundColor;
+    color: $onBackgroundColor;
+    @include sm {
+      padding: $padding-sm;
+    }
+    @include md {
+      padding: $padding-md;
+    }
+    @include lg {
+      padding: $padding-lg;
+    }
+    @include xl {
+      padding: $padding-lg;
+    }
+  }
+}
+
+.container {
+  background-color: $backgroundColor;
+}

@@ -1,24 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useAuth } from "../../../contexts/FirebaseContext";
-import { Divider, Stack, Box, Typography, Alert, InputAdornment } from "@mui/material";
+import { Divider, Stack, Box, Typography, Alert, InputAdornment, Avatar, Badge, IconButton } from "@mui/material";
 import BasicTextField from "../../../components/textfields/BasicTextField";
+import { IoIosCamera } from 'react-icons/io';
 import color from "../../../styles/_color.scss";
 import DangerButton from "../../../components/buttons/DangerButton";
 import InfoButton from "../../../components/buttons/InfoButton";
 import PrimaryButton from "../../../components/buttons/PrimaryButton";
 import TitleText from "../../../components/texts/TitleText";
 import "../User.scss";
+import { getDownloadURL } from "firebase/storage";
 
 function UserProfile({ currentUser, userDesc }) {
-  const { logout, verifyEmail, authErrorHandler, editUserData } = useAuth();
+  const { logout, verifyEmail, authErrorHandler, editUserData, uploadImage } = useAuth();
   const [verifyStatus, setVerifyStatus] = useState(null);
   const [editStatus, setEditStatus] = useState(null);
   const [buttonLoading, setButtonLoading] = useState(false);
+  const [disabledButton, setDisabledButton] = useState(true);
   const [isEmailVerified, setIsEmailVerified] = useState(currentUser.emailVerified);
   const [isEdit, setIsEdit] = useState(false);
   const [error, setError] = useState();
   const [editedUser, setEditedUser] = useState({});
-
+  const [selectedFile, setSelectedFile] = useState();
+  const [avatarPreview, setAvatarPreview] = useState();
+  const fileInput = useRef();
   const userData = [
     {
       name: "Nama",
@@ -51,10 +56,23 @@ function UserProfile({ currentUser, userDesc }) {
     }
   }
 
+  const avatarUploadHandler = async (newFile) => {
+    const imageRef = `assets/users/${currentUser?.uid}/profile_picture`
+    uploadImage(imageRef, newFile).then((snapshot) => {
+      getDownloadURL(snapshot.ref).then((downloadURL) => {
+        setDisabledButton(false);
+        setEditedUser((prev) => ({
+          ...prev,
+          profile_picture: downloadURL
+        }))
+      })
+    })
+  }
+
   const editUserHandler = async (e) => {
     e.preventDefault();
-
     const editUserDataStats = await editUserData(editedUser)
+    setDisabledButton(true)
 
     if (editUserDataStats === true) {
       setEditStatus({
@@ -77,8 +95,19 @@ function UserProfile({ currentUser, userDesc }) {
     setIsEmailVerified(currentUser.emailVerified);
   }, [currentUser])
 
-  // TODO: Make user can edit their password and add their profile picture as their identity.
+  useEffect(() => {
+    if (!selectedFile) {
+      setAvatarPreview(undefined);
+      return;
+    }
 
+    const objectURL = URL.createObjectURL(selectedFile)
+    setAvatarPreview(objectURL);
+
+    return () => URL.revokeObjectURL(objectURL);
+  }, [selectedFile])
+
+  // TODO: Make user can edit their password
   if (currentUser) {
     return (
       <>
@@ -111,6 +140,23 @@ function UserProfile({ currentUser, userDesc }) {
                     alignItems: "flex-start",
                   }}
                 >
+                  <Stack id="user-avatar"
+                    alignItems="center"
+                    justifyContent="center"
+                    width="100%"
+                    gap={2}
+                    sx={{
+                      mb: "4vw"
+                    }}
+                  >
+                    <Avatar
+                      src={userDesc?.profile_picture ? userDesc?.profile_picture : "/broken-image.jpg"}
+                      sx={{
+                        width: "128px",
+                        height: "128px"
+                      }}
+                    />
+                  </Stack>
                   <table className="user__profile__table" style={{ tableLayout: "fixed" }}>
                     <tbody>
                       {userData.map((data) => (
@@ -155,6 +201,63 @@ function UserProfile({ currentUser, userDesc }) {
                     alignItems: "flex-start",
                   }}
                 >
+                  <Stack id="user-avatar"
+                    alignItems="center"
+                    justifyContent="center"
+                    width="100%"
+                    gap={2}
+                    sx={{
+                      mb: "4vw"
+                    }}
+                  >
+                    <Badge
+                      overlap="circular"
+                      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                      badgeContent={
+                        <IconButton
+                          size="medium"
+                          disableRipple
+                          onClick={() => fileInput.current.click()}
+                          sx={{
+                            backgroundColor: color.primary,
+                            color: color.onPrimary
+                          }}
+                        >
+                          <input
+                            ref={fileInput}
+                            accept="image/*"
+                            multiple={false}
+                            type="file"
+                            onChange={(event) => {
+                              setSelectedFile(event.target.files[0])
+                              avatarUploadHandler(event.target.files[0])
+                            }}
+                            hidden
+                          />
+                          <IoIosCamera />
+                        </IconButton>
+                      }
+                    >
+                      {selectedFile && (
+                        <Avatar
+                          src={avatarPreview}
+                          sx={{
+                            width: "128px",
+                            height: "128px"
+                          }}
+                        />
+                      )}
+                      {!selectedFile && (
+                        <Avatar
+                          src={userDesc?.profile_picture ? userDesc?.profile_picture : "/broken-image.jpg"}
+                          sx={{
+                            width: "128px",
+                            height: "128px"
+                          }}
+                        />
+                      )}
+                    </Badge>
+                  </Stack>
                   <table className="user__profile__table">
                     <tbody>
                       {userData.map((data) => (
@@ -192,6 +295,7 @@ function UserProfile({ currentUser, userDesc }) {
                                           : data.value
                                   }
                                   onChange={(e) => {
+                                    setDisabledButton(false);
                                     switch (data.name) {
                                       case "Nama":
                                         if (e.target.value === "") {
@@ -277,10 +381,20 @@ function UserProfile({ currentUser, userDesc }) {
                     </tbody>
                   </table>
                 </Stack>
-                <PrimaryButton fullWidth onClick={(e) => editUserHandler(e)} disabled={buttonLoading}>
+                <PrimaryButton fullWidth onClick={(e) => editUserHandler(e)} disabled={disabledButton}>
                   Simpan
                 </PrimaryButton>
-                <DangerButton fullWidth onClick={() => setIsEdit(false)} disabled={buttonLoading}>Batal</DangerButton>
+                <DangerButton
+                  fullWidth
+                  onClick={() => {
+                    setIsEdit(false)
+                    setDisabledButton(true);
+                    setSelectedFile(undefined);
+                  }}
+                  disabled={buttonLoading}
+                >
+                  Batal
+                </DangerButton>
               </>
             )}
           </Stack>

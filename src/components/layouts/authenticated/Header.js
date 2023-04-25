@@ -2,7 +2,6 @@ import { Drawer, IconButton, List, ListItem, ListItemText, Stack } from "@mui/ma
 import { useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import ListButton from "../../utils/ListButton";
-import color from '../../../styles/_color.scss';
 import "./Authenticated.scss";
 
 function Header({ handlePageChange, activePage, tabs, logo }) {
@@ -97,7 +96,7 @@ function Header({ handlePageChange, activePage, tabs, logo }) {
                             md: "none",
                             lg: "none",
                         },
-                        color: color.onBackgroundColor,
+                        color: "inherit",
                     }}
                 >
                     <GiHamburgerMenu />
