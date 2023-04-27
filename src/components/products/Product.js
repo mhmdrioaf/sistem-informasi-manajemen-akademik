@@ -13,8 +13,18 @@ function Product({ product }) {
     return (
         <Stack id="product-container"
             sx={{
-                width: "22.222vw",
-                height: "31.111vw",
+                width: {
+                    xs: 160,
+                    sm: 160,
+                    md: 320,
+                    lg: 320,
+                },
+                height: {
+                    xs: 224,
+                    sm: 224,
+                    md: 448,
+                    lg: 448,
+                },
                 backgroundColor: color.primary,
                 backgroundImage: `url(${product?.pictures[0]})`,
                 backgroundPosition: "center",
@@ -22,8 +32,9 @@ function Product({ product }) {
                 backgroundRepeat: "no-repeat",
                 border: `.1vw solid ${color.outlineColor}`,
                 justifyContent: "flex-end",
-                borderRadius: ".8vw",
+                borderRadius: "6%",
                 cursor: "pointer",
+                overflow: "hidden"
             }}
         >
             <Stack id="product-description"
@@ -33,6 +44,12 @@ function Product({ product }) {
                     backgroundColor: color.tertiaryContainer,
                     color: color.onTertiaryContainer,
                     borderRadius: ".8vw",
+                    display: {
+                        xs: "none",
+                        sm: "none",
+                        md: "flex",
+                        lg: "flex",
+                    }
                 }}
             >
                 <Typography fontSize={24}>{product?.name}</Typography>
@@ -63,6 +80,45 @@ function Product({ product }) {
                             <AiFillStar color="yellow" />
                             <Typography fontSize={12} fontWeight="bold">4.5</Typography>
                         </Stack>
+                    </Stack>
+                </Stack>
+            </Stack>
+
+            <Stack id="product-description-small-devices"
+                spacing={1}
+                sx={{
+                    width: "100%",
+                    minHeight: "33.333%",
+                    backgroundColor: color.tertiaryContainer,
+                    padding: ".8em",
+                    display: {
+                        xs: "flex",
+                        sm: "flex",
+                        md: "none",
+                        lg: "none",
+                    },
+                    // borderTopLeftRadius: "12%",
+                    // borderTopRightRadius: "12%",
+                    borderRadius: "6%"
+                }}
+            >
+                <Typography fontSize=".8rem">{product?.name}</Typography>
+                <Typography fontSize=".8rem" fontWeight="bold">{rupiah(product?.price)}</Typography>
+                <Stack direction="row">
+                    <Stack
+                        alignItems="flex-start"
+                        direction="row"
+                        spacing={1}
+                    >
+                        <Typography fontSize=".8rem" fontWeight="bold">4.5</Typography>
+                        <div id="divider"
+                            style={{
+                                width: "1px",
+                                height: "100%",
+                                backgroundColor: color.outlineColor,
+                            }}
+                        />
+                        <Typography fontSize=".8rem">Terjual: 50</Typography>
                     </Stack>
                 </Stack>
             </Stack>

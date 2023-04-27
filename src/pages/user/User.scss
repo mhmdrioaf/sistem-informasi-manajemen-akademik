@@ -1,9 +1,12 @@
+@import "../../styles/color";
 @import "../../styles/variables";
 @import "../../styles/mixins";
 
 .user {
   &__profile {
     &__container {
+      background-color: $backgroundColor;
+      color: $onBackgroundColor;
       @include sm {
         padding: $padding-sm;
       }
@@ -26,23 +29,10 @@
     }
 
     &__table {
-      td {
-        @include sm {
-          padding: $padding-sm;
-        }
-
-        @include md {
-          padding: $padding-md;
-        }
-
-        @include lg {
-          padding: $padding-lg;
-        }
-
-        @include xl {
-          padding: $padding-lg;
-        }
-      }
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      border-spacing: 32px;
     }
   }
 }

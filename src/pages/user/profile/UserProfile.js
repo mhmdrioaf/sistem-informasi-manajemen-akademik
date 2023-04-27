@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useAuth } from "../../../contexts/FirebaseContext";
-import { Divider, Stack, Box, Typography, Alert, InputAdornment, Avatar, Badge, IconButton } from "@mui/material";
+import { Divider, Stack, Box, Typography, Alert, InputAdornment, Avatar, Badge, IconButton, AlertTitle, Modal } from "@mui/material";
 import BasicTextField from "../../../components/textfields/BasicTextField";
 import { IoIosCamera } from 'react-icons/io';
 import color from "../../../styles/_color.scss";
@@ -23,6 +23,9 @@ function UserProfile({ currentUser, userDesc }) {
   const [editedUser, setEditedUser] = useState({});
   const [selectedFile, setSelectedFile] = useState();
   const [avatarPreview, setAvatarPreview] = useState();
+  const [viewPhoto, setViewPhoto] = useState(false);
+  const handleOpenViewPhoto = () => setViewPhoto(true);
+  const handleCloseViewPhoto = () => setViewPhoto(false);
   const fileInput = useRef();
   const userData = [
     {
@@ -45,14 +48,16 @@ function UserProfile({ currentUser, userDesc }) {
 
     if (verifyEmailStats === true) {
       setVerifyStatus({
-        message: "Email verifikasi telah dikirim.",
-        status: "success"
+        message: "Email verifikasi telah dikirim. Silahkan cek email anda.",
+        status: "info"
       })
+      setIsEmailVerified(true);
     } else {
       setVerifyStatus({
         message: authErrorHandler(verifyEmailStats),
         status: "error"
       });
+      setIsEmailVerified(true);
     }
   }
 
@@ -76,7 +81,7 @@ function UserProfile({ currentUser, userDesc }) {
 
     if (editUserDataStats === true) {
       setEditStatus({
-        message: "Profil telah di edit, sistem akan memuat ulang...",
+        message: "Profil telah di edit, halaman akan memuat ulang...",
         status: "success",
       })
       setButtonLoading(true);
@@ -111,6 +116,68 @@ function UserProfile({ currentUser, userDesc }) {
   if (currentUser) {
     return (
       <>
+        {(!isEmailVerified && userDesc !== ("admin" || "student" || "teacher")) && (
+          <Alert severity="warning"
+            style={{
+              width: "100%",
+              position: "sticky",
+              zIndex: 5,
+            }}
+          >
+            <AlertTitle>Segera lakukan verifikasi email.</AlertTitle>
+            <Typography>
+              Untuk melakukan verifikasi, silakan klik <b onClick={(e) => verifyEmailHandler(e)} style={{ cursor: "pointer" }}>disini</b>
+            </Typography>
+          </Alert>
+        )}
+        {verifyStatus && (
+          <Alert
+            severity={verifyStatus?.status}
+            sx={{
+              width: "100%",
+              position: "sticky",
+              zIndex: 5,
+            }}
+          >
+            {verifyStatus?.message}
+          </Alert>
+        )}
+        {editStatus && (
+          <Alert
+            severity={editStatus?.status}
+            sx={{
+              width: "100%",
+              position: "fixed",
+              bottom: 0,
+              left: 0,
+              zIndex: 5,
+            }}
+          >
+            {editStatus?.message}
+          </Alert>
+        )}
+        {userDesc?.profile_picture && (
+          <Modal
+            open={viewPhoto}
+            onClose={handleCloseViewPhoto}
+          >
+            <Box sx={{
+              width: 400,
+              height: 400,
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              padding: 4,
+              backgroundImage: `url(${userDesc?.profile_picture})`,
+              backgroundSize: "contain",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
+              border: "none",
+              outline: "none",
+            }} />
+          </Modal>
+        )}
         <Box className="user__profile__container">
           <Stack className="user__profile__body" spacing={4}>
             <Stack spacing={2} sx={{ justifyContent: "center" }}>
@@ -119,17 +186,6 @@ function UserProfile({ currentUser, userDesc }) {
                 subtitle="Kelola informasi profil anda untuk mengontrol, melindungi dan mengamankan akun."
               />
               <Divider />
-              {editStatus && (
-                <Alert severity={editStatus?.status}>
-                  {editStatus?.message}
-                </Alert>
-              )}
-
-              {verifyStatus && (
-                <Alert severity={verifyStatus?.status}>
-                  {verifyStatus?.message}
-                </Alert>
-              )}
             </Stack>
 
             {!isEdit && (
@@ -138,6 +194,7 @@ function UserProfile({ currentUser, userDesc }) {
                   sx={{
                     width: "100%",
                     alignItems: "flex-start",
+                    overflow: "hidden",
                   }}
                 >
                   <Stack id="user-avatar"
@@ -153,36 +210,49 @@ function UserProfile({ currentUser, userDesc }) {
                       src={userDesc?.profile_picture ? userDesc?.profile_picture : "/broken-image.jpg"}
                       sx={{
                         width: "128px",
-                        height: "128px"
+                        height: "128px",
+                        border: `1px solid ${color.outlineColor}`,
+                        cursor: "pointer"
                       }}
+                      onClick={() => handleOpenViewPhoto()}
                     />
                   </Stack>
-                  <table className="user__profile__table" style={{ tableLayout: "fixed" }}>
-                    <tbody>
-                      {userData.map((data) => (
-                        <tr key={data.name}>
-                          <td key={data.name}>
-                            <Typography color={color.outline}>
-                              {data.name}
-                            </Typography>
-                          </td>
-                          <td key={data.value} style={{ wordWrap: "break-word" }}>
-                            <Stack direction="row" spacing={4} sx={{
-                              alignItems: "center"
-                            }}>
-                              <div>{data.value === false ? <Typography sx={{ color: "rgba(0,0,0,0.5)" }}>Belum di set.</Typography> : data.value}</div>
-                              <div>
-                                {userDesc?.role === "guest" && !isEmailVerified && data.hasOwnProperty("verified") && (
-                                  <PrimaryButton onClick={(e) => verifyEmailHandler(e)}>Verifikasi Email</PrimaryButton>
-                                )}
-                              </div>
-                            </Stack>
-                          </td>
-
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                  <Stack id="table-container"
+                    sx={{
+                      overflowX: "auto",
+                      width: "100%",
+                      alignItems: "center",
+                      border: `1px solid ${color.outlineColor}`,
+                      borderRadius: "4%"
+                    }}
+                  >
+                    <table
+                      style={{
+                        width: "100%",
+                        borderCollapse: "collapse",
+                        tableLayout: "fixed",
+                        borderSpacing: "32px",
+                      }}
+                    >
+                      <tbody>
+                        {userData.map((user) => (
+                          <tr key={user.name}>
+                            <td key={user.name} style={{ verticalAlign: "top", padding: "1rem" }}>
+                              {user.name}
+                            </td>
+                            <td key={user.name} style={{ wordWrap: "break-word", padding: "1rem" }}>
+                              {user.value === false ? (
+                                <Typography color={color.outlineColor}>
+                                  Belum di set.
+                                </Typography>
+                              ) : user.value
+                              }
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </Stack>
                 </Stack>
                 <InfoButton fullWidth onClick={() => setIsEdit(true)}>
                   Edit Profile
@@ -262,18 +332,24 @@ function UserProfile({ currentUser, userDesc }) {
                     <tbody>
                       {userData.map((data) => (
                         <tr key={data.name}>
-                          <td key={data.name}>
+                          <td key={data.name} style={{ verticalAlign: "top", padding: "1rem" }}>
                             <Typography color={color.outline}>
                               {data.name}
                             </Typography>
                           </td>
-                          <td key={data.value}>
+                          <td key={data.value} style={{ wordWrap: "break-word", padding: "1rem" }}>
                             {data.type !== "email" && data.type !== "user-id" && (
                               <>
                                 <BasicTextField
                                   fullWidth
                                   type={data.type}
                                   label={data.name}
+                                  minRows={
+                                    data.name === "Alamat Pengiriman" ? 2 : 1
+                                  }
+                                  multiline={
+                                    data.name === "Alamat Pengiriman" ? true : false
+                                  }
                                   InputProps={{
                                     startAdornment: (
                                       <>
@@ -398,12 +474,12 @@ function UserProfile({ currentUser, userDesc }) {
               </>
             )}
           </Stack>
-        </Box>
+        </Box >
       </>
     );
   }
 
-  return <h1>Profile page</h1>;
+  return <h1>Maintenance...</h1>;
 }
 
 export default UserProfile;

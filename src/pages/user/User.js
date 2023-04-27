@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Stack } from "@mui/material";
-import { IoMdCart, IoMdPerson } from "react-icons/io";
+import { IoMdCart, IoMdHome, IoMdPerson } from "react-icons/io";
 import UserProfile from "./profile/UserProfile";
 import UserCart from "./cart/UserCart";
 import Header from "../../components/layouts/authenticated/Header";
 
 function User({ currentUser, userDesc }) {
     const [page, setPage] = useState("profile");
-    const [activePage, setActivePage] = useState(0);
+    const [activePage, setActivePage] = useState(1);
 
     const navigate = useNavigate();
 
@@ -18,6 +18,11 @@ function User({ currentUser, userDesc }) {
     };
 
     const tabs = [
+        {
+            value: "home",
+            name: "Beranda",
+            element: <IoMdHome />
+        },
         {
             value: "profile",
             name: "Profil",
@@ -36,6 +41,8 @@ function User({ currentUser, userDesc }) {
                 return <UserProfile currentUser={currentUser} userDesc={userDesc} />
             case "cart":
                 return <UserCart currentUser={currentUser} userDesc={userDesc} />
+            case "home":
+                return navigate("/");
             default:
                 return navigate("/", "replace");
         }
