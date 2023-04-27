@@ -17,3 +17,5 @@ export const USER_PROFILE = "/user/profile"
 
 // seller routes
 export const SELLER_HOME = "/seller";
+
+export const PRODUCT_DETAIL = (productId) => `/product/${productId}`;

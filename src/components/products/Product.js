@@ -3,7 +3,7 @@ import React from "react";
 import { AiFillStar } from "react-icons/ai";
 import color from '../../styles/_color.scss';
 
-function Product({ product }) {
+function Product({ product, productLink }) {
     const rupiah = (number) => {
         return Intl.NumberFormat("id-ID", {
             style: "currency",
@@ -12,6 +12,8 @@ function Product({ product }) {
     }
     return (
         <Stack id="product-container"
+            component="a"
+            href={productLink}
             sx={{
                 width: {
                     xs: 160,
@@ -34,7 +36,9 @@ function Product({ product }) {
                 justifyContent: "flex-end",
                 borderRadius: "6%",
                 cursor: "pointer",
-                overflow: "hidden"
+                overflow: "hidden",
+                textDecoration: "none",
+                color: color.onTertiaryContainer,
             }}
         >
             <Stack id="product-description"

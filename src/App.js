@@ -23,6 +23,7 @@ import {
   NonAuthenticatedRoute,
   SellerRoute,
 } from "./routes";
+import ProductDetail from "./pages/marketplace/products/ProductDetail";
 
 function App() {
   const [userRole, setUserRole] = useState("guest");
@@ -67,6 +68,7 @@ function App() {
             element={<IndexPage currentUser={currentUser} />}
           />
           <Route path={ROUTES.MARKETPLACE} element={<MarketplacePage currentUser={currentUser} userDesc={userDesc} />} />
+          <Route path={"/product/:productId"} element={<ProductDetail currentUser={currentUser} userDesc={userDesc} />} />
 
           <Route element={<AdminRoute userRole={userRole} status={status} />}>
             <Route

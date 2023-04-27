@@ -1,15 +1,15 @@
-import React, { useEffect, useState, useRef } from "react";
-import { useAuth } from "../../../contexts/FirebaseContext";
-import { Divider, Stack, Box, Typography, Alert, InputAdornment, Avatar, Badge, IconButton, AlertTitle, Modal } from "@mui/material";
-import BasicTextField from "../../../components/textfields/BasicTextField";
+import { Alert, AlertTitle, Avatar, Badge, Box, Divider, IconButton, InputAdornment, Modal, Stack, Typography } from "@mui/material";
+import { getDownloadURL } from "firebase/storage";
+import React, { useEffect, useRef, useState } from "react";
 import { IoIosCamera } from 'react-icons/io';
-import color from "../../../styles/_color.scss";
 import DangerButton from "../../../components/buttons/DangerButton";
 import InfoButton from "../../../components/buttons/InfoButton";
 import PrimaryButton from "../../../components/buttons/PrimaryButton";
+import BasicTextField from "../../../components/textfields/BasicTextField";
 import TitleText from "../../../components/texts/TitleText";
+import { useAuth } from "../../../contexts/FirebaseContext";
+import color from "../../../styles/_color.scss";
 import "../User.scss";
-import { getDownloadURL } from "firebase/storage";
 
 function UserProfile({ currentUser, userDesc }) {
   const { logout, verifyEmail, authErrorHandler, editUserData, uploadImage } = useAuth();

@@ -25,4 +25,23 @@
 
 .container {
   background-color: $backgroundColor;
+  min-height: 100vh;
+}
+
+#product {
+  &-detail-container {
+    color: $onBackgroundColor;
+    @include sm {
+      padding: $padding-sm;
+    }
+    @include md {
+      padding: $padding-md;
+    }
+    @include lg {
+      padding: $padding-lg;
+    }
+    @include xl {
+      padding: $padding-lg;
+    }
+  }
 }

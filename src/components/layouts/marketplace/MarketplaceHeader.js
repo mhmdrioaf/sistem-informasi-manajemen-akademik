@@ -25,7 +25,7 @@ import * as ROUTES from '../../../constants/routes';
 import color from '../../../styles/_color.scss';
 import './MarketplaceHeader.scss';
 
-function MarketplaceHeader({ currentUser, userDesc }) {
+function MarketplaceHeader({ currentUser, userDesc, showSearchIcon }) {
 
     const [state, setState] = useState(false);
     const [anchorElement, setAnchorElement] = useState(null);
@@ -35,7 +35,7 @@ function MarketplaceHeader({ currentUser, userDesc }) {
     const searchInputId = searchInputOpen ? "simple-popover" : undefined;
     const searchSubmitHandler = (query) => {
         if (query !== "") {
-            return navigate(`?search=${query}`)
+            return navigate(`/marketplace?search=${query}`)
         }
     }
     const navigationTabs = [
@@ -78,6 +78,8 @@ function MarketplaceHeader({ currentUser, userDesc }) {
                 {navigationTabs.map((tab) => (
                     <ListItem key={tab.id} sx={{ width: "100%" }}>
                         <Stack
+                            component="a"
+                            href={tab.link}
                             key={tab.id}
                             direction="row"
                             alignItems="center"
@@ -87,6 +89,7 @@ function MarketplaceHeader({ currentUser, userDesc }) {
                                 backgroundColor: tab.name === "Marketplace" ? color.primaryContainer : color.surfaceVariant,
                                 color: tab.name === "Marketplace" ? color.onPrimaryContainer : color.onSurfaceVariant,
                                 width: "100%",
+                                textDecoration: "none",
                                 padding: ".8rem 2.4rem",
                                 borderRadius: ".8vw",
                                 cursor: "pointer",
@@ -95,7 +98,6 @@ function MarketplaceHeader({ currentUser, userDesc }) {
                                     color: color.onPrimary,
                                 }
                             }}
-                            onClick={() => navigate(tab.link)}
                         >
                             {tab.value}
                             <ListItemText key={tab.id} primary={tab.name} />
@@ -105,6 +107,8 @@ function MarketplaceHeader({ currentUser, userDesc }) {
                 {userDesc?.role === ("admin" || "student" || "teacher") && (
                     <ListItem sx={{ width: "100%" }}>
                         <Stack
+                            component="a"
+                            href={ROUTES.SELLER_HOME}
                             direction="row"
                             alignItems="center"
                             justifyContent="center"
@@ -116,12 +120,12 @@ function MarketplaceHeader({ currentUser, userDesc }) {
                                 padding: ".8rem 2.4rem",
                                 borderRadius: ".8vw",
                                 cursor: "pointer",
+                                textDecoration: "none",
                                 "&:hover": {
                                     backgroundColor: color.primary,
                                     color: color.onPrimary,
                                 }
                             }}
-                            onClick={() => navigate(ROUTES.SELLER_HOME)}
                         >
                             <GiShop />
                             <ListItemText primary="Seller Dashboard" />
@@ -135,6 +139,8 @@ function MarketplaceHeader({ currentUser, userDesc }) {
                 {categoriesList.map((category) => (
                     <ListItem key={category.id}>
                         <Stack
+                            component="a"
+                            href={`${ROUTES.MARKETPLACE_CATEGORY}${category.value}`}
                             direction="column"
                             gap={2}
                             alignItems="center"
@@ -147,12 +153,12 @@ function MarketplaceHeader({ currentUser, userDesc }) {
                                 width: "100%",
                                 borderRadius: ".8vw",
                                 cursor: "pointer",
+                                textDecoration: "none",
                                 "&:hover": {
                                     backgroundColor: color.primary,
                                     color: color.onPrimary
                                 }
                             }}
-                            onClick={() => navigate(`${ROUTES.MARKETPLACE_CATEGORY}${category.value}`)}
                         >
                             {category.name}
                         </Stack>
@@ -202,39 +208,41 @@ function MarketplaceHeader({ currentUser, userDesc }) {
                         <Typography fontWeight="bold">Marketplace</Typography>
                     </Stack>
                 </Stack>
-                <Stack id="search-bar-container"
-                    alignItems="center"
-                    justifyContent="center"
-                    flexGrow={3}
-                    sx={{
-                        display: {
-                            xs: "none",
-                            sm: "none",
-                            md: "none",
-                            lg: "flex",
-                        }
-                    }}
-                >
-                    <BasicTextField
-                        fullWidth
-                        hiddenLabel
-                        placeholder="Cari apa saja..."
-                        variant="outlined"
-                        onChange={(event) => setSearchQuery(event.target.value)}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <FaSearch />
-                                </InputAdornment>
-                            ),
-                            endAdornment: (
-                                <InputAdornment position="end">
-                                    <PrimaryButton onClick={() => searchSubmitHandler(searchQuery)}>Cari</PrimaryButton>
-                                </InputAdornment>
-                            )
+                {showSearchIcon && (
+                    <Stack id="search-bar-container"
+                        alignItems="center"
+                        justifyContent="center"
+                        flexGrow={3}
+                        sx={{
+                            display: {
+                                xs: "none",
+                                sm: "none",
+                                md: "none",
+                                lg: "flex",
+                            }
                         }}
-                    />
-                </Stack>
+                    >
+                        <BasicTextField
+                            fullWidth
+                            hiddenLabel
+                            placeholder="Cari apa saja..."
+                            variant="outlined"
+                            onChange={(event) => setSearchQuery(event.target.value)}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <FaSearch />
+                                    </InputAdornment>
+                                ),
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <PrimaryButton onClick={() => searchSubmitHandler(searchQuery)}>Cari</PrimaryButton>
+                                    </InputAdornment>
+                                )
+                            }}
+                        />
+                    </Stack>
+                )}
                 <Stack id="nav-container"
                     direction="row"
                     alignItems="center"
@@ -247,47 +255,51 @@ function MarketplaceHeader({ currentUser, userDesc }) {
                     }}
                     flexGrow={1}
                 >
-                    <Popover
-                        id={searchInputId}
-                        open={searchInputOpen}
-                        anchorEl={anchorElement}
-                        onClose={() => setAnchorElement(null)}
-                        anchorOrigin={{
-                            vertical: "bottom",
-                            horizontal: "left"
-                        }}
-                    >
-                        <BasicTextField
-                            hiddenLabel
-                            placeholder="Cari apa saja..."
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        <IconButton onClick={() => searchSubmitHandler(searchQuery)}>
-                                            <FaSearch />
-                                        </IconButton>
-                                    </InputAdornment>
-                                )
-                            }}
-                            onChange={(event) => setSearchQuery(event.target.value)}
-                        />
-                    </Popover>
-                    <IconButton id="search-icon"
-                        disableRipple
-                        size="medium"
-                        onClick={(event) => handleSearchInputClick(event)}
-                        className="icon"
-                        sx={{
-                            display: {
-                                xs: "flex",
-                                sm: "flex",
-                                md: "flex",
-                                lg: "none"
-                            }
-                        }}
-                    >
-                        <FaSearch />
-                    </IconButton>
+                    {showSearchIcon && (
+                        <>
+                            <Popover
+                                id={searchInputId}
+                                open={searchInputOpen}
+                                anchorEl={anchorElement}
+                                onClose={() => setAnchorElement(null)}
+                                anchorOrigin={{
+                                    vertical: "bottom",
+                                    horizontal: "left"
+                                }}
+                            >
+                                <BasicTextField
+                                    hiddenLabel
+                                    placeholder="Cari apa saja..."
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <IconButton onClick={() => searchSubmitHandler(searchQuery)}>
+                                                    <FaSearch />
+                                                </IconButton>
+                                            </InputAdornment>
+                                        )
+                                    }}
+                                    onChange={(event) => setSearchQuery(event.target.value)}
+                                />
+                            </Popover>
+                            <IconButton id="search-icon"
+                                disableRipple
+                                size="medium"
+                                onClick={(event) => handleSearchInputClick(event)}
+                                className="icon"
+                                sx={{
+                                    display: {
+                                        xs: "flex",
+                                        sm: "flex",
+                                        md: "flex",
+                                        lg: "none"
+                                    }
+                                }}
+                            >
+                                <FaSearch />
+                            </IconButton>
+                        </>
+                    )}
                     <IconButton id="cart-icon"
                         disableRipple
                         size="medium"
