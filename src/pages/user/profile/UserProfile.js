@@ -240,7 +240,7 @@ function UserProfile({ currentUser, userDesc }) {
                             <td key={user.name} style={{ verticalAlign: "top", padding: "1rem" }}>
                               {user.name}
                             </td>
-                            <td key={user.name} style={{ wordWrap: "break-word", padding: "1rem" }}>
+                            <td key={user.value} style={{ wordWrap: "break-word", padding: "1rem" }}>
                               {user.value === false ? (
                                 <Typography color={color.outlineColor}>
                                   Belum di set.
@@ -367,7 +367,7 @@ function UserProfile({ currentUser, userDesc }) {
                                       : (data.value === false && data.type === "number")
                                         ? "8123456789"
                                         : (data.type === "number")
-                                          ? parseInt(data.value.toString().substring(2))
+                                          ? parseInt(data.value.toString().substring(2)).toString()
                                           : data.value
                                   }
                                   onChange={(e) => {
