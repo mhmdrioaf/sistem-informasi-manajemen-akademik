@@ -1,6 +1,6 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { NoAccessPage } from "../pages";
+import { NoAccessPage } from "../pages/Landing";
 import FullPageLoading from "../components/indicators/PrimaryLoading";
 import * as ROUTES from "../constants/routes";
 import * as STATUS from "../constants/status";

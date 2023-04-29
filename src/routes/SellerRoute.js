@@ -3,7 +3,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import FullPageLoading from "../components/indicators/PrimaryLoading";
 import * as ROUTES from "../constants/routes";
 import * as STATUS from "../constants/status";
-import { NoAccessPage } from "../pages";
+import { NoAccessPage } from "../pages/Landing";
 
 function SellerRoute({ userRole, status }) {
   switch (status) {
@@ -11,7 +11,7 @@ function SellerRoute({ userRole, status }) {
       if (userRole === ("admin" || "student" || "teacher")) return <Outlet />;
       else return <NoAccessPage />;
     case STATUS.AUTH_GUEST:
-      return <NoAccessPage />
+      return <NoAccessPage />;
     case STATUS.AUTH_NOT_LOGGED_IN:
       return <Navigate to={ROUTES.LOGIN} />;
     default:

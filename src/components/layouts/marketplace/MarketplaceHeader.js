@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { GiHamburgerMenu, GiShop } from 'react-icons/gi';
 import { BsFillPersonFill } from 'react-icons/bs';
 import { FaShoppingCart, FaSearch } from 'react-icons/fa';
-import { IoMdNotifications } from 'react-icons/io';
+import { IoMdLogIn, IoMdNotifications } from 'react-icons/io';
 import { HiHome } from "react-icons/hi";
 import { AiFillShopping } from "react-icons/ai";
 import OutlinedButton from '../../buttons/OutlinedButton';
@@ -40,7 +40,12 @@ function MarketplaceHeader({ currentUser, userDesc, showSearchIcon }) {
     }
     const navigationTabs = [
         { name: "Home", value: <HiHome />, link: ROUTES.LANDING, id: "nav-tab-home" },
-        { name: "Profile", value: <BsFillPersonFill />, link: ROUTES.USER_HOME, id: "nav-tab-profile" },
+        {
+            name: currentUser ? "Profile" : "Login",
+            value: currentUser ? <BsFillPersonFill /> : <IoMdLogIn />,
+            link: currentUser ? ROUTES.USER_HOME : ROUTES.LOGIN,
+            id: currentUser ? "nav-tab-profile" : "nav-tab-login"
+        },
         { name: "Marketplace", value: <AiFillShopping />, link: ROUTES.MARKETPLACE, id: "nav-tab-marketplace" }
     ]
     const categoriesList = [

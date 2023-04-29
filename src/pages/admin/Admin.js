@@ -1,11 +1,14 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Stack, Typography } from "@mui/material";
-import { AdminDashboardPage, AdminStudentPage } from "..";
+import React, { Suspense, lazy, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import FullPageLoading from "../../components/indicators/PrimaryLoading";
 import Header from "../../components/layouts/global/Header";
 import * as ROUTES from "../../constants/routes";
 
-function AdminIndexPage() {
+const AdminDashboardPage = lazy(() => import("./dashboard/AdminDashboard"));
+const AdminStudentPage = lazy(() => import("./student/AdminStudent"));
+
+function Admin() {
   const [page, setPage] = useState(ROUTES.ADMIN_DASHBOARD);
   const [activePage, setActivePage] = useState(0);
 
@@ -19,9 +22,17 @@ function AdminIndexPage() {
   const pagesList = () => {
     switch (page) {
       case ROUTES.ADMIN_DASHBOARD:
-        return <AdminDashboardPage />;
+        return (
+          <Suspense fallback={<FullPageLoading />}>
+            <AdminDashboardPage />
+          </Suspense>
+        );
       case ROUTES.ADMIN_STUDENTS:
-        return <AdminStudentPage />;
+        return (
+          <Suspense fallback={<FullPageLoading />}>
+            <AdminStudentPage />
+          </Suspense>
+        );
       default:
         return navigate("/404");
     }
@@ -48,4 +59,4 @@ function AdminIndexPage() {
   );
 }
 
-export default AdminIndexPage;
+export default Admin;

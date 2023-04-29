@@ -1,29 +1,33 @@
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, lazy, useEffect, useState } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.scss";
+import FullPageLoading from "./components/indicators/PrimaryLoading";
 import * as ROUTES from "./constants/routes";
 import * as STATUS from "./constants/status";
 import { AuthProvider } from "./contexts/FirebaseContext";
 import { auth, db } from "./firebase";
-import {
-  LoginPage,
-  MarketplacePage,
-  RegisterPage,
-  ResetPasswordPage,
-  SellerPage,
-  UserPage,
-} from "./pages";
-import AdminIndexPage from "./pages/admin";
-import IndexPage from "./pages/index";
 import {
   AdminRoute,
   AuthenticatedRoute,
   NonAuthenticatedRoute,
   SellerRoute,
 } from "./routes";
-import ProductDetail from "./pages/marketplace/products/ProductDetail";
+
+const LoginPage = lazy(() => import("./pages/login/Login"));
+const MarketplacePage = lazy(() => import("./pages/marketplace/Marketplace"));
+const RegisterPage = lazy(() => import("./pages/register/Register"));
+const ResetPasswordPage = lazy(() =>
+  import("./pages/reset_password/ResetPassword")
+);
+const SellerPage = lazy(() => import("./pages/user/seller/Seller"));
+const UserPage = lazy(() => import("./pages/user/User"));
+const AdminPage = lazy(() => import("./pages/admin/Admin"));
+const ProductDetailPage = lazy(() =>
+  import("./pages/marketplace/products/ProductDetail")
+);
+const LandingPage = lazy(() => import("./pages/Landing"));
 
 function App() {
   const [userRole, setUserRole] = useState("guest");
@@ -65,39 +69,107 @@ function App() {
           <Route
             exact
             path={ROUTES.LANDING}
-            element={<IndexPage currentUser={currentUser} />}
+            element={
+              <Suspense fallback={<FullPageLoading />}>
+                <LandingPage currentUser={currentUser} />
+              </Suspense>
+            }
           />
-          <Route path={ROUTES.MARKETPLACE} element={<MarketplacePage currentUser={currentUser} userDesc={userDesc} />} />
-          <Route path={"/product/:productId"} element={<ProductDetail currentUser={currentUser} userDesc={userDesc} />} />
+          <Route
+            path={ROUTES.MARKETPLACE}
+            element={
+              <Suspense fallback={<FullPageLoading />}>
+                <MarketplacePage
+                  currentUser={currentUser}
+                  userDesc={userDesc}
+                />
+              </Suspense>
+            }
+          />
+          <Route
+            path={"/product/:productId"}
+            element={
+              <Suspense fallback={<FullPageLoading />}>
+                <ProductDetailPage
+                  currentUser={currentUser}
+                  userDesc={userDesc}
+                />
+              </Suspense>
+            }
+          />
 
-          <Route element={<AdminRoute userRole={userRole} status={status} />}>
-            <Route
-              exact
-              path={ROUTES.ADMIN_HOME}
-              element={<AdminIndexPage />}
-            />
+          <Route
+            element={
+              <Suspense fallback={<FullPageLoading />}>
+                <AdminRoute userRole={userRole} status={status} />
+              </Suspense>
+            }
+          >
+            <Route exact path={ROUTES.ADMIN_HOME} element={<AdminPage />} />
           </Route>
 
-          <Route element={<SellerRoute userRole={userRole} status={status} />}>
+          <Route
+            element={
+              <Suspense fallback={<FullPageLoading />}>
+                <SellerRoute userRole={userRole} status={status} />
+              </Suspense>
+            }
+          >
             <Route
               path={ROUTES.SELLER_HOME}
-              element={<SellerPage currentUser={currentUser} userDesc={userDesc} />}
+              element={
+                <SellerPage currentUser={currentUser} userDesc={userDesc} />
+              }
             />
           </Route>
 
-          <Route element={<AuthenticatedRoute status={status} />}>
+          <Route
+            element={
+              <Suspense fallback={<FullPageLoading />}>
+                <AuthenticatedRoute status={status} />
+              </Suspense>
+            }
+          >
             <Route
               path={ROUTES.USER_HOME}
-              element={<UserPage currentUser={currentUser} userDesc={userDesc} />}
+              element={
+                <Suspense fallback={<FullPageLoading />}>
+                  <UserPage currentUser={currentUser} userDesc={userDesc} />
+                </Suspense>
+              }
             />
           </Route>
 
-          <Route element={<NonAuthenticatedRoute status={status} />}>
-            <Route path={ROUTES.LOGIN} element={<LoginPage />} />
-            <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
+          <Route
+            element={
+              <Suspense fallback={<FullPageLoading />}>
+                <NonAuthenticatedRoute status={status} />
+              </Suspense>
+            }
+          >
+            <Route
+              path={ROUTES.LOGIN}
+              element={
+                <Suspense fallback={<FullPageLoading />}>
+                  <LoginPage />
+                </Suspense>
+              }
+            />
+            <Route
+              path={ROUTES.REGISTER}
+              element={
+                <Suspense fallback={<FullPageLoading />}>
+                  <RegisterPage />
+                </Suspense>
+              }
+            />
             <Route
               path={ROUTES.PASSWORD_RESET}
-              element={<ResetPasswordPage />}
+              element={
+                <Suspense fallback={<FullPageLoading />}>
+                  <ResetPasswordPage />
+                </Suspense>
+              }
             />
           </Route>
         </Routes>
