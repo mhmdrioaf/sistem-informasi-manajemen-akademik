@@ -6,6 +6,7 @@ import BasicTextField from "../../components/textfields/BasicTextField";
 import PrimaryButton from "../../components/buttons/PrimaryButton";
 import FullPageLoading from "../../components/indicators/PrimaryLoading";
 import * as ROUTES from "../../constants/routes";
+import { IoMdHome, IoMdArrowBack } from "react-icons/io";
 import color from "../../styles/_color.scss";
 import {
   Box,
@@ -97,7 +98,7 @@ function LoginContent() {
           sx={{
             width: "100%",
             minHeight: "100vh",
-            backgroundColor: color.backgroundColor,
+            backgroundColor: color.surfaceVariant,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -116,11 +117,39 @@ function LoginContent() {
               justifyContent: "center",
               alignItems: "center",
               padding: "1.6rem",
-              backgroundColor: "#FFF",
+              backgroundColor: color.surface,
               borderRadius: ".4vw",
+              position: "relative",
             }}
             spacing={4}
           >
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+              }}
+            >
+              <IconButton
+                onClick={() => navigate(ROUTES.LANDING)}
+                disableRipple
+                size="small"
+                color={color.onSurface}
+                sx={{
+                  borderRadius: 0,
+                  backgroundColor: color.tertiaryContainer,
+                  color: color.onTertiaryContainer,
+                  "&:hover": {
+                    backgroundColor: color.tertiary,
+                    color: color.onTertiary,
+                  },
+                }}
+              >
+                <>
+                  <IoMdArrowBack /> <IoMdHome />
+                </>
+              </IconButton>
+            </div>
             {/* login title */}
             <img
               src={assets.image}

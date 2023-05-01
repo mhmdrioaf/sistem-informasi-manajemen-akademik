@@ -36,3 +36,31 @@
     }
   }
 }
+
+.cart {
+  &-product {
+    &-container {
+      @include sm {
+        padding: $padding-sm;
+      }
+      @include md {
+        padding: $padding-md;
+      }
+      @include lg {
+        padding: $padding-lg;
+      }
+      @include xl {
+        padding: $padding-lg;
+      }
+    }
+    &-card {
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+      background-color: $tertiaryContainer;
+      color: $onTertiaryContainer;
+      padding: 2em;
+      border-radius: 1rem;
+    }
+  }
+}

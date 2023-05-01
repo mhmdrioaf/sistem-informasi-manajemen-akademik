@@ -1,5 +1,5 @@
 import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import React, { Suspense, lazy, useEffect, useState } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.scss";
@@ -14,6 +14,7 @@ import {
   NonAuthenticatedRoute,
   SellerRoute,
 } from "./routes";
+import UserCart from "./pages/user/cart/UserCart";
 
 const LoginPage = lazy(() => import("./pages/login/Login"));
 const MarketplacePage = lazy(() => import("./pages/marketplace/Marketplace"));
@@ -46,7 +47,6 @@ function App() {
 
           if (docSnap.exists()) {
             setUserRole(docSnap.data().role);
-            setUserDesc(docSnap.data());
             setStatus(STATUS.SUCCESS);
           } else {
             setUserRole("guest");
@@ -57,6 +57,16 @@ function App() {
         fetchUser();
       } else {
         setStatus(STATUS.AUTH_NOT_LOGGED_IN);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        onSnapshot(doc(db, "users", user?.uid), (doc) => {
+          setUserDesc(doc.data());
+        });
       }
     });
   }, []);
@@ -135,6 +145,15 @@ function App() {
               element={
                 <Suspense fallback={<FullPageLoading />}>
                   <UserPage currentUser={currentUser} userDesc={userDesc} />
+                </Suspense>
+              }
+            />
+
+            <Route
+              path={ROUTES.USER_CART}
+              element={
+                <Suspense fallback={<FullPageLoading />}>
+                  <UserCart currentUser={currentUser} userDesc={userDesc} />
                 </Suspense>
               }
             />

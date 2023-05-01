@@ -31,13 +31,15 @@ function Marketplace({ currentUser, userDesc }) {
         currentUser={currentUser}
         userDesc={userDesc}
         showSearchIcon={true}
+        showCartIcon={true}
+        showCategoriesList={true}
       />
       <Stack id="marketplace-body" alignItems="flex-start" gap={2}>
         <Typography fontSize="1.6em" fontWeight="medium" fontFamily="inherit">
           Produk Pilihan
         </Typography>
         {products?.map((product) => (
-          <Suspense fallback={<ProductCardSkeleton />}>
+          <Suspense key={product?.id} fallback={<ProductCardSkeleton />}>
             <ProductCard
               product={product}
               productLink={ROUTES.PRODUCT_DETAIL(product.id)}

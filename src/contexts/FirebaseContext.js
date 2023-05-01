@@ -9,7 +9,14 @@ import {
   sendEmailVerification,
 } from "firebase/auth";
 import { auth, db } from "../firebase";
-import { getDoc, doc, setDoc, collection, getDocs } from "firebase/firestore";
+import {
+  getDoc,
+  doc,
+  setDoc,
+  collection,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../firebase";
 
@@ -31,7 +38,13 @@ export function AuthProvider({ children }) {
     );
   }
 
-  async function register(newEmail, newPassword, newName, newAddresses, newPhoneNumber) {
+  async function register(
+    newEmail,
+    newPassword,
+    newName,
+    newAddresses,
+    newPhoneNumber
+  ) {
     const registerUser = await createUserWithEmailAndPassword(
       auth,
       newEmail,
@@ -41,7 +54,7 @@ export function AuthProvider({ children }) {
         const user = userCredential.user;
 
         updateProfile(user, {
-          displayName: newName
+          displayName: newName,
         }).then(() => {
           setDoc(doc(db, "users", user.uid), {
             id: user.uid,
@@ -53,16 +66,18 @@ export function AuthProvider({ children }) {
             cart: [],
             wishlist: [],
             role: "guest",
-          }).then(() => {
-            setDoc(doc(db, "users", user.uid, "orders", "order_status"), {
-              finished: [],
-              processed: [],
-            }).catch((error) => {
-              return error.code;
+          })
+            .then(() => {
+              setDoc(doc(db, "users", user.uid, "orders", "order_status"), {
+                finished: [],
+                processed: [],
+              }).catch((error) => {
+                return error.code;
+              });
             })
-          }).catch((error) => {
-            return error.code;
-          });
+            .catch((error) => {
+              return error.code;
+            });
         });
         return true;
       })
@@ -74,21 +89,25 @@ export function AuthProvider({ children }) {
   }
 
   async function verifyEmail() {
-    return sendEmailVerification(currentUser).then(() => {
-      return true
-    }).catch((error) => {
-      return error.code;
-    })
+    return sendEmailVerification(currentUser)
+      .then(() => {
+        return true;
+      })
+      .catch((error) => {
+        return error.code;
+      });
   }
 
   async function editUserData(editedUser) {
     const updateUserData = await updateProfile(currentUser, {
-      displayName: editedUser?.displayName
-    }).then(() => {
-      return true;
-    }).catch((error) => {
-      return error.code
+      displayName: editedUser?.displayName,
     })
+      .then(() => {
+        return true;
+      })
+      .catch((error) => {
+        return error.code;
+      });
 
     if (updateUserData === true) {
       const userRef = doc(db, "users", currentUser.uid);
@@ -99,7 +118,7 @@ export function AuthProvider({ children }) {
   }
 
   async function uploadImage(imageRef, imageFile) {
-    return uploadBytes(ref(storage, imageRef), imageFile)
+    return uploadBytes(ref(storage, imageRef), imageFile);
   }
 
   async function logout() {
@@ -158,15 +177,14 @@ export function AuthProvider({ children }) {
   }
 
   async function fetchCollection(dataCol) {
-    const events = getDocs(collection(db, dataCol))
-      .then((querySnapshot) => {
-        const tempDoc = []
-        querySnapshot.forEach((doc) => {
-          tempDoc.push({ id: doc.id, ...doc.data() })
-        })
-
-        return tempDoc;
+    const events = getDocs(collection(db, dataCol)).then((querySnapshot) => {
+      const tempDoc = [];
+      querySnapshot.forEach((doc) => {
+        tempDoc.push({ id: doc.id, ...doc.data() });
       });
+
+      return tempDoc;
+    });
 
     return events;
   }
@@ -194,6 +212,14 @@ export function AuthProvider({ children }) {
     }
   }
 
+  async function updateData(dataCol, dataDoc, dataToChange, newData) {
+    const dataRef = doc(db, dataCol, dataDoc);
+
+    await updateDoc(dataRef, {
+      [dataToChange]: newData,
+    });
+  }
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -218,6 +244,7 @@ export function AuthProvider({ children }) {
     fetchCollection,
     fetchSubDoc,
     uploadImage,
+    updateData,
     currentUser,
   };
 

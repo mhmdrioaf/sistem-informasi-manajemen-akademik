@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { getDownloadURL } from "firebase/storage";
 import React, { useEffect, useRef, useState } from "react";
-import { IoIosCamera } from "react-icons/io";
+import { IoIosCamera, IoMdClose } from "react-icons/io";
 import DangerButton from "../../../components/buttons/DangerButton";
 import InfoButton from "../../../components/buttons/InfoButton";
 import PrimaryButton from "../../../components/buttons/PrimaryButton";
@@ -40,8 +40,6 @@ function UserProfile({ currentUser, userDesc }) {
   const [selectedFile, setSelectedFile] = useState();
   const [avatarPreview, setAvatarPreview] = useState();
   const [viewPhoto, setViewPhoto] = useState(false);
-  const handleOpenViewPhoto = () => setViewPhoto(true);
-  const handleCloseViewPhoto = () => setViewPhoto(false);
   const fileInput = useRef();
   const userData = [
     {
@@ -76,6 +74,10 @@ function UserProfile({ currentUser, userDesc }) {
       type: "text",
     },
   ];
+
+  const handleOpenViewPhoto = () => setViewPhoto(true);
+
+  const handleCloseViewPhoto = () => setViewPhoto(false);
 
   const resizeImage = (image) =>
     new Promise((resolve) => {
@@ -235,20 +237,51 @@ function UserProfile({ currentUser, userDesc }) {
             <Box
               sx={{
                 width: 400,
-                height: 400,
-                position: "absolute",
+                height: "auto",
+                position: "relative",
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
-                padding: 4,
-                backgroundImage: `url(${userDesc?.profile_picture})`,
-                backgroundSize: "contain",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center",
                 border: "none",
+                backgroundColor: color.surface,
                 outline: "none",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                m: 0,
               }}
-            />
+            >
+              <IconButton
+                disableRipple
+                size="small"
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: 2,
+                  backgroundColor: color.primaryContainer,
+                  color: color.onPrimaryContainer,
+                  cursor: "pointer",
+                  ":hover": {
+                    backgroundColor: color.primary,
+                    color: color.onPrimary,
+                  },
+                  position: "absolute",
+                  top: 0,
+                  right: 0,
+                  borderRadius: 0,
+                }}
+                onClick={handleCloseViewPhoto}
+              >
+                <IoMdClose />
+              </IconButton>
+              <img
+                src={userDesc?.profile_picture}
+                width={400}
+                height="auto"
+                alt="product"
+              />
+            </Box>
           </Modal>
         )}
         <Box className="user__profile__container">
