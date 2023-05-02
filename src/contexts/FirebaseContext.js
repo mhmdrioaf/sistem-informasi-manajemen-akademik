@@ -154,7 +154,7 @@ export function AuthProvider({ children }) {
         return "Email telah terdaftar!";
 
       default:
-        return "Proses masuk gagal, hubungi penyedia layanan.";
+        return "Proses gagal, hubungi penyedia layanan.";
     }
   }
 
@@ -215,9 +215,15 @@ export function AuthProvider({ children }) {
   async function updateData(dataCol, dataDoc, dataToChange, newData) {
     const dataRef = doc(db, dataCol, dataDoc);
 
-    await updateDoc(dataRef, {
+    return await updateDoc(dataRef, {
       [dataToChange]: newData,
-    });
+    })
+      .then(() => {
+        return true;
+      })
+      .catch((error) => {
+        return error.code;
+      });
   }
 
   useEffect(() => {

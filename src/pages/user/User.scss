@@ -64,3 +64,107 @@
     }
   }
 }
+
+.chat {
+  .container {
+    background-color: $backgroundColor;
+    color: $onBackgroundColor;
+    width: 100%;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sidebar {
+    background-color: $surface;
+    color: $onSurface;
+    flex: 1;
+    height: 100%;
+    padding: 1.6em;
+
+    .user-container {
+      align-items: center;
+      gap: 1em;
+      padding: 1em;
+      border-radius: 0.8em;
+      cursor: pointer;
+      &:hover {
+        background-color: $surfaceVariant;
+        color: $onSurfaceVariant;
+      }
+    }
+
+    .user-message-container {
+      justify-content: space-around;
+      height: 100%;
+    }
+
+    .user-name {
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    .user-message {
+      font-size: 0.8rem;
+    }
+
+    .user-image {
+      width: 3.2em;
+      height: 3.2em;
+      border-radius: 0.4em;
+      background-color: $primaryContainer;
+    }
+  }
+
+  .message-container {
+    flex: 2;
+    height: 100%;
+    justify-content: space-between;
+    height: 100%;
+
+    .chat-room {
+      height: 100%;
+      align-items: flex-start;
+      flex: 5;
+      padding: 1.6em;
+
+      .chat-user-incoming-message {
+        align-self: flex-start;
+        background-color: $secondary;
+        color: $onSecondary;
+        padding: 1em 1em;
+        border-radius: 1em;
+        border-bottom-left-radius: 0;
+        max-width: 45%;
+        word-break: break-all;
+      }
+
+      .chat-user-sent-message {
+        align-self: flex-end;
+        flex-direction: row-reverse;
+        background-color: $primary;
+        color: $onPrimary;
+        padding: 1em 1em;
+        border-radius: 1em;
+        border-bottom-right-radius: 0;
+        max-width: 45%;
+        word-break: break-all;
+      }
+
+      .message {
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+      }
+    }
+
+    .message-input-container {
+      flex: 1;
+      height: 100%;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.6em;
+      gap: 1em;
+    }
+  }
+}

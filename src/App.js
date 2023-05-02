@@ -29,6 +29,7 @@ const ProductDetailPage = lazy(() =>
   import("./pages/marketplace/products/ProductDetail")
 );
 const LandingPage = lazy(() => import("./pages/Landing"));
+const ChatPage = lazy(() => import("./pages/user/chat/Chat"));
 
 function App() {
   const [userRole, setUserRole] = useState("guest");
@@ -154,6 +155,15 @@ function App() {
               element={
                 <Suspense fallback={<FullPageLoading />}>
                   <UserCart currentUser={currentUser} userDesc={userDesc} />
+                </Suspense>
+              }
+            />
+
+            <Route
+              path="/chat/:userId"
+              element={
+                <Suspense fallback={<FullPageLoading />}>
+                  <ChatPage />
                 </Suspense>
               }
             />

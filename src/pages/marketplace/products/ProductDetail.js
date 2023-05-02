@@ -3,18 +3,30 @@ import { useAuth } from "../../../contexts/FirebaseContext";
 import FullPageLoading from "../../../components/indicators/PrimaryLoading";
 import "../Marketplace.scss";
 import { MarketplaceHeader } from "../../../components/layouts";
-import { Stack, Divider, Modal, IconButton, Box } from "@mui/material";
+import {
+  Stack,
+  Divider,
+  Modal,
+  IconButton,
+  Box,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import color from "../../../styles/_color.scss";
 import { IoMdCart, IoMdClose, IoMdStar } from "react-icons/io";
 import InfoButton from "../../../components/buttons/InfoButton";
 import PrimaryButton from "../../../components/buttons/PrimaryButton";
+import * as ROUTES from "../../../constants/routes";
+import { Navigate } from "react-router-dom";
 
 function ProductDetail({ currentUser, userDesc }) {
   const [isLoading, setIsLoading] = useState(true);
   const [viewPicture, setViewPicture] = useState(false);
+  const [status, setStatus] = useState({});
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [pictureIndex, setPictureIndex] = useState(0);
   const [product, setProduct] = useState(null);
-  const { fetchData } = useAuth();
+  const { fetchData, updateData, authErrorHandler } = useAuth();
   const URL = window.location.href;
 
   const handleViewPicture = (index) => {
@@ -31,6 +43,38 @@ function ProductDetail({ currentUser, userDesc }) {
       style: "currency",
       currency: "IDR",
     }).format(number);
+  };
+
+  const onCloseSnackbar = () => setSnackbarOpen(false);
+
+  const handleAddToCart = async (product) => {
+    let cartProductsTemp = userDesc?.cart;
+    cartProductsTemp.push(product.id);
+
+    if (currentUser) {
+      const sendNewCartProduct = await updateData(
+        "users",
+        currentUser.uid,
+        "cart",
+        cartProductsTemp
+      );
+
+      if (sendNewCartProduct === true) {
+        setStatus({
+          message: `Berhasil menambahkan ${product.name} ke keranjang.`,
+          status: "success",
+        });
+        setSnackbarOpen(true);
+      } else {
+        setStatus({
+          message: authErrorHandler(sendNewCartProduct),
+          status: "error",
+        });
+        setSnackbarOpen(true);
+      }
+    } else {
+      return <Navigate to={ROUTES.LOGIN} />;
+    }
   };
 
   useEffect(() => {
@@ -56,6 +100,17 @@ function ProductDetail({ currentUser, userDesc }) {
 
   return (
     <>
+      {status && (
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={3000}
+          onClose={onCloseSnackbar}
+        >
+          <Alert severity={status.status} sx={{ width: "100%" }}>
+            {status.message}
+          </Alert>
+        </Snackbar>
+      )}
       {product?.pictures && (
         <Modal open={viewPicture} onClose={handleClosePicture}>
           <Box
@@ -285,7 +340,7 @@ function ProductDetail({ currentUser, userDesc }) {
                 spacing={2}
                 justifyContent="center"
               >
-                <InfoButton>
+                <InfoButton onClick={() => handleAddToCart(product)}>
                   <IoMdCart />
                 </InfoButton>
                 <PrimaryButton
