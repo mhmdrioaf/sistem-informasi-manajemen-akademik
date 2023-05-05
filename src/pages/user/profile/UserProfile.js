@@ -515,13 +515,12 @@ function UserProfile({ currentUser, userDesc }) {
                                             e.target.value = "";
                                             return setEditedUser((prev) => ({
                                               ...prev,
-                                              displayName:
-                                                currentUser?.displayName,
+                                              name: currentUser?.displayName,
                                             }));
                                           } else {
                                             return setEditedUser((prev) => ({
                                               ...prev,
-                                              displayName: e.target.value,
+                                              name: e.target.value,
                                             }));
                                           }
                                         case "Nomor telepon":

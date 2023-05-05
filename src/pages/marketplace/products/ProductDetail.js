@@ -26,7 +26,7 @@ function ProductDetail({ currentUser, userDesc }) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [pictureIndex, setPictureIndex] = useState(0);
   const [product, setProduct] = useState(null);
-  const { fetchData, updateData, authErrorHandler } = useAuth();
+  const { fetchData, addProductToCart, authErrorHandler } = useAuth();
   const URL = window.location.href;
 
   const handleViewPicture = (index) => {
@@ -48,15 +48,10 @@ function ProductDetail({ currentUser, userDesc }) {
   const onCloseSnackbar = () => setSnackbarOpen(false);
 
   const handleAddToCart = async (product) => {
-    let cartProductsTemp = userDesc?.cart;
-    cartProductsTemp.push(product.id);
-
     if (currentUser) {
-      const sendNewCartProduct = await updateData(
-        "users",
+      const sendNewCartProduct = await addProductToCart(
         currentUser.uid,
-        "cart",
-        cartProductsTemp
+        product.id
       );
 
       if (sendNewCartProduct === true) {

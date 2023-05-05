@@ -1,19 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { useAuth } from "../../../contexts/FirebaseContext";
 import { Badge, IconButton, Stack } from "@mui/material";
-import * as ROUTES from "../../../constants/routes";
-import color from "../../../styles/_color.scss";
-import { MarketplaceHeader } from "../../../components/layouts";
-import { LazyLoadImage } from "react-lazy-load-image-component";
+import { collection, onSnapshot } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 import { AiOutlineDelete, AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import { MarketplaceHeader } from "../../../components/layouts";
+import * as ROUTES from "../../../constants/routes";
+import { useAuth } from "../../../contexts/FirebaseContext";
+import { db } from "../../../firebase";
+import color from "../../../styles/_color.scss";
 
 function UserCart({ currentUser, userDesc }) {
   const [cartProducts, setCartProducts] = useState([]);
-  const [seller, setSeller] = useState({});
   const [totalCost, setTotalCost] = useState(15000);
-  const { fetchData, updateData } = useAuth();
-
-  let cartProductsTemp = userDesc?.cart;
+  const { fetchData, updateCart } = useAuth();
 
   const rupiah = (number) => {
     return Intl.NumberFormat("id-ID", {
@@ -22,96 +21,63 @@ function UserCart({ currentUser, userDesc }) {
     }).format(number);
   };
 
-  const changeProductQuantity = async (index, options) => {
-    let currentCartProducts = [...cartProducts];
-    let product = { ...currentCartProducts[index] };
-    let productIndex = cartProductsTemp.indexOf(product.id);
-    let totalProduct = cartProductsTemp.filter(
-      (item) => item === product.id
-    ).length;
-
-    switch (options) {
-      case "increment":
-        product.quantity = product.quantity + 1;
-        cartProductsTemp.push(product.id);
-        break;
-      case "decrement":
-        product.quantity = product.quantity - 1;
-        if (productIndex > -1) cartProductsTemp.splice(productIndex, 1);
-        break;
-      case "delete":
-        product.quantity = 0;
-        if (productIndex > -1)
-          cartProductsTemp.splice(productIndex, totalProduct);
-        break;
-      default:
-        product.quantity = 1;
-        break;
-    }
-
-    await updateData("users", currentUser?.uid, "cart", cartProductsTemp);
-    setCartProducts(currentCartProducts);
+  const updateProductQuantity = async (productId, options) => {
+    await updateCart(currentUser.uid, productId, options);
   };
-  useEffect(() => {
-    async function showProducts() {
-      const userCart = userDesc.cart;
-      userCart.map(async (product) => {
-        const productData = await fetchData("products", product);
-        const sellerData = await fetchData("users", productData?.seller_id);
-
-        const productQuantity = userDesc.cart.filter(
-          (item) => item === product
-        ).length;
-
-        if (productQuantity > 0) {
-          setCartProducts(() => [
-            {
-              id: productData.id,
-              name: productData.name,
-              seller_id: productData.sellerId,
-              price: productData.price,
-              pictures: productData.pictures,
-              quantity: productQuantity,
-            },
-          ]);
-        } else {
-          setCartProducts((prev) => [
-            ...prev,
-            {
-              id: productData.id,
-              name: productData.name,
-              seller_id: productData.sellerId,
-              price: productData.price,
-              pictures: productData.pictures,
-              quantity: 1,
-            },
-          ]);
-        }
-
-        setSeller((prev) => ({
-          ...prev,
-          [productData.id]: sellerData?.name ? sellerData?.name : "Unknown",
-        }));
-      });
-    }
-
-    showProducts();
-  }, [fetchData, userDesc.cart]);
 
   useEffect(() => {
-    cartProducts.map((product) => {
-      if (product.quantity > 0) {
-        setTotalCost(15000 + product.price * product.quantity);
-      } else {
-        setTotalCost(0);
+    const unsubscribe = onSnapshot(
+      collection(db, `cart${currentUser.uid}`),
+      (snapshot) => {
+        snapshot.docChanges().forEach(async (change) => {
+          const { id, quantity } = change.doc.data();
+          const productData = await fetchData("products", id);
+          const sellerData = await fetchData("users", productData.seller_id);
+          switch (change.type) {
+            case "added":
+              setCartProducts((prev) => [
+                ...prev,
+                {
+                  id: id,
+                  name: productData.name,
+                  price: productData.price,
+                  pictures: productData.pictures,
+                  seller: sellerData.name,
+                  quantity: quantity,
+                },
+              ]);
+              break;
+            case "modified":
+              setCartProducts((prev) =>
+                prev.map((p) => (p.id === id ? { ...p, quantity } : p))
+              );
+
+              break;
+            case "removed":
+              setCartProducts((prev) => prev.filter((p) => p.id !== id));
+
+              break;
+
+            default:
+              break;
+          }
+        });
       }
+    );
 
-      return true;
-    });
+    return () => unsubscribe();
+  }, [currentUser.uid, fetchData]);
+
+  useEffect(() => {
+    const totalPrice = cartProducts.reduce(
+      (total, product) => total + product.price * product.quantity,
+      0
+    );
+    setTotalCost(totalPrice + 15000);
   }, [cartProducts]);
 
   if (currentUser) {
-    if (userDesc?.cart?.length > 0) {
+    if (cartProducts.length > 0) {
       return (
         <Stack
           spacing={4}
@@ -170,7 +136,7 @@ function UserCart({ currentUser, userDesc }) {
 
                     <Stack spacing={1}>
                       <b style={{ fontSize: "2rem" }}>{product.name}</b>
-                      <p>{seller[product.id]}</p>
+                      <p>{product.seller}</p>
                     </Stack>
 
                     <Stack spacing={1}>
@@ -181,7 +147,7 @@ function UserCart({ currentUser, userDesc }) {
                     <Stack spacing={1} direction="row">
                       <IconButton
                         onClick={() =>
-                          changeProductQuantity(index, "decrement")
+                          updateProductQuantity(product.id, "decrement")
                         }
                         sx={{
                           backgroundColor: color.tertiary,
@@ -199,7 +165,7 @@ function UserCart({ currentUser, userDesc }) {
                       <IconButton
                         disableRipple
                         onClick={() =>
-                          changeProductQuantity(index, "increment")
+                          updateProductQuantity(product.id, "increment")
                         }
                         sx={{
                           backgroundColor: color.tertiary,
@@ -216,7 +182,9 @@ function UserCart({ currentUser, userDesc }) {
 
                       <IconButton
                         disableRipple
-                        onClick={() => changeProductQuantity(index, "delete")}
+                        onClick={() =>
+                          updateProductQuantity(product.id, "delete")
+                        }
                         sx={{
                           backgroundColor: color.error,
                           color: color.onError,
@@ -233,7 +201,18 @@ function UserCart({ currentUser, userDesc }) {
                   </Stack>
                 );
               } else {
-                return null;
+                return (
+                  <Stack spacing={4}>
+                    <Stack
+                      alignItems="center"
+                      justifyContent="center"
+                      width="100%"
+                      sx={{ color: color.outlineColor }}
+                    >
+                      <p>Nothing here...</p>
+                    </Stack>
+                  </Stack>
+                );
               }
             })}
           </Stack>
@@ -249,9 +228,7 @@ function UserCart({ currentUser, userDesc }) {
           </Stack>
         </Stack>
       );
-    }
-
-    if (userDesc?.cart?.length <= 0) {
+    } else {
       return (
         <Stack spacing={4}>
           <MarketplaceHeader
@@ -275,26 +252,5 @@ function UserCart({ currentUser, userDesc }) {
       );
     }
   }
-
-  if (!currentUser) {
-    <Stack
-      alignItems="center"
-      justifyContent="center"
-      width="100%"
-      height="100vh"
-    >
-      <p>You have to be logged in to see your cart.</p>
-      <p>
-        Click{" "}
-        <a
-          href={ROUTES.LOGIN}
-          style={{ color: color.primary, textDecoration: "none" }}
-        >
-          here to login.
-        </a>
-      </p>
-    </Stack>;
-  }
 }
-
 export default UserCart;

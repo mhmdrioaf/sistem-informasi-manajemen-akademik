@@ -16,6 +16,8 @@ import {
   collection,
   getDocs,
   updateDoc,
+  increment,
+  deleteDoc,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../firebase";
@@ -226,6 +228,53 @@ export function AuthProvider({ children }) {
       });
   }
 
+  async function addProductToCart(userId, productId) {
+    const cartRef = doc(db, `cart${userId}`, productId);
+
+    const product = await fetchData(`cart${userId}`, productId);
+
+    if (product !== null) {
+      return await updateDoc(cartRef, {
+        quantity: increment(1),
+      })
+        .then(() => {
+          return true;
+        })
+        .catch((error) => {
+          return error.code;
+        });
+    } else {
+      return await setDoc(doc(db, `cart${userId}`, productId), {
+        id: productId,
+        quantity: 1,
+      })
+        .then(() => {
+          return true;
+        })
+        .catch((error) => {
+          return error.code;
+        });
+    }
+  }
+
+  async function updateCart(userId, productId, options) {
+    const cartRef = doc(db, `cart${userId}`, productId);
+    switch (options) {
+      case "increment":
+        return await updateDoc(cartRef, {
+          quantity: increment(1),
+        });
+      case "decrement":
+        return await updateDoc(cartRef, {
+          quantity: increment(-1),
+        });
+      case "delete":
+        return await deleteDoc(cartRef);
+      default:
+        break;
+    }
+  }
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -251,6 +300,8 @@ export function AuthProvider({ children }) {
     fetchSubDoc,
     uploadImage,
     updateData,
+    addProductToCart,
+    updateCart,
     currentUser,
   };
 
