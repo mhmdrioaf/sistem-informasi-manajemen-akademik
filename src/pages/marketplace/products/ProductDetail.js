@@ -17,7 +17,7 @@ import { IoMdCart, IoMdClose, IoMdStar } from "react-icons/io";
 import InfoButton from "../../../components/buttons/InfoButton";
 import PrimaryButton from "../../../components/buttons/PrimaryButton";
 import * as ROUTES from "../../../constants/routes";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function ProductDetail({ currentUser, userDesc }) {
   const [isLoading, setIsLoading] = useState(true);
@@ -27,6 +27,7 @@ function ProductDetail({ currentUser, userDesc }) {
   const [pictureIndex, setPictureIndex] = useState(0);
   const [product, setProduct] = useState(null);
   const { fetchData, addProductToCart, authErrorHandler } = useAuth();
+  const navigate = useNavigate();
   const URL = window.location.href;
 
   const handleViewPicture = (index) => {
@@ -68,7 +69,7 @@ function ProductDetail({ currentUser, userDesc }) {
         setSnackbarOpen(true);
       }
     } else {
-      return <Navigate to={ROUTES.LOGIN} />;
+      return navigate(ROUTES.LOGIN, "replace");
     }
   };
 

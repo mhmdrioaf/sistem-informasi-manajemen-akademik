@@ -1,5 +1,11 @@
 import { Badge, IconButton, Stack } from "@mui/material";
-import { collection, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  updateDoc,
+} from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { AiOutlineDelete, AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -10,9 +16,9 @@ import { db } from "../../../firebase";
 import color from "../../../styles/_color.scss";
 
 function UserCart({ currentUser, userDesc }) {
-  const [cartProducts, setCartProducts] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
   const [totalCost, setTotalCost] = useState(15000);
-  const { fetchData, updateCart } = useAuth();
+  const { fetchData } = useAuth();
 
   const rupiah = (number) => {
     return Intl.NumberFormat("id-ID", {
@@ -21,63 +27,67 @@ function UserCart({ currentUser, userDesc }) {
     }).format(number);
   };
 
-  const updateProductQuantity = async (productId, options) => {
-    await updateCart(currentUser.uid, productId, options);
+  const updateProductQuantity = async (itemId, newQuantity) => {
+    const userRef = doc(db, "users", currentUser.uid);
+
+    const cart = (await getDoc(userRef)).data().cart;
+    const updatedCart = cart.map((item) =>
+      item.id === itemId ? { ...item, quantity: newQuantity } : item
+    );
+    await updateDoc(userRef, { cart: updatedCart });
+  };
+
+  const handleDeleteProduct = async (itemId) => {
+    const userRef = doc(db, "users", currentUser.uid);
+
+    const cart = (await getDoc(userRef)).data().cart;
+    const updatedCartItems = cart.filter((item) => item.id !== itemId);
+    await updateDoc(userRef, { cart: updatedCartItems });
   };
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(
-      collection(db, `cart${currentUser.uid}`),
-      (snapshot) => {
-        snapshot.docChanges().forEach(async (change) => {
-          const { id, quantity } = change.doc.data();
-          const productData = await fetchData("products", id);
-          const sellerData = await fetchData("users", productData.seller_id);
-          switch (change.type) {
-            case "added":
-              setCartProducts((prev) => [
-                ...prev,
-                {
-                  id: id,
-                  name: productData.name,
-                  price: productData.price,
-                  pictures: productData.pictures,
-                  seller: sellerData.name,
-                  quantity: quantity,
-                },
-              ]);
-              break;
-            case "modified":
-              setCartProducts((prev) =>
-                prev.map((p) => (p.id === id ? { ...p, quantity } : p))
-              );
+    const cartRef = collection(db, "users");
+    const userRef = doc(cartRef, currentUser.uid);
+    const unsubscribe = onSnapshot(userRef, async (doc) => {
+      if (doc.exists()) {
+        const { cart } = doc.data();
+        const fetchNewCartItems = cart.map(async (item) => {
+          const product = await fetchData("products", item.id);
+          const seller = await fetchData("users", product.seller_id);
 
-              break;
-            case "removed":
-              setCartProducts((prev) => prev.filter((p) => p.id !== id));
+          return {
+            id: item.id,
+            name: product.name,
+            price: product.price,
+            pictures: product.pictures,
+            seller: seller.name,
+            quantity: item.quantity,
+          };
+        });
 
-              break;
-
-            default:
-              break;
+        Promise.all(fetchNewCartItems).then((response) => {
+          if (JSON.stringify(response) !== JSON.stringify(cartItems)) {
+            setCartItems(response);
           }
         });
       }
-    );
+    });
 
-    return () => unsubscribe();
-  }, [currentUser.uid, fetchData]);
+    return () => {
+      unsubscribe();
+    };
+  }, [cartItems, currentUser.uid, fetchData]);
 
   useEffect(() => {
-    const totalPrice = cartProducts.reduce(
+    const totalPrice = cartItems.reduce(
       (total, product) => total + product.price * product.quantity,
       0
     );
     setTotalCost(totalPrice + 15000);
-  }, [cartProducts]);
+  }, [cartItems]);
 
   if (currentUser) {
-    if (cartProducts.length > 0) {
+    if (cartItems.length > 0) {
       return (
         <Stack
           spacing={4}
@@ -95,125 +105,115 @@ function UserCart({ currentUser, userDesc }) {
             showCartIcon={false}
           />
           <Stack spacing={4} className="cart-product-container">
-            {cartProducts.map((product, index) => {
-              if (product?.quantity > 0) {
-                return (
-                  <Stack
-                    className="cart-product-card"
-                    key={product.id + index}
-                    direction="row"
+            {cartItems.map((product, index) => {
+              return (
+                <Stack
+                  className="cart-product-card"
+                  key={product.id + index}
+                  direction="row"
+                >
+                  <Badge
+                    badgeContent={product?.quantity}
+                    sx={{
+                      "& .MuiBadge-badge": {
+                        backgroundColor: color.primary,
+                        color: color.onPrimary,
+                        width: 35,
+                        height: 35,
+                        borderRadius: "50%",
+                        fontSize: "1em",
+                      },
+                    }}
                   >
-                    <Badge
-                      badgeContent={product?.quantity}
+                    <LazyLoadImage
+                      src={
+                        product?.pictures
+                          ? product.pictures[0]
+                          : "/broken-image.jpg"
+                      }
+                      alt="product"
+                      width={128}
+                      height={128}
+                      style={{
+                        border: `1px solid ${color.outlineColor}`,
+                        borderRadius: "1rem",
+                        objectFit: "cover",
+                        objectPosition: "center center",
+                      }}
+                    />
+                  </Badge>
+
+                  <Stack spacing={1}>
+                    <b style={{ fontSize: "2rem" }}>{product.name}</b>
+                    <p>{product.seller}</p>
+                  </Stack>
+
+                  <Stack spacing={1}>
+                    <p>{rupiah(product.price)}</p>
+                    <b>Total: {rupiah(product.price * product.quantity)}</b>
+                  </Stack>
+
+                  <Stack spacing={1} direction="row">
+                    <IconButton
+                      onClick={() => {
+                        if (product.quantity > 1) {
+                          updateProductQuantity(
+                            product.id,
+                            product.quantity - 1
+                          );
+                        } else {
+                          handleDeleteProduct(product.id);
+                        }
+                      }}
                       sx={{
-                        "& .MuiBadge-badge": {
-                          backgroundColor: color.primary,
-                          color: color.onPrimary,
-                          width: 35,
-                          height: 35,
-                          borderRadius: "50%",
-                          fontSize: "1em",
+                        backgroundColor: color.tertiary,
+                        color: color.onTertiary,
+                        borderRadius: "1rem",
+                        "&:hover": {
+                          backgroundColor: color.tertiaryHover,
+                          color: color.onTertiaryHover,
                         },
                       }}
                     >
-                      <LazyLoadImage
-                        src={
-                          product?.pictures
-                            ? product.pictures[0]
-                            : "/broken-image.jpg"
-                        }
-                        alt="product"
-                        width={128}
-                        height={128}
-                        style={{
-                          border: `1px solid ${color.outlineColor}`,
-                          borderRadius: "1rem",
-                          objectFit: "cover",
-                          objectPosition: "center center",
-                        }}
-                      />
-                    </Badge>
+                      <AiOutlineMinus />
+                    </IconButton>
 
-                    <Stack spacing={1}>
-                      <b style={{ fontSize: "2rem" }}>{product.name}</b>
-                      <p>{product.seller}</p>
-                    </Stack>
-
-                    <Stack spacing={1}>
-                      <p>{rupiah(product.price)}</p>
-                      <b>Total: {rupiah(product.price * product.quantity)}</b>
-                    </Stack>
-
-                    <Stack spacing={1} direction="row">
-                      <IconButton
-                        onClick={() =>
-                          updateProductQuantity(product.id, "decrement")
-                        }
-                        sx={{
-                          backgroundColor: color.tertiary,
-                          color: color.onTertiary,
-                          borderRadius: "1rem",
-                          "&:hover": {
-                            backgroundColor: color.tertiaryHover,
-                            color: color.onTertiaryHover,
-                          },
-                        }}
-                      >
-                        <AiOutlineMinus />
-                      </IconButton>
-
-                      <IconButton
-                        disableRipple
-                        onClick={() =>
-                          updateProductQuantity(product.id, "increment")
-                        }
-                        sx={{
-                          backgroundColor: color.tertiary,
-                          color: color.onTertiary,
-                          borderRadius: "1rem",
-                          "&:hover": {
-                            backgroundColor: color.tertiaryHover,
-                            color: color.onTertiaryHover,
-                          },
-                        }}
-                      >
-                        <AiOutlinePlus />
-                      </IconButton>
-
-                      <IconButton
-                        disableRipple
-                        onClick={() =>
-                          updateProductQuantity(product.id, "delete")
-                        }
-                        sx={{
-                          backgroundColor: color.error,
-                          color: color.onError,
-                          borderRadius: "1rem",
-                          "&:hover": {
-                            backgroundColor: color.errorHover,
-                            color: color.onErrorHover,
-                          },
-                        }}
-                      >
-                        <AiOutlineDelete />
-                      </IconButton>
-                    </Stack>
-                  </Stack>
-                );
-              } else {
-                return (
-                  <Stack spacing={4}>
-                    <Stack
-                      alignItems="center"
-                      justifyContent="center"
-                      width="100%"
-                      sx={{ color: color.outlineColor }}
+                    <IconButton
+                      disableRipple
+                      onClick={() =>
+                        updateProductQuantity(product.id, product.quantity + 1)
+                      }
+                      sx={{
+                        backgroundColor: color.tertiary,
+                        color: color.onTertiary,
+                        borderRadius: "1rem",
+                        "&:hover": {
+                          backgroundColor: color.tertiaryHover,
+                          color: color.onTertiaryHover,
+                        },
+                      }}
                     >
-                      <p>Nothing here...</p>
-                    </Stack>
+                      <AiOutlinePlus />
+                    </IconButton>
+
+                    <IconButton
+                      disableRipple
+                      onClick={() => handleDeleteProduct(product.id)}
+                      sx={{
+                        backgroundColor: color.error,
+                        color: color.onError,
+                        borderRadius: "1rem",
+                        "&:hover": {
+                          backgroundColor: color.errorHover,
+                          color: color.onErrorHover,
+                        },
+                      }}
+                    >
+                      <AiOutlineDelete />
+                    </IconButton>
                   </Stack>
-                );
-              }
+                </Stack>
+              );
             })}
           </Stack>
 

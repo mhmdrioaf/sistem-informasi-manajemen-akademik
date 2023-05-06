@@ -16,8 +16,7 @@ import {
   collection,
   getDocs,
   updateDoc,
-  increment,
-  deleteDoc,
+  arrayUnion,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../firebase";
@@ -229,14 +228,18 @@ export function AuthProvider({ children }) {
   }
 
   async function addProductToCart(userId, productId) {
-    const cartRef = doc(db, `cart${userId}`, productId);
+    const userRef = doc(db, "users", userId);
+    const cart = (await getDoc(userRef)).data().cart;
 
-    const product = await fetchData(`cart${userId}`, productId);
-
-    if (product !== null) {
-      return await updateDoc(cartRef, {
-        quantity: increment(1),
-      })
+    const existingItemIndex = cart.findIndex((item) => item.id === productId);
+    if (existingItemIndex !== -1) {
+      const prevItem = cart[existingItemIndex];
+      const updatedCart = [...cart];
+      updatedCart[existingItemIndex] = {
+        ...prevItem,
+        quantity: prevItem.quantity + 1,
+      };
+      return await updateDoc(userRef, { cart: updatedCart })
         .then(() => {
           return true;
         })
@@ -244,9 +247,11 @@ export function AuthProvider({ children }) {
           return error.code;
         });
     } else {
-      return await setDoc(doc(db, `cart${userId}`, productId), {
-        id: productId,
-        quantity: 1,
+      return await updateDoc(userRef, {
+        cart: arrayUnion({
+          id: productId,
+          quantity: 1,
+        }),
       })
         .then(() => {
           return true;
@@ -254,24 +259,6 @@ export function AuthProvider({ children }) {
         .catch((error) => {
           return error.code;
         });
-    }
-  }
-
-  async function updateCart(userId, productId, options) {
-    const cartRef = doc(db, `cart${userId}`, productId);
-    switch (options) {
-      case "increment":
-        return await updateDoc(cartRef, {
-          quantity: increment(1),
-        });
-      case "decrement":
-        return await updateDoc(cartRef, {
-          quantity: increment(-1),
-        });
-      case "delete":
-        return await deleteDoc(cartRef);
-      default:
-        break;
     }
   }
 
@@ -301,7 +288,6 @@ export function AuthProvider({ children }) {
     uploadImage,
     updateData,
     addProductToCart,
-    updateCart,
     currentUser,
   };
 
