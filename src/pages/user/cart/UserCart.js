@@ -1,4 +1,4 @@
-import { Badge, IconButton, Stack } from "@mui/material";
+import { Badge, IconButton, Stack, Divider, Link } from "@mui/material";
 import {
   collection,
   doc,
@@ -10,10 +10,11 @@ import React, { useEffect, useState } from "react";
 import { AiOutlineDelete, AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { MarketplaceHeader } from "../../../components/layouts";
-import * as ROUTES from "../../../constants/routes";
 import { useAuth } from "../../../contexts/FirebaseContext";
 import { db } from "../../../firebase";
 import color from "../../../styles/_color.scss";
+import * as ROUTES from "../../../constants/routes";
+import "../User.scss";
 
 function UserCart({ currentUser, userDesc }) {
   const [cartItems, setCartItems] = useState([]);
@@ -44,6 +45,15 @@ function UserCart({ currentUser, userDesc }) {
     const updatedCartItems = cart.filter((item) => item.id !== itemId);
     await updateDoc(userRef, { cart: updatedCartItems });
   };
+
+  const groupedProducts = cartItems.reduce((accumulator, current) => {
+    const seller = current.seller;
+    if (!accumulator[seller]) {
+      accumulator[seller] = [];
+    }
+    accumulator[seller].push(current);
+    return accumulator;
+  }, {});
 
   useEffect(() => {
     const cartRef = collection(db, "users");
@@ -86,137 +96,130 @@ function UserCart({ currentUser, userDesc }) {
     setTotalCost(totalPrice + 15000);
   }, [cartItems]);
 
-  if (currentUser) {
-    if (cartItems.length > 0) {
-      return (
-        <Stack
-          spacing={4}
-          sx={{
-            backgroundColor: color.backgroundColor,
-            color: color.onBackgroundColor,
-            minHeight: "100vh",
-          }}
-        >
-          <MarketplaceHeader
-            currentUser={currentUser}
-            showSearchIcon={false}
-            userDesc={userDesc}
-            showCategoriesList={false}
-            showCartIcon={false}
-          />
-          <Stack spacing={4} className="cart-product-container">
-            {cartItems.map((product, index) => {
-              return (
-                <Stack
-                  className="cart-product-card"
-                  key={product.id + index}
-                  direction="row"
-                >
-                  <Badge
-                    badgeContent={product?.quantity}
-                    sx={{
-                      "& .MuiBadge-badge": {
-                        backgroundColor: color.primary,
-                        color: color.onPrimary,
-                        width: 35,
-                        height: 35,
-                        borderRadius: "50%",
-                        fontSize: "1em",
-                      },
-                    }}
-                  >
-                    <LazyLoadImage
-                      src={
-                        product?.pictures
-                          ? product.pictures[0]
-                          : "/broken-image.jpg"
-                      }
-                      alt="product"
-                      width={128}
-                      height={128}
-                      style={{
-                        border: `1px solid ${color.outlineColor}`,
-                        borderRadius: "1rem",
-                        objectFit: "cover",
-                        objectPosition: "center center",
-                      }}
-                    />
-                  </Badge>
-
-                  <Stack spacing={1}>
-                    <b style={{ fontSize: "2rem" }}>{product.name}</b>
-                    <p>{product.seller}</p>
-                  </Stack>
-
-                  <Stack spacing={1}>
-                    <p>{rupiah(product.price)}</p>
-                    <b>Total: {rupiah(product.price * product.quantity)}</b>
-                  </Stack>
-
-                  <Stack spacing={1} direction="row">
-                    <IconButton
-                      onClick={() => {
-                        if (product.quantity > 1) {
-                          updateProductQuantity(
-                            product.id,
-                            product.quantity - 1
-                          );
-                        } else {
-                          handleDeleteProduct(product.id);
-                        }
-                      }}
-                      sx={{
-                        backgroundColor: color.tertiary,
-                        color: color.onTertiary,
-                        borderRadius: "1rem",
-                        "&:hover": {
-                          backgroundColor: color.tertiaryHover,
-                          color: color.onTertiaryHover,
-                        },
-                      }}
-                    >
-                      <AiOutlineMinus />
-                    </IconButton>
-
-                    <IconButton
-                      disableRipple
-                      onClick={() =>
-                        updateProductQuantity(product.id, product.quantity + 1)
-                      }
-                      sx={{
-                        backgroundColor: color.tertiary,
-                        color: color.onTertiary,
-                        borderRadius: "1rem",
-                        "&:hover": {
-                          backgroundColor: color.tertiaryHover,
-                          color: color.onTertiaryHover,
-                        },
-                      }}
-                    >
-                      <AiOutlinePlus />
-                    </IconButton>
-
-                    <IconButton
-                      disableRipple
-                      onClick={() => handleDeleteProduct(product.id)}
-                      sx={{
-                        backgroundColor: color.error,
-                        color: color.onError,
-                        borderRadius: "1rem",
-                        "&:hover": {
-                          backgroundColor: color.errorHover,
-                          color: color.onErrorHover,
-                        },
-                      }}
-                    >
-                      <AiOutlineDelete />
-                    </IconButton>
-                  </Stack>
+  return (
+    <>
+      <MarketplaceHeader
+        currentUser={currentUser}
+        userDesc={userDesc}
+        showSearchIcon={false}
+        showCartIcon={false}
+        showCategoriesList={false}
+      />
+      {cartItems.length > 0 && (
+        <Stack className="cart-product-container" spacing={4}>
+          {Object.keys(groupedProducts).map((seller) => (
+            <>
+              <Stack className="cart-seller-container" spacing={2}>
+                <b key={seller}>{seller}</b>
+                <Stack className="cart-products" spacing={4}>
+                  {groupedProducts[seller].map((product) => (
+                    <div key={product.id} className="cart-product">
+                      <Stack className="cart-product-image">
+                        <Badge
+                          badgeContent={product?.quantity}
+                          sx={{
+                            "& .MuiBadge-badge": {
+                              backgroundColor: color.primary,
+                              color: color.onPrimary,
+                              width: 35,
+                              height: 35,
+                              borderRadius: "50%",
+                              fontSize: "1em",
+                            },
+                          }}
+                        >
+                          <LazyLoadImage
+                            src={
+                              product.pictures[0]
+                                ? product.pictures[0]
+                                : "/broken-image.jpg"
+                            }
+                            alt={product.name}
+                            width={128}
+                            height={128}
+                          />
+                        </Badge>
+                      </Stack>
+                      <Stack
+                        className="cart-product-details"
+                        direction={{
+                          xs: "column",
+                          sm: "column",
+                          md: "row",
+                          lg: "row",
+                        }}
+                      >
+                        <p className="cart-product-name" title={product.name}>
+                          {product.name}
+                        </p>
+                        <Stack className="cart-product-price">
+                          <p>{rupiah(product.price)}</p>
+                          <b>
+                            Total: {rupiah(product.price * product.quantity)}
+                          </b>
+                        </Stack>
+                        <Stack
+                          className="cart-product-quantity"
+                          direction="row"
+                          spacing={2}
+                        >
+                          <IconButton
+                            size="medium"
+                            disableRipple
+                            sx={{
+                              backgroundColor: color.tertiary,
+                              color: color.onTertiary,
+                            }}
+                            onClick={() => {
+                              if (product.quantity > 1) {
+                                updateProductQuantity(
+                                  product.id,
+                                  product.quantity - 1
+                                );
+                              } else {
+                                handleDeleteProduct(product.id);
+                              }
+                            }}
+                          >
+                            <AiOutlineMinus />
+                          </IconButton>
+                          <IconButton
+                            size="medium"
+                            disableRipple
+                            sx={{
+                              backgroundColor: color.tertiary,
+                              color: color.onTertiary,
+                            }}
+                            onClick={() =>
+                              updateProductQuantity(
+                                product.id,
+                                product.quantity + 1
+                              )
+                            }
+                          >
+                            <AiOutlinePlus />
+                          </IconButton>
+                          <IconButton
+                            size="medium"
+                            disableRipple
+                            sx={{
+                              backgroundColor: color.error,
+                              color: color.onError,
+                            }}
+                            onClick={() => handleDeleteProduct(product.id)}
+                          >
+                            <AiOutlineDelete />
+                          </IconButton>
+                        </Stack>
+                      </Stack>
+                    </div>
+                  ))}
                 </Stack>
-              );
-            })}
-          </Stack>
-
+              </Stack>
+              <Divider />
+            </>
+          ))}
+          <Divider />
           <Stack spacing={4} className="cart-total-cost">
             <Stack
               diretion="row"
@@ -227,30 +230,31 @@ function UserCart({ currentUser, userDesc }) {
             </Stack>
           </Stack>
         </Stack>
-      );
-    } else {
-      return (
-        <Stack spacing={4}>
-          <MarketplaceHeader
-            currentUser={currentUser}
-            showSearchIcon={false}
-            userDesc={userDesc}
-          />
-          <Stack alignItems="center" justifyContent="center" width="100%">
-            <p>You haven't added any product yet</p>
-            <b>
-              Go{" "}
-              <a
-                href={ROUTES.MARKETPLACE}
-                style={{ color: color.primary, textDecoration: "none" }}
-              >
-                here to explore new products
-              </a>
-            </b>
-          </Stack>
+      )}
+
+      {cartItems.length <= 0 && (
+        <Stack
+          className="cart-product-container"
+          sx={{
+            width: "100%",
+            height: "100vh",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <p style={{ color: color.outlineColor }}>
+            You haven't added any product yet.
+          </p>
+          <Link
+            href={ROUTES.MARKETPLACE}
+            underline="none"
+            sx={{ color: color.primary }}
+          >
+            Explore new product.
+          </Link>
         </Stack>
-      );
-    }
-  }
+      )}
+    </>
+  );
 }
 export default UserCart;

@@ -8,6 +8,7 @@ import {
   IconButton,
   InputAdornment,
   Modal,
+  Snackbar,
   Stack,
   Typography,
 } from "@mui/material";
@@ -29,13 +30,13 @@ function UserProfile({ currentUser, userDesc }) {
     useAuth();
   const [verifyStatus, setVerifyStatus] = useState(null);
   const [editStatus, setEditStatus] = useState(null);
-  const [buttonLoading, setButtonLoading] = useState(false);
   const [disabledButton, setDisabledButton] = useState(true);
   const [isEmailVerified, setIsEmailVerified] = useState(
     currentUser.emailVerified
   );
   const [isEdit, setIsEdit] = useState(false);
   const [error, setError] = useState();
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [editedUser, setEditedUser] = useState({});
   const [selectedFile, setSelectedFile] = useState();
   const [avatarPreview, setAvatarPreview] = useState();
@@ -44,7 +45,7 @@ function UserProfile({ currentUser, userDesc }) {
   const userData = [
     {
       name: "Nama",
-      value: currentUser.displayName ? currentUser.displayName : false,
+      value: userDesc.name ? userDesc.name : false,
       type: "text",
     },
     {
@@ -142,6 +143,8 @@ function UserProfile({ currentUser, userDesc }) {
     });
   };
 
+  const handleCloseSnackbar = () => setSnackbarOpen(false);
+
   const editUserHandler = async (e) => {
     e.preventDefault();
     const editUserDataStats = await editUserData(editedUser);
@@ -149,18 +152,17 @@ function UserProfile({ currentUser, userDesc }) {
 
     if (editUserDataStats === true) {
       setEditStatus({
-        message: "Profil telah di edit, halaman akan memuat ulang...",
+        message: "Profil telah di simpan.",
         status: "success",
       });
-      setButtonLoading(true);
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
+      setSnackbarOpen(true);
+      setIsEdit(false);
     } else {
       setEditStatus({
         message: editUserDataStats,
         status: "error",
       });
+      setSnackbarOpen(true);
     }
   };
 
@@ -219,18 +221,13 @@ function UserProfile({ currentUser, userDesc }) {
           </Alert>
         )}
         {editStatus && (
-          <Alert
-            severity={editStatus?.status}
-            sx={{
-              width: "100%",
-              position: "fixed",
-              bottom: 0,
-              left: 0,
-              zIndex: 5,
-            }}
+          <Snackbar
+            open={snackbarOpen}
+            autoHideDuration={1000}
+            onClose={handleCloseSnackbar}
           >
-            {editStatus?.message}
-          </Alert>
+            <Alert severity={editStatus?.status}>{editStatus?.message}</Alert>
+          </Snackbar>
         )}
         {userDesc?.profile_picture && (
           <Modal open={viewPhoto} onClose={handleCloseViewPhoto}>
@@ -515,7 +512,7 @@ function UserProfile({ currentUser, userDesc }) {
                                             e.target.value = "";
                                             return setEditedUser((prev) => ({
                                               ...prev,
-                                              name: currentUser?.displayName,
+                                              name: userDesc?.name,
                                             }));
                                           } else {
                                             return setEditedUser((prev) => ({
@@ -612,7 +609,6 @@ function UserProfile({ currentUser, userDesc }) {
                     setDisabledButton(true);
                     setSelectedFile(undefined);
                   }}
-                  disabled={buttonLoading}
                 >
                   Batal
                 </DangerButton>

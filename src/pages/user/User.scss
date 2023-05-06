@@ -39,6 +39,109 @@
 
 .cart {
   &-product {
+    border-radius: 0.8em;
+    display: flex;
+    align-items: center;
+    @include sm {
+      flex-direction: column;
+      gap: 2rem;
+    }
+    @include md {
+      flex-direction: column;
+      gap: 2rem;
+    }
+    @include lg {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+    @include xl {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+    background-color: $tertiaryContainer;
+    color: $onTertiaryContainer;
+    padding: 1rem;
+
+    &-image {
+      flex-grow: 0;
+      flex-shrink: 0;
+      flex-basis: 15%;
+
+      img {
+        object-fit: cover;
+        object-position: center center;
+        border-radius: 8%;
+      }
+    }
+
+    &-details {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-grow: 1;
+      flex-shrink: 1;
+      flex-basis: 0;
+
+      @include sm {
+        gap: 2rem;
+      }
+      @include md {
+        gap: 2rem;
+      }
+    }
+
+    &-name {
+      font-size: 1.2em;
+      flex-grow: 1;
+      flex-shrink: 1;
+      flex-basis: auto;
+      font-weight: bold;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      @include sm {
+        max-width: 20ch;
+      }
+      @include md {
+        max-width: 20ch;
+      }
+      @include lg {
+        max-width: 12ch;
+      }
+      @include xl {
+        max-width: 12ch;
+      }
+    }
+
+    &-price {
+      flex-grow: 0;
+      flex-shrink: 0;
+      flex-basis: auto;
+      font-size: 1em;
+    }
+
+    &-quantity {
+      flex-grow: 0;
+      flex-shrink: 0;
+      flex-basis: auto;
+      font-size: 1em;
+      @include sm {
+        justify-content: space-around;
+        width: 100%;
+      }
+      @include md {
+        justify-content: space-around;
+        width: 100%;
+      }
+      @include lg {
+        justify-content: unset;
+        width: unset;
+      }
+      @include xl {
+        justify-content: unset;
+        width: unset;
+      }
+    }
     &-container {
       @include sm {
         padding: $padding-sm;
@@ -52,15 +155,6 @@
       @include xl {
         padding: $padding-lg;
       }
-    }
-    &-card {
-      width: 100%;
-      align-items: center;
-      justify-content: space-between;
-      background-color: $tertiaryContainer;
-      color: $onTertiaryContainer;
-      padding: 2em;
-      border-radius: 1rem;
     }
   }
 }
