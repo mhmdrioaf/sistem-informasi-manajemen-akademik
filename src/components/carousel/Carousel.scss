@@ -1,0 +1,12 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.carousel {
+  &-container {
+    position: relative;
+    width: 100%;
+    min-height: 50vh;
+    border-radius: 0.8vw;
+    overflow: hidden;
+  }
+}

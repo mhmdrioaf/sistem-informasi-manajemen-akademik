@@ -10,7 +10,7 @@ const UserProfile = lazy(() => import("./profile/UserProfile"));
 
 function User({ currentUser, userDesc }) {
   const [page, setPage] = useState("profile");
-  const [activePage, setActivePage] = useState(1);
+  const [activePage, setActivePage] = useState(0);
 
   const handlePageChange = (page, index) => {
     setPage(page);

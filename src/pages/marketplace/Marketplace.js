@@ -1,4 +1,4 @@
-import { Stack, Typography } from "@mui/material";
+import { Skeleton, Stack, Typography } from "@mui/material";
 import React, { Suspense, lazy, useEffect, useState } from "react";
 import { MarketplaceHeader } from "../../components/layouts";
 import ProductCardSkeleton from "../../components/products/ProductCardSkeleton";
@@ -7,14 +7,23 @@ import { useAuth } from "../../contexts/FirebaseContext";
 import "./Marketplace.scss";
 
 const ProductCard = lazy(() => import("../../components/products/Product"));
+const Carousel = lazy(() => import("../../components/carousel/Carousel"));
 
 function Marketplace({ currentUser, userDesc }) {
   const [products, setProducts] = useState(null);
-  const { fetchCollection } = useAuth();
+  const [carouselAssets, setCarouselAssets] = useState([]);
+  const { fetchCollection, fetchData } = useAuth();
 
   useEffect(() => {
     const unsub = async () => {
       const productsData = await fetchCollection("products");
+      const marketplaceBannerAssets = await fetchData("constants", "global");
+
+      if (marketplaceBannerAssets.marketplace_banner.length > 0) {
+        setCarouselAssets(marketplaceBannerAssets);
+      } else {
+        setCarouselAssets([]);
+      }
 
       if (productsData?.length > 0) {
         setProducts(productsData);
@@ -24,7 +33,7 @@ function Marketplace({ currentUser, userDesc }) {
     };
 
     unsub();
-  }, [fetchCollection]);
+  }, [fetchCollection, fetchData]);
   return (
     <Stack gap={4} className="container">
       <MarketplaceHeader
@@ -35,6 +44,16 @@ function Marketplace({ currentUser, userDesc }) {
         showCategoriesList={true}
       />
       <Stack id="marketplace-body" alignItems="flex-start" gap={2}>
+        <Suspense
+          fallback={
+            <Skeleton
+              variant="rounded"
+              sx={{ width: "100%", height: "50vh" }}
+            />
+          }
+        >
+          <Carousel assets={carouselAssets.marketplace_banner} />
+        </Suspense>
         <Typography fontSize="1.6em" fontWeight="medium" fontFamily="inherit">
           Produk Pilihan
         </Typography>

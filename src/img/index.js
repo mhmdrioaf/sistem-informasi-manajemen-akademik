@@ -5,3 +5,5 @@ export { default as carousel_4 } from "./carousel_4.jpg";
 export { default as carousel_5 } from "./carousel_5.jpg";
 export { default as principalImg } from "./principal.jpg";
 export { default as logoTutWuri } from "./tutwuri.png";
+export { default as marketplaceCarousel_1 } from "./marketplace_carousel_1.jpg";
+export { default as marketplaceCarousel_2 } from "./marketplace_carousel_2.jpg";
