@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Alert, Box, InputAdornment, Link, Stack, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  InputAdornment,
+  Link,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { useAuth } from "../../contexts/FirebaseContext";
 import { useNavigate } from "react-router-dom";
 import BasicTextField from "../../components/textfields/BasicTextField";
@@ -20,7 +27,7 @@ function Register() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const { register, fetchAssets, fetchConstants, authErrorHandler } = useAuth();
+  const { register, fetchConstants, authErrorHandler } = useAuth();
 
   const createMarkup = (data) => {
     return { __html: data };
@@ -29,7 +36,13 @@ function Register() {
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     setButtonLoading(true);
-    const registerUser = await register(data.email, data.password, data.name, data.addresses, data.phone_number);
+    const registerUser = await register(
+      data.email,
+      data.password,
+      data.name,
+      data.addresses,
+      data.phone_number
+    );
 
     if (registerUser !== true) {
       setError(registerUser);
@@ -45,10 +58,9 @@ function Register() {
     const getAssets = async () => {
       const ref = await fetchConstants("constants", "global");
 
-      const assets = await fetchAssets("assets/img", ref?.IMAGE);
       setAssets((prev) => ({
         ...prev,
-        image: assets,
+        image: ref?.IMAGE,
         register_info: ref?.REGISTER_INFO,
       }));
 
@@ -56,7 +68,7 @@ function Register() {
     };
 
     getAssets();
-  }, [fetchAssets, fetchConstants]);
+  }, [fetchConstants]);
 
   return (
     <Box className="register__container">
@@ -125,12 +137,14 @@ function Register() {
                   <InputAdornment position="start">
                     <Typography>+62</Typography>
                   </InputAdornment>
-                )
+                ),
               }}
-              onChange={(e) => setData((prev) => ({
-                ...prev,
-                phone_number: Number(`+62${parseInt(e.target.value)}`),
-              }))}
+              onChange={(e) =>
+                setData((prev) => ({
+                  ...prev,
+                  phone_number: Number(`+62${parseInt(e.target.value)}`),
+                }))
+              }
             />
 
             {/* address input */}
@@ -147,7 +161,7 @@ function Register() {
                   addresses: {
                     delivery_address: "",
                     public_address: e.target.value,
-                  }
+                  },
                 }))
               }
             />

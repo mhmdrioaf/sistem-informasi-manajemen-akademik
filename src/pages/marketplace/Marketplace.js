@@ -1,4 +1,4 @@
-import { Skeleton, Stack, Typography } from "@mui/material";
+import { Skeleton, Stack } from "@mui/material";
 import React, { Suspense, lazy, useEffect, useState } from "react";
 import { MarketplaceHeader } from "../../components/layouts";
 import ProductCardSkeleton from "../../components/products/ProductCardSkeleton";
@@ -35,7 +35,7 @@ function Marketplace({ currentUser, userDesc }) {
     unsub();
   }, [fetchCollection, fetchData]);
   return (
-    <Stack gap={4} className="container">
+    <Stack className="marketplace-container">
       <MarketplaceHeader
         currentUser={currentUser}
         userDesc={userDesc}
@@ -43,7 +43,7 @@ function Marketplace({ currentUser, userDesc }) {
         showCartIcon={true}
         showCategoriesList={true}
       />
-      <Stack id="marketplace-body" alignItems="flex-start" gap={2}>
+      <div className="marketplace-banner-container">
         <Suspense
           fallback={
             <Skeleton
@@ -54,17 +54,19 @@ function Marketplace({ currentUser, userDesc }) {
         >
           <Carousel assets={carouselAssets.marketplace_banner} />
         </Suspense>
-        <Typography fontSize="1.6em" fontWeight="medium" fontFamily="inherit">
-          Produk Pilihan
-        </Typography>
-        {products?.map((product) => (
-          <Suspense key={product?.id} fallback={<ProductCardSkeleton />}>
-            <ProductCard
-              product={product}
-              productLink={ROUTES.PRODUCT_DETAIL(product.id)}
-            />
-          </Suspense>
-        ))}
+      </div>
+      <Stack className="marketplace-body" gap={2}>
+        <h3>Produk Pilihan</h3>
+        <div className="products-row">
+          {products?.map((product) => (
+            <Suspense key={product.id} fallback={<ProductCardSkeleton />}>
+              <ProductCard
+                product={product}
+                productLink={ROUTES.PRODUCT_DETAIL(product.id)}
+              />
+            </Suspense>
+          ))}
+        </div>
       </Stack>
     </Stack>
   );

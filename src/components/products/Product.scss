@@ -1,0 +1,95 @@
+@import "../../styles/mixins";
+@import "../../styles/color";
+
+.product {
+  &-container {
+    border-radius: 0.8vw;
+    gap: 0.4vw;
+    height: auto;
+    display: flex;
+    flex: 0 0 auto;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+    color: $onBackgroundColor;
+    border: 1px solid rgba($outlineColor, 0.5);
+    padding: 0.4rem;
+    cursor: pointer;
+    @include sm {
+      width: 128px;
+    }
+    @include md {
+      width: 128px;
+    }
+    @include lg {
+      width: 212px;
+    }
+    @include xl {
+      width: 212px;
+    }
+    .product {
+      &-title {
+        @include sm {
+          font-size: 0.8em;
+        }
+        @include md {
+          font-size: 0.8em;
+        }
+        @include lg {
+          font-size: 1em;
+        }
+        @include xl {
+          font-size: 1em;
+        }
+      }
+      &-title,
+      &-description {
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      &-price {
+        @include sm {
+          font-size: 1em;
+        }
+        @include md {
+          font-size: 1em;
+        }
+        @include lg {
+          font-size: 1.2em;
+        }
+        @include xl {
+          font-size: 1.2em;
+        }
+      }
+      &-description,
+      &-rating,
+      &-sold {
+        color: $outlineColor;
+        @include sm {
+          font-size: 0.6em;
+        }
+        @include md {
+          font-size: 0.6em;
+        }
+        @include lg {
+          font-size: 0.8em;
+        }
+        @include xl {
+          font-size: 0.8em;
+        }
+      }
+      &-rating {
+        display: flex;
+        flex-direction: row;
+        gap: 0.4vw;
+        color: $primary;
+
+        &-count {
+          color: $outlineColor;
+        }
+      }
+    }
+  }
+}

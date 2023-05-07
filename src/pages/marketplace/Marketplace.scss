@@ -2,7 +2,12 @@
 @import "../../styles/mixins";
 @import "../../styles/variables";
 
-#marketplace {
+.marketplace-container {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.marketplace {
   &-body {
     width: 100%;
     min-height: 100vh;
@@ -23,9 +28,22 @@
   }
 }
 
-.container {
+.marketplace-banner-container {
+  width: 100%;
   background-color: $backgroundColor;
-  min-height: 100vh;
+  color: $onBackgroundColor;
+  @include sm {
+    padding: $padding-sm;
+  }
+  @include md {
+    padding: $padding-md;
+  }
+  @include lg {
+    padding: $padding-lg;
+  }
+  @include xl {
+    padding: $padding-lg;
+  }
 }
 
 #product {
@@ -43,5 +61,18 @@
     @include xl {
       padding: $padding-lg;
     }
+  }
+}
+
+.products-row {
+  display: flex;
+  flex-direction: row;
+  column-gap: 1.2rem;
+  width: 100%;
+  white-space: nowrap;
+  overflow-x: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
   }
 }

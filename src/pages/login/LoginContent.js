@@ -32,8 +32,7 @@ function LoginContent() {
     password: "",
   });
 
-  const { login, authErrorHandler, fetchData, fetchAssets, fetchConstants } =
-    useAuth();
+  const { login, authErrorHandler, fetchData } = useAuth();
   const navigate = useNavigate();
 
   const onLoginClickHandler = async (e) => {
@@ -67,27 +66,18 @@ function LoginContent() {
   useEffect(() => {
     const getConstants = async () => {
       const loginConstants = await fetchData("constants", "login");
+      const assets = await fetchData("constants", "global");
 
+      setAssets((prev) => ({
+        ...prev,
+        image: assets.IMAGE,
+      }));
       setLoginConstants(loginConstants);
+      setIsLoading(false);
     };
 
     getConstants();
   }, [fetchData]);
-
-  useEffect(() => {
-    const getAssets = async () => {
-      const ref = await fetchConstants("constants", "global");
-
-      const assets = await fetchAssets("assets/img", ref?.logo);
-      setAssets((prev) => ({
-        ...prev,
-        image: assets,
-      }));
-      setIsLoading(false);
-    };
-
-    getAssets();
-  }, [fetchAssets, fetchConstants]);
 
   return (
     <>
