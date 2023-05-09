@@ -15,6 +15,7 @@ import {
   SellerRoute,
 } from "./routes";
 import UserCart from "./pages/user/cart/UserCart";
+import { MarketplaceProvider } from "./contexts/MarketplaceContext";
 
 const LoginPage = lazy(() => import("./pages/login/Login"));
 const MarketplacePage = lazy(() => import("./pages/marketplace/Marketplace"));
@@ -92,12 +93,27 @@ function App() {
           <Route
             path={ROUTES.MARKETPLACE}
             element={
-              <Suspense fallback={<FullPageLoading />}>
-                <MarketplacePage
-                  currentUser={currentUser}
-                  userDesc={userDesc}
-                />
-              </Suspense>
+              <MarketplaceProvider>
+                <Suspense fallback={<FullPageLoading />}>
+                  <MarketplacePage
+                    currentUser={currentUser}
+                    userDesc={userDesc}
+                  />
+                </Suspense>
+              </MarketplaceProvider>
+            }
+          />
+          <Route
+            path="/marketplace/category/:category"
+            element={
+              <MarketplaceProvider>
+                <Suspense fallback={<FullPageLoading />}>
+                  <MarketplaceCategoryPage
+                    currentUser={currentUser}
+                    userDesc={userDesc}
+                  />
+                </Suspense>
+              </MarketplaceProvider>
             }
           />
           <Route
@@ -105,18 +121,6 @@ function App() {
             element={
               <Suspense fallback={<FullPageLoading />}>
                 <ProductDetailPage
-                  currentUser={currentUser}
-                  userDesc={userDesc}
-                />
-              </Suspense>
-            }
-          />
-
-          <Route
-            path="/marketplace/category/:category"
-            element={
-              <Suspense fallback={<FullPageLoading />}>
-                <MarketplaceCategoryPage
                   currentUser={currentUser}
                   userDesc={userDesc}
                 />

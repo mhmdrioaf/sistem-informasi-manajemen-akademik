@@ -28,21 +28,23 @@ import "./MarketplaceHeader.scss";
 function MarketplaceHeader({
   currentUser,
   userDesc,
-  showSearchIcon,
-  showCartIcon,
-  showCategoriesList,
+  showSearchIcon = true,
+  showCartIcon = true,
+  showCategoriesList = true,
   setSearchQuery,
   onSearchHandler,
   isSearching = false,
   onBackButtonPressed,
   searchWordEntered,
   setSearchWordEntered,
+  anchorElement,
+  setAnchorElement,
 }) {
   const [state, setState] = useState(false);
-  const [anchorElement, setAnchorElement] = useState(null);
   const navigate = useNavigate();
   const searchInputOpen = Boolean(anchorElement);
   const searchInputId = searchInputOpen ? "simple-popover" : undefined;
+
   const navigationTabs = [
     {
       name: "Home",

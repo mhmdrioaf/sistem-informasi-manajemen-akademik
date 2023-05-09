@@ -5,48 +5,29 @@ import { MarketplaceHeader } from "../../components/layouts";
 import ProductCardSkeleton from "../../components/products/ProductCardSkeleton";
 import Skeleton from "@mui/material/Skeleton";
 import * as ROUTES from "../../constants/routes";
+import { useMarketplace } from "../../contexts/MarketplaceContext";
 
 const ProductCard = lazy(() => import("../../components/products/Product"));
 const Carousel = lazy(() => import("../../components/carousel/Carousel"));
 
 function MarketplaceCategory({ currentUser, userDesc }) {
   const [products, setProducts] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
-  const [isFounded, setIsFounded] = useState(true);
-  const [searchResult, setSearchResult] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchWordEntered, setSearchWordEntered] = useState("");
-  const [carouselAssets, setCarouselAssets] = useState([]);
-  const { fetchCategory, fetchData } = useAuth();
-
-  const onSearchHandler = () => {
-    const result = products.filter((product) => {
-      const productResult = product.name
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
-      if (productResult) {
-        setIsFounded(true);
-        return productResult;
-      } else {
-        return setIsFounded(false);
-      }
-    });
-
-    if (searchQuery !== "") {
-      setSearchResult(result);
-      setIsSearching(true);
-    } else {
-      setSearchResult([]);
-      setIsSearching(false);
-    }
-  };
-
-  const onBackButtonPressed = () => {
-    setIsSearching(false);
-    setIsFounded(true);
-    setSearchWordEntered("");
-    setSearchResult([]);
-  };
+  const [categoryBannerAssets, setCategoryBannerAssets] = useState([]);
+  const { fetchCategory } = useAuth();
+  const {
+    bannerAssets,
+    searchProducts,
+    backButtonPressHandler,
+    isSearching,
+    filteredProducts,
+    searchQuery,
+    setSearchQuery,
+    searchInputValue,
+    setSearchInputValue,
+    searchFieldAnchorElement,
+    setSearchFieldAnchorElement,
+    isFounded,
+  } = useMarketplace();
 
   useEffect(() => {
     const mainUrl = window.location.href;
@@ -54,24 +35,21 @@ function MarketplaceCategory({ currentUser, userDesc }) {
     const category = URL[URL.length - 1];
     const unsubscribe = async () => {
       const productsData = await fetchCategory(category);
-      const marketplaceBannerAssets = await fetchData("constants", "global");
 
-      if (marketplaceBannerAssets.marketplace_banner.length > 0) {
-        const assetsResult = marketplaceBannerAssets.marketplace_banner.filter(
-          (asset) => {
-            return asset.category.includes(category);
-          }
-        );
+      if (bannerAssets.length !== 0) {
+        const assetsResult = bannerAssets.filter((asset) => {
+          return asset.category.includes(category);
+        });
 
-        setCarouselAssets(assetsResult);
+        setCategoryBannerAssets(assetsResult);
       } else {
-        setCarouselAssets([]);
+        setCategoryBannerAssets([]);
       }
       setProducts(productsData);
     };
 
     unsubscribe();
-  }, [fetchCategory, fetchData]);
+  }, [fetchCategory, bannerAssets]);
 
   return (
     <Stack className="marketplace-container">
@@ -82,42 +60,15 @@ function MarketplaceCategory({ currentUser, userDesc }) {
         showCartIcon={true}
         showCategoriesList={true}
         setSearchQuery={setSearchQuery}
-        onSearchHandler={onSearchHandler}
+        onSearchHandler={() => searchProducts(products, searchQuery)}
         isSearching={isSearching}
-        onBackButtonPressed={onBackButtonPressed}
-        searchWordEntered={searchWordEntered}
-        setSearchWordEntered={setSearchWordEntered}
+        onBackButtonPressed={backButtonPressHandler}
+        searchWordEntered={searchInputValue}
+        setSearchWordEntered={setSearchInputValue}
+        anchorElement={searchFieldAnchorElement}
+        setAnchorElement={setSearchFieldAnchorElement}
       />
-      {searchResult.length !== 0 && (
-        <>
-          <div className="marketplace-banner-container">
-            <Suspense
-              fallback={
-                <Skeleton
-                  variant="rounded"
-                  sx={{ width: "100%", height: "50vh" }}
-                />
-              }
-            >
-              <Carousel assets={carouselAssets} auto={false} />
-            </Suspense>
-          </div>
-          <Stack className="marketplace-body" gap={2}>
-            <h3>Hasil pencarian</h3>
-            <div className="products-row">
-              {searchResult?.map((product) => (
-                <Suspense key={product.id} fallback={<ProductCardSkeleton />}>
-                  <ProductCard
-                    product={product}
-                    productLink={ROUTES.PRODUCT_DETAIL(product.id)}
-                  />
-                </Suspense>
-              ))}
-            </div>
-          </Stack>
-        </>
-      )}
-      {searchResult.length === 0 && isFounded && (
+      {filteredProducts.length !== 0 && (
         <>
           <div className="marketplace-banner-container">
             <Suspense
@@ -129,7 +80,41 @@ function MarketplaceCategory({ currentUser, userDesc }) {
               }
             >
               <Carousel
-                assets={carouselAssets}
+                assets={categoryBannerAssets}
+                auto={false}
+                showArrows={false}
+                setUrl={false}
+              />
+            </Suspense>
+          </div>
+          <Stack className="marketplace-body" gap={2}>
+            <h3>Hasil pencarian</h3>
+            <div className="products-row">
+              {filteredProducts?.map((product) => (
+                <Suspense key={product.id} fallback={<ProductCardSkeleton />}>
+                  <ProductCard
+                    product={product}
+                    productLink={ROUTES.PRODUCT_DETAIL(product.id)}
+                  />
+                </Suspense>
+              ))}
+            </div>
+          </Stack>
+        </>
+      )}
+      {filteredProducts.length === 0 && isFounded && (
+        <>
+          <div className="marketplace-banner-container">
+            <Suspense
+              fallback={
+                <Skeleton
+                  variant="rounded"
+                  sx={{ width: "100%", height: "50vh" }}
+                />
+              }
+            >
+              <Carousel
+                assets={categoryBannerAssets}
                 auto={false}
                 showArrows={false}
                 setUrl={false}
