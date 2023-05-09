@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { GiHamburgerMenu, GiShop } from "react-icons/gi";
 import { BsFillPersonFill } from "react-icons/bs";
 import { FaShoppingCart, FaSearch } from "react-icons/fa";
-import { IoMdLogIn, IoMdNotifications } from "react-icons/io";
+import { IoMdArrowBack, IoMdLogIn, IoMdNotifications } from "react-icons/io";
 import { HiHome } from "react-icons/hi";
 import { AiFillShopping } from "react-icons/ai";
 import OutlinedButton from "../../buttons/OutlinedButton";
@@ -31,18 +31,18 @@ function MarketplaceHeader({
   showSearchIcon,
   showCartIcon,
   showCategoriesList,
+  setSearchQuery,
+  onSearchHandler,
+  isSearching = false,
+  onBackButtonPressed,
+  searchWordEntered,
+  setSearchWordEntered,
 }) {
   const [state, setState] = useState(false);
   const [anchorElement, setAnchorElement] = useState(null);
-  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const searchInputOpen = Boolean(anchorElement);
   const searchInputId = searchInputOpen ? "simple-popover" : undefined;
-  const searchSubmitHandler = (query) => {
-    if (query !== "") {
-      return navigate(`/marketplace?search=${query}`);
-    }
-  };
   const navigationTabs = [
     {
       name: "Home",
@@ -63,6 +63,7 @@ function MarketplaceHeader({
       id: "nav-tab-marketplace",
     },
   ];
+
   const categoriesList = [
     { name: "Olerikultura", value: "olerikultura", id: "olerikultura" },
     { name: "Frutikultura", value: "frutikultura", id: "frutikultura" },
@@ -218,16 +219,33 @@ function MarketplaceHeader({
           gap={2}
           flexGrow={1}
         >
-          <IconButton
-            id="icon-hamburger"
-            disableRipple
-            size="medium"
-            className="icon"
-            onClick={toggleDrawer(true)}
-          >
-            <GiHamburgerMenu />
-          </IconButton>
+          {isSearching === false && (
+            <IconButton
+              id="icon-hamburger"
+              disableRipple
+              size="medium"
+              className="icon"
+              onClick={toggleDrawer(true)}
+            >
+              <GiHamburgerMenu />
+            </IconButton>
+          )}
+          {isSearching === true && (
+            <IconButton
+              id="icon-hamburger"
+              disableRipple
+              size="medium"
+              className="icon"
+              onClick={onBackButtonPressed}
+            >
+              <IoMdArrowBack />
+            </IconButton>
+          )}
+
           <Stack
+            component="a"
+            href={ROUTES.MARKETPLACE}
+            sx={{ textDecoration: "none", color: color.primary }}
             id="header-logo"
             direction="column"
             alignItems="start"
@@ -268,7 +286,11 @@ function MarketplaceHeader({
               hiddenLabel
               placeholder="Cari apa saja..."
               variant="outlined"
-              onChange={(event) => setSearchQuery(event.target.value)}
+              value={searchWordEntered}
+              onChange={(event) => {
+                setSearchQuery(event.target.value);
+                setSearchWordEntered(event.target.value);
+              }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -277,9 +299,7 @@ function MarketplaceHeader({
                 ),
                 endAdornment: (
                   <InputAdornment position="end">
-                    <PrimaryButton
-                      onClick={() => searchSubmitHandler(searchQuery)}
-                    >
+                    <PrimaryButton onClick={onSearchHandler}>
                       Cari
                     </PrimaryButton>
                   </InputAdornment>
@@ -319,9 +339,7 @@ function MarketplaceHeader({
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
-                        <IconButton
-                          onClick={() => searchSubmitHandler(searchQuery)}
-                        >
+                        <IconButton onClick={onSearchHandler}>
                           <FaSearch />
                         </IconButton>
                       </InputAdornment>
