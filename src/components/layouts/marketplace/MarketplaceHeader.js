@@ -370,10 +370,12 @@ function MarketplaceHeader({
           {showCartIcon && (
             <>
               <IconButton
+                component="a"
+                href={ROUTES.USER_CART}
                 id="cart-icon"
                 disableRipple
                 size="medium"
-                onClick={() => console.log("cart")}
+                sx={{ color: color.primary, textDecoration: "none" }}
                 className="icon"
               >
                 <FaShoppingCart />

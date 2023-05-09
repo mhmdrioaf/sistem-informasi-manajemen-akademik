@@ -5,7 +5,7 @@ import { IoMdArrowBack, IoMdArrowForward } from "react-icons/io";
 import "./Carousel.scss";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
-function Carousel({ assets }) {
+function Carousel({ assets, auto = true, showArrows = true, setUrl = true }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const handlePrevClick = useCallback(() => {
     setActiveIndex(activeIndex === 0 ? assets?.length - 1 : activeIndex - 1);
@@ -15,13 +15,15 @@ function Carousel({ assets }) {
   }, [activeIndex, assets?.length]);
 
   useEffect(() => {
-    const handleAutoNextClick = () => {
-      handleNextClick();
-    };
-    const intervalId = setInterval(handleAutoNextClick, 3000);
+    if (auto) {
+      const handleAutoNextClick = () => {
+        handleNextClick();
+      };
+      const intervalId = setInterval(handleAutoNextClick, 3000);
 
-    return () => clearInterval(intervalId);
-  }, [handleNextClick]);
+      return () => clearInterval(intervalId);
+    }
+  }, [handleNextClick, auto]);
 
   return (
     <div className="carousel-container">
@@ -29,7 +31,11 @@ function Carousel({ assets }) {
         <>
           <Link
             underline="none"
-            href={`/marketplace/category/${assets[activeIndex].category}`}
+            href={
+              setUrl
+                ? `/marketplace/category/${assets[activeIndex].category}`
+                : "#"
+            }
           >
             <div
               id="dim"
@@ -67,46 +73,50 @@ function Carousel({ assets }) {
               }}
             />
           </Link>
-          <IconButton
-            disableRipple
-            size="medium"
-            sx={{
-              backgroundColor: color.primaryContainer,
-              color: color.onPrimaryContainer,
-              borderRadius: ".4vw",
-              "&:hover": {
-                backgroundColor: color.primary,
-                color: color.onPrimary,
-              },
-              position: "absolute",
-              top: "50%",
-              left: "1rem",
-              transform: "translateY(-50%)",
-            }}
-            onClick={handlePrevClick}
-          >
-            <IoMdArrowBack />
-          </IconButton>
-          <IconButton
-            disableRipple
-            size="medium"
-            sx={{
-              backgroundColor: color.primaryContainer,
-              color: color.onPrimaryContainer,
-              borderRadius: ".4vw",
-              "&:hover": {
-                backgroundColor: color.primary,
-                color: color.onPrimary,
-              },
-              position: "absolute",
-              top: "50%",
-              right: "1rem",
-              transform: "translateY(-50%)",
-            }}
-            onClick={handleNextClick}
-          >
-            <IoMdArrowForward />
-          </IconButton>
+          {showArrows && (
+            <>
+              <IconButton
+                disableRipple
+                size="medium"
+                sx={{
+                  backgroundColor: color.primaryContainer,
+                  color: color.onPrimaryContainer,
+                  borderRadius: ".4vw",
+                  "&:hover": {
+                    backgroundColor: color.primary,
+                    color: color.onPrimary,
+                  },
+                  position: "absolute",
+                  top: "50%",
+                  left: "1rem",
+                  transform: "translateY(-50%)",
+                }}
+                onClick={handlePrevClick}
+              >
+                <IoMdArrowBack />
+              </IconButton>
+              <IconButton
+                disableRipple
+                size="medium"
+                sx={{
+                  backgroundColor: color.primaryContainer,
+                  color: color.onPrimaryContainer,
+                  borderRadius: ".4vw",
+                  "&:hover": {
+                    backgroundColor: color.primary,
+                    color: color.onPrimary,
+                  },
+                  position: "absolute",
+                  top: "50%",
+                  right: "1rem",
+                  transform: "translateY(-50%)",
+                }}
+                onClick={handleNextClick}
+              >
+                <IoMdArrowForward />
+              </IconButton>
+            </>
+          )}
           <div
             id="category-text"
             style={{

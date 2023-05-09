@@ -18,6 +18,9 @@ import UserCart from "./pages/user/cart/UserCart";
 
 const LoginPage = lazy(() => import("./pages/login/Login"));
 const MarketplacePage = lazy(() => import("./pages/marketplace/Marketplace"));
+const MarketplaceCategoryPage = lazy(() =>
+  import("./pages/marketplace/MarketplaceCategory")
+);
 const RegisterPage = lazy(() => import("./pages/register/Register"));
 const ResetPasswordPage = lazy(() =>
   import("./pages/reset_password/ResetPassword")
@@ -102,6 +105,18 @@ function App() {
             element={
               <Suspense fallback={<FullPageLoading />}>
                 <ProductDetailPage
+                  currentUser={currentUser}
+                  userDesc={userDesc}
+                />
+              </Suspense>
+            }
+          />
+
+          <Route
+            path="/marketplace/category/:category"
+            element={
+              <Suspense fallback={<FullPageLoading />}>
+                <MarketplaceCategoryPage
                   currentUser={currentUser}
                   userDesc={userDesc}
                 />

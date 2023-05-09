@@ -17,6 +17,8 @@ import {
   getDocs,
   updateDoc,
   arrayUnion,
+  query,
+  where,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../firebase";
@@ -170,6 +172,22 @@ export function AuthProvider({ children }) {
     }
   }
 
+  async function fetchCategory(categoryName) {
+    const q = query(
+      collection(db, "products"),
+      where("category", "==", categoryName)
+    );
+    const result = getDocs(q).then((querySnapshot) => {
+      const productData = [];
+      querySnapshot.forEach((doc) => {
+        productData.push({ id: doc.id, ...doc.data() });
+      });
+      return productData;
+    });
+
+    return result;
+  }
+
   async function fetchConstants(dataCol, dataDoc) {
     const constantRef = await fetchData(dataCol, dataDoc);
 
@@ -285,6 +303,7 @@ export function AuthProvider({ children }) {
     fetchAssets,
     fetchCollection,
     fetchSubDoc,
+    fetchCategory,
     uploadImage,
     updateData,
     addProductToCart,

@@ -20,3 +20,5 @@ export const USER_PROFILE = "/user/profile";
 export const SELLER_HOME = "/seller";
 
 export const PRODUCT_DETAIL = (productId) => `/product/${productId}`;
+export const PRODUCT_CATEGORY = (category) =>
+  `/marketplace/category/${category}`;
