@@ -21,7 +21,7 @@ import {
   where,
   onSnapshot,
 } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { ref, uploadBytes } from "firebase/storage";
 import { storage } from "../firebase";
 
 const FirebaseContext = React.createContext();
@@ -222,13 +222,6 @@ export function AuthProvider({ children }) {
     return result;
   }
 
-  async function fetchConstants(dataCol, dataDoc) {
-    const constantRef = await fetchData(dataCol, dataDoc);
-
-    if (constantRef) return constantRef;
-    else return null;
-  }
-
   async function fetchCollection(dataCol) {
     const events = getDocs(collection(db, dataCol)).then((querySnapshot) => {
       const tempDoc = [];
@@ -248,18 +241,6 @@ export function AuthProvider({ children }) {
 
     if (docSnap.exists()) {
       return docSnap.data();
-    } else {
-      return null;
-    }
-  }
-
-  async function fetchAssets(path, child) {
-    const assetsRef = ref(storage, `${path}/${child}`);
-
-    const downloadUrl = await getDownloadURL(assetsRef);
-
-    if (downloadUrl) {
-      return downloadUrl;
     } else {
       return null;
     }
@@ -322,9 +303,7 @@ export function AuthProvider({ children }) {
     editUserData,
     authErrorHandler,
     verifyEmail,
-    fetchConstants,
     fetchData,
-    fetchAssets,
     fetchCollection,
     fetchSubDoc,
     fetchCategory,

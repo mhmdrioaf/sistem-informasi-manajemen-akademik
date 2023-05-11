@@ -87,6 +87,12 @@ function MarketplaceHeader({
   const handleSearchInputClick = (event) => {
     setAnchorElement(event.currentTarget);
   };
+
+  const onSearchKeyHandler = (event) => {
+    if (event.keyCode === 13) {
+      onSearchHandler();
+    }
+  };
   const drawerList = () => (
     <Stack
       alignItems="center"
@@ -293,6 +299,7 @@ function MarketplaceHeader({
                 setSearchQuery(event.target.value);
                 setSearchWordEntered(event.target.value);
               }}
+              onKeyDown={onSearchKeyHandler}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -348,6 +355,7 @@ function MarketplaceHeader({
                     ),
                   }}
                   onChange={(event) => setSearchQuery(event.target.value)}
+                  onKeyDown={onSearchKeyHandler}
                 />
               </Popover>
               <IconButton

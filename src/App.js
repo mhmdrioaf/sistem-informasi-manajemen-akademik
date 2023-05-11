@@ -15,6 +15,7 @@ import {
 } from "./routes";
 import UserCart from "./pages/user/cart/UserCart";
 import { MarketplaceProvider } from "./contexts/MarketplaceContext";
+import { NotFoundPage } from "./pages/Landing";
 
 const LoginPage = lazy(() => import("./pages/login/Login"));
 const MarketplacePage = lazy(() => import("./pages/marketplace/Marketplace"));
@@ -51,6 +52,8 @@ function App() {
     <AuthProvider>
       <Router>
         <Routes>
+          <Route path="*" element={<NotFoundPage />} />
+
           {/* public route */}
           <Route
             exact

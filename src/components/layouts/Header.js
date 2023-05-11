@@ -71,7 +71,8 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-      <Link id="drawer-profile-link"
+      <Link
+        id="drawer-profile-link"
         href={currentUser ? ROUTES.USER_HOME : ROUTES.LOGIN}
         color="inherit"
         underline="none"
@@ -88,10 +89,12 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
         </List>
       </Link>
 
-      <Link id="drawer-marketplace-link"
+      <Link
+        id="drawer-marketplace-link"
         href={ROUTES.MARKETPLACE}
         color="inherit"
-        underline="none">
+        underline="none"
+      >
         <List>
           <ListItem disablePadding>
             <ListButton>
@@ -129,7 +132,8 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
   return (
     <>
       <Box className="sub-header-container">
-        <Stack id="sub-header-container"
+        <Stack
+          id="sub-header-container"
           direction="row"
           sx={{
             display: {
@@ -140,13 +144,14 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
             },
           }}
         >
-
-          <Stack id="sub-header-nav-links"
+          <Stack
+            id="sub-header-nav-links"
             color="inherit"
             direction="row"
             spacing={2}
           >
-            <Link id="sub-header-profile-link"
+            <Link
+              id="sub-header-profile-link"
               underline="none"
               href={currentUser ? ROUTES.USER_HOME : ROUTES.LOGIN}
             >
@@ -158,7 +163,8 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
               </Stack>
             </Link>
 
-            <Link id="sub-header-marketplace-link"
+            <Link
+              id="sub-header-marketplace-link"
               color={color.onPrimary}
               underline="none"
               href={ROUTES.MARKETPLACE}
@@ -170,10 +176,7 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
             </Link>
           </Stack>
 
-          <Stack id="sub-header-social-media-links"
-            spacing={2}
-            direction="row"
-          >
+          <Stack id="sub-header-social-media-links" spacing={2} direction="row">
             <Link href={socialLink.facebook} target="_blank">
               <BsFacebook />
             </Link>
@@ -193,17 +196,23 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
         </Stack>
       </Box>
 
-      <Box id="header-container"
+      <Box
+        id="header-container"
         className={
           scrollValue >= 75
             ? "header__main__container sticky"
             : "header__main__container"
         }
       >
-        <Stack id="header-logo-container-small-devices"
+        <Stack
+          id="header-logo-container-small-devices"
+          component="a"
+          href={ROUTES.LANDING}
           direction="row"
           spacing={2}
           sx={{
+            color: color.onBackgroundColor,
+            textDecoration: "none",
             alignItems: "center",
             display: {
               xs: "flex",
@@ -223,7 +232,8 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
             }}
           />
           <Stack direction="column" spacing={0}>
-            <Typography className="small-devices-title"
+            <Typography
+              className="small-devices-title"
               sx={{
                 fontSize: ".8em",
                 fontWeight: "bold",
@@ -242,7 +252,8 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
           </Stack>
         </Stack>
 
-        <IconButton id="icon-hamburger"
+        <IconButton
+          id="icon-hamburger"
           onClick={toggleDrawer("bottom", true)}
           size="medium"
           sx={{
@@ -258,9 +269,14 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
           <GiHamburgerMenu />
         </IconButton>
 
-        <Stack id="header-logo-container"
+        <Stack
+          id="header-logo-container"
+          component="a"
+          href={ROUTES.LANDING}
           spacing={0}
           sx={{
+            textDecoration: "none",
+            color: color.onBackgroundColor,
             display: {
               xs: "none",
               sm: "none",
@@ -295,7 +311,8 @@ function Header({ currentUser, handlePageChange, activePage, scrollValue }) {
           </Typography>
         </Stack>
 
-        <Stack id="navbar-container"
+        <Stack
+          id="navbar-container"
           spacing={2}
           direction="row"
           sx={{

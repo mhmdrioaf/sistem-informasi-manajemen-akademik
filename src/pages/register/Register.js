@@ -27,7 +27,7 @@ function Register() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const { register, fetchConstants, authErrorHandler } = useAuth();
+  const { register, authErrorHandler, fetchData } = useAuth();
 
   const createMarkup = (data) => {
     return { __html: data };
@@ -56,7 +56,7 @@ function Register() {
 
   useEffect(() => {
     const getAssets = async () => {
-      const ref = await fetchConstants("constants", "global");
+      const ref = await fetchData("constants", "global");
 
       setAssets((prev) => ({
         ...prev,
@@ -68,7 +68,7 @@ function Register() {
     };
 
     getAssets();
-  }, [fetchConstants]);
+  }, [fetchData]);
 
   return (
     <Box className="register__container">

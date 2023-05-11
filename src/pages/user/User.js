@@ -10,11 +10,9 @@ const UserProfile = lazy(() => import("./profile/UserProfile"));
 
 function User() {
   const [page, setPage] = useState("profile");
-  const [activePage, setActivePage] = useState(0);
 
-  const handlePageChange = (page, index) => {
+  const handlePageChange = (page) => {
     setPage(page);
-    setActivePage(index);
   };
 
   const tabs = [
@@ -54,12 +52,7 @@ function User() {
   return (
     <div>
       <Stack>
-        <Header
-          handlePageChange={handlePageChange}
-          activePage={activePage}
-          logo={"User"}
-          tabs={tabs}
-        />
+        <Header handlePageChange={handlePageChange} logo={"User"} tabs={tabs} />
         {pageList()}
       </Stack>
     </div>

@@ -2,21 +2,20 @@ import { Stack, Typography } from "@mui/material";
 import React, { Suspense, lazy, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FullPageLoading from "../../components/indicators/PrimaryLoading";
-import Header from "../../components/layouts/global/Header";
+import Header from "../../components/layouts/authenticated/Header";
 import * as ROUTES from "../../constants/routes";
+import { IoMdBookmark, IoMdPerson } from "react-icons/io";
 
 const AdminDashboardPage = lazy(() => import("./dashboard/AdminDashboard"));
 const AdminStudentPage = lazy(() => import("./student/AdminStudent"));
 
 function Admin() {
   const [page, setPage] = useState(ROUTES.ADMIN_DASHBOARD);
-  const [activePage, setActivePage] = useState(0);
 
   const navigate = useNavigate();
 
-  const handlePageChange = (page, index) => {
-    setPage((prev) => (prev = page));
-    setActivePage(index);
+  const handlePageChange = (page) => {
+    setPage(page);
   };
 
   const pagesList = () => {
@@ -38,16 +37,21 @@ function Admin() {
     }
   };
 
+  const tabs = [
+    {
+      name: "Dashboard",
+      route: ROUTES.ADMIN_DASHBOARD,
+      element: <IoMdPerson />,
+    },
+    { name: "Students", route: ROUTES.ADMIN_STUDENTS, element: <IoMdPerson /> },
+    { name: "Dashboard", route: "/admin/teachers", element: <IoMdBookmark /> },
+  ];
+
   return (
     <Stack>
       <Header
         handlePageChange={handlePageChange}
-        activePage={activePage}
-        tabs={[
-          { name: "Dashboard", route: ROUTES.ADMIN_DASHBOARD },
-          { name: "Students", route: ROUTES.ADMIN_STUDENTS },
-          { name: "Teachers", route: "/admin/teachers" },
-        ]}
+        tabs={tabs}
         logo={
           <Typography sx={{ fontWeight: "bold", textTransform: "uppercase" }}>
             Administrator
