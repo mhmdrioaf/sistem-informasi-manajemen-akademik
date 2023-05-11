@@ -10,7 +10,7 @@ import { useMarketplace } from "../../contexts/MarketplaceContext";
 const ProductCard = lazy(() => import("../../components/products/Product"));
 const Carousel = lazy(() => import("../../components/carousel/Carousel"));
 
-function MarketplaceCategory({ currentUser, userDesc }) {
+function MarketplaceCategory() {
   const [products, setProducts] = useState([]);
   const [categoryBannerAssets, setCategoryBannerAssets] = useState([]);
   const { fetchCategory } = useAuth();
@@ -54,8 +54,6 @@ function MarketplaceCategory({ currentUser, userDesc }) {
   return (
     <Stack className="marketplace-container">
       <MarketplaceHeader
-        currentUser={currentUser}
-        userDesc={userDesc}
         showSearchIcon={true}
         showCartIcon={true}
         showCategoriesList={true}

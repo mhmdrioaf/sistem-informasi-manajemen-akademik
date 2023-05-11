@@ -1,11 +1,10 @@
 import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 import React, { Suspense, lazy, useEffect, useState } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.scss";
 import FullPageLoading from "./components/indicators/PrimaryLoading";
 import * as ROUTES from "./constants/routes";
-import * as STATUS from "./constants/status";
 import { AuthProvider } from "./contexts/FirebaseContext";
 import { auth, db } from "./firebase";
 import {
@@ -36,35 +35,7 @@ const LandingPage = lazy(() => import("./pages/Landing"));
 const ChatPage = lazy(() => import("./pages/user/chat/Chat"));
 
 function App() {
-  const [userRole, setUserRole] = useState("guest");
   const [userDesc, setUserDesc] = useState({});
-  const [currentUser, setCurrentUser] = useState(null);
-  const [status, setStatus] = useState(STATUS.LOADING);
-
-  // fetching user role
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setCurrentUser(user);
-        const fetchUser = async () => {
-          const dataRef = doc(db, "users", user?.uid);
-          const docSnap = await getDoc(dataRef);
-
-          if (docSnap.exists()) {
-            setUserRole(docSnap.data().role);
-            setStatus(STATUS.SUCCESS);
-          } else {
-            setUserRole("guest");
-            setStatus(STATUS.AUTH_GUEST);
-          }
-        };
-
-        fetchUser();
-      } else {
-        setStatus(STATUS.AUTH_NOT_LOGGED_IN);
-      }
-    });
-  }, []);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -86,7 +57,7 @@ function App() {
             path={ROUTES.LANDING}
             element={
               <Suspense fallback={<FullPageLoading />}>
-                <LandingPage currentUser={currentUser} />
+                <LandingPage />
               </Suspense>
             }
           />
@@ -95,10 +66,7 @@ function App() {
             element={
               <MarketplaceProvider>
                 <Suspense fallback={<FullPageLoading />}>
-                  <MarketplacePage
-                    currentUser={currentUser}
-                    userDesc={userDesc}
-                  />
+                  <MarketplacePage userDesc={userDesc} />
                 </Suspense>
               </MarketplaceProvider>
             }
@@ -108,10 +76,7 @@ function App() {
             element={
               <MarketplaceProvider>
                 <Suspense fallback={<FullPageLoading />}>
-                  <MarketplaceCategoryPage
-                    currentUser={currentUser}
-                    userDesc={userDesc}
-                  />
+                  <MarketplaceCategoryPage userDesc={userDesc} />
                 </Suspense>
               </MarketplaceProvider>
             }
@@ -120,10 +85,7 @@ function App() {
             path={"/product/:productId"}
             element={
               <Suspense fallback={<FullPageLoading />}>
-                <ProductDetailPage
-                  currentUser={currentUser}
-                  userDesc={userDesc}
-                />
+                <ProductDetailPage userDesc={userDesc} />
               </Suspense>
             }
           />
@@ -131,7 +93,7 @@ function App() {
           <Route
             element={
               <Suspense fallback={<FullPageLoading />}>
-                <AdminRoute userRole={userRole} status={status} />
+                <AdminRoute />
               </Suspense>
             }
           >
@@ -141,22 +103,20 @@ function App() {
           <Route
             element={
               <Suspense fallback={<FullPageLoading />}>
-                <SellerRoute userRole={userRole} status={status} />
+                <SellerRoute />
               </Suspense>
             }
           >
             <Route
               path={ROUTES.SELLER_HOME}
-              element={
-                <SellerPage currentUser={currentUser} userDesc={userDesc} />
-              }
+              element={<SellerPage userDesc={userDesc} />}
             />
           </Route>
 
           <Route
             element={
               <Suspense fallback={<FullPageLoading />}>
-                <AuthenticatedRoute status={status} />
+                <AuthenticatedRoute />
               </Suspense>
             }
           >
@@ -164,7 +124,7 @@ function App() {
               path={ROUTES.USER_HOME}
               element={
                 <Suspense fallback={<FullPageLoading />}>
-                  <UserPage currentUser={currentUser} userDesc={userDesc} />
+                  <UserPage userDesc={userDesc} />
                 </Suspense>
               }
             />
@@ -173,7 +133,7 @@ function App() {
               path={ROUTES.USER_CART}
               element={
                 <Suspense fallback={<FullPageLoading />}>
-                  <UserCart currentUser={currentUser} userDesc={userDesc} />
+                  <UserCart userDesc={userDesc} />
                 </Suspense>
               }
             />
@@ -191,7 +151,7 @@ function App() {
           <Route
             element={
               <Suspense fallback={<FullPageLoading />}>
-                <NonAuthenticatedRoute status={status} />
+                <NonAuthenticatedRoute />
               </Suspense>
             }
           >

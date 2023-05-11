@@ -24,10 +24,9 @@ import BasicTextField from "../../textfields/BasicTextField";
 import * as ROUTES from "../../../constants/routes";
 import color from "../../../styles/_color.scss";
 import "./MarketplaceHeader.scss";
+import { useAuth } from "../../../contexts/FirebaseContext";
 
 function MarketplaceHeader({
-  currentUser,
-  userDesc,
   showSearchIcon = true,
   showCartIcon = true,
   showCategoriesList = true,
@@ -40,10 +39,11 @@ function MarketplaceHeader({
   anchorElement,
   setAnchorElement,
 }) {
-  const [state, setState] = useState(false);
+  const [swipeableDrawerState, setSwipeableDrawerState] = useState(false);
   const navigate = useNavigate();
   const searchInputOpen = Boolean(anchorElement);
   const searchInputId = searchInputOpen ? "simple-popover" : undefined;
+  const { currentUser, userData } = useAuth();
 
   const navigationTabs = [
     {
@@ -82,7 +82,7 @@ function MarketplaceHeader({
       return;
     }
 
-    setState(open);
+    setSwipeableDrawerState(open);
   };
   const handleSearchInputClick = (event) => {
     setAnchorElement(event.currentTarget);
@@ -127,7 +127,7 @@ function MarketplaceHeader({
             </Stack>
           </ListItem>
         ))}
-        {userDesc?.role === ("admin" || "student" || "teacher") && (
+        {userData?.role === ("admin" || "student" || "teacher") && (
           <ListItem sx={{ width: "100%" }}>
             <Stack
               component="a"
@@ -429,7 +429,7 @@ function MarketplaceHeader({
       </Stack>
       <SwipeableDrawer
         anchor="left"
-        open={state}
+        open={swipeableDrawerState}
         onClose={toggleDrawer(false)}
         onOpen={toggleDrawer(true)}
       >

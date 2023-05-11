@@ -25,9 +25,16 @@ import color from "../../../styles/_color.scss";
 import "../User.scss";
 import Resizer from "react-image-file-resizer";
 
-function UserProfile({ currentUser, userDesc }) {
-  const { logout, verifyEmail, authErrorHandler, editUserData, uploadImage } =
-    useAuth();
+function UserProfile() {
+  const {
+    logout,
+    verifyEmail,
+    authErrorHandler,
+    editUserData,
+    uploadImage,
+    currentUser,
+    userData,
+  } = useAuth();
   const [verifyStatus, setVerifyStatus] = useState(null);
   const [editStatus, setEditStatus] = useState(null);
   const [disabledButton, setDisabledButton] = useState(true);
@@ -42,35 +49,35 @@ function UserProfile({ currentUser, userDesc }) {
   const [avatarPreview, setAvatarPreview] = useState();
   const [viewPhoto, setViewPhoto] = useState(false);
   const fileInput = useRef();
-  const userData = [
+  const userDataDisplay = [
     {
       name: "Nama",
-      value: userDesc.name ? userDesc.name : false,
+      value: userData?.name ? userData?.name : false,
       type: "text",
     },
     {
       name: "Email",
-      value: currentUser.email,
-      verified: currentUser.emailVerified,
+      value: currentUser?.email,
+      verified: currentUser?.emailVerified,
       type: "email",
     },
     {
       name: "Nomor telepon",
-      value: userDesc.phone_number ? userDesc.phone_number : false,
+      value: userData?.phone_number ? userData?.phone_number : false,
       type: "number",
     },
     { name: "User ID", value: currentUser.uid, type: "user-id" },
     {
       name: "Alamat Pengiriman",
-      value: userDesc.addresses.delivery_address
-        ? userDesc.addresses.delivery_address
+      value: userData?.addresses?.delivery_address
+        ? userData?.addresses?.delivery_address
         : false,
       type: "text",
     },
     {
       name: "Kota",
-      value: userDesc.addresses.public_address
-        ? userDesc.addresses.public_address
+      value: userData?.addresses?.public_address
+        ? userData?.addresses?.public_address
         : false,
       type: "text",
     },
@@ -187,7 +194,7 @@ function UserProfile({ currentUser, userDesc }) {
     return (
       <>
         {!isEmailVerified &&
-          userDesc !== ("admin" || "student" || "teacher") && (
+          userData !== ("admin" || "student" || "teacher") && (
             <Alert
               severity="warning"
               style={{
@@ -229,7 +236,7 @@ function UserProfile({ currentUser, userDesc }) {
             <Alert severity={editStatus?.status}>{editStatus?.message}</Alert>
           </Snackbar>
         )}
-        {userDesc?.profile_picture && (
+        {userData?.profile_picture && (
           <Modal open={viewPhoto} onClose={handleCloseViewPhoto}>
             <Box
               sx={{
@@ -273,7 +280,7 @@ function UserProfile({ currentUser, userDesc }) {
                 <IoMdClose />
               </IconButton>
               <img
-                src={userDesc?.profile_picture}
+                src={userData?.profile_picture}
                 width={400}
                 height="auto"
                 alt="product"
@@ -312,8 +319,8 @@ function UserProfile({ currentUser, userDesc }) {
                   >
                     <Avatar
                       src={
-                        userDesc?.profile_picture
-                          ? userDesc?.profile_picture
+                        userData?.profile_picture
+                          ? userData?.profile_picture
                           : "/broken-image.jpg"
                       }
                       sx={{
@@ -344,7 +351,7 @@ function UserProfile({ currentUser, userDesc }) {
                       }}
                     >
                       <tbody>
-                        {userData.map((user) => (
+                        {userDataDisplay.map((user) => (
                           <tr key={user.name}>
                             <td
                               key={user.name}
@@ -437,8 +444,8 @@ function UserProfile({ currentUser, userDesc }) {
                       {!selectedFile && (
                         <Avatar
                           src={
-                            userDesc?.profile_picture
-                              ? userDesc?.profile_picture
+                            userData?.profile_picture
+                              ? userData?.profile_picture
                               : "/broken-image.jpg"
                           }
                           sx={{
@@ -451,7 +458,7 @@ function UserProfile({ currentUser, userDesc }) {
                   </Stack>
                   <table className="user__profile__table">
                     <tbody>
-                      {userData.map((data) => (
+                      {userDataDisplay.map((data) => (
                         <tr key={data.name}>
                           <td
                             key={data.name}
@@ -512,7 +519,7 @@ function UserProfile({ currentUser, userDesc }) {
                                             e.target.value = "";
                                             return setEditedUser((prev) => ({
                                               ...prev,
-                                              name: userDesc?.name,
+                                              name: userData?.name,
                                             }));
                                           } else {
                                             return setEditedUser((prev) => ({
@@ -526,7 +533,7 @@ function UserProfile({ currentUser, userDesc }) {
                                             return setEditedUser((prev) => ({
                                               ...prev,
                                               phone_number:
-                                                userDesc?.phone_number,
+                                                userData?.phone_number,
                                             }));
                                           } else {
                                             return setEditedUser((prev) => ({
@@ -544,7 +551,7 @@ function UserProfile({ currentUser, userDesc }) {
                                               addresses: {
                                                 ...prev?.addresses,
                                                 delivery_address:
-                                                  userDesc?.addresses
+                                                  userData?.addresses
                                                     ?.delivery_address,
                                               },
                                             }));
@@ -566,7 +573,7 @@ function UserProfile({ currentUser, userDesc }) {
                                               addresses: {
                                                 ...prev?.addresses,
                                                 public_address:
-                                                  userDesc?.addresses
+                                                  userData?.addresses
                                                     ?.public_address,
                                               },
                                             }));

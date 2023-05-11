@@ -9,7 +9,7 @@ import "./Marketplace.scss";
 const ProductCard = lazy(() => import("../../components/products/Product"));
 const Carousel = lazy(() => import("../../components/carousel/Carousel"));
 
-function Marketplace({ currentUser, userDesc }) {
+function Marketplace() {
   const {
     products,
     filteredProducts,
@@ -29,8 +29,6 @@ function Marketplace({ currentUser, userDesc }) {
   return (
     <Stack className="marketplace-container">
       <MarketplaceHeader
-        currentUser={currentUser}
-        userDesc={userDesc}
         setSearchQuery={setSearchQuery}
         onSearchHandler={() => searchProducts(products, searchQuery)}
         isSearching={isSearching}

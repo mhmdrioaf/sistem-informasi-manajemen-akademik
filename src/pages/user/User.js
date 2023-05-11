@@ -8,7 +8,7 @@ import * as ROUTES from "../../constants/routes";
 
 const UserProfile = lazy(() => import("./profile/UserProfile"));
 
-function User({ currentUser, userDesc }) {
+function User() {
   const [page, setPage] = useState("profile");
   const [activePage, setActivePage] = useState(0);
 
@@ -35,7 +35,7 @@ function User({ currentUser, userDesc }) {
       case "profile":
         return (
           <Suspense fallback={<FullPageLoading />}>
-            <UserProfile currentUser={currentUser} userDesc={userDesc} />
+            <UserProfile />
           </Suspense>
         );
       case "cart":

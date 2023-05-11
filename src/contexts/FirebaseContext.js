@@ -19,6 +19,7 @@ import {
   arrayUnion,
   query,
   where,
+  onSnapshot,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../firebase";
@@ -31,6 +32,39 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
+  const [userRole, setUserRole] = useState("guest");
+  const [userData, setUserData] = useState({});
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUser(user);
+        const getUserData = async () => {
+          const userRef = doc(db, "users", user?.uid);
+          const userDoc = await getDoc(userRef);
+
+          if (userDoc.exists()) {
+            setUserRole(userDoc?.data()?.role);
+          } else {
+            setUserRole("guest");
+          }
+        };
+        getUserData();
+      } else {
+        setCurrentUser(null);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        onSnapshot(doc(db, "users", user?.uid), (doc) => {
+          setUserData(doc.data());
+        });
+      }
+    });
+  }, []);
 
   async function login(email, password) {
     return signInWithEmailAndPassword(auth, email, password).then(
@@ -280,16 +314,6 @@ export function AuthProvider({ children }) {
     }
   }
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setCurrentUser(user);
-      } else {
-        setCurrentUser(null);
-      }
-    });
-  });
-
   const value = {
     register,
     login,
@@ -308,6 +332,8 @@ export function AuthProvider({ children }) {
     updateData,
     addProductToCart,
     currentUser,
+    userRole,
+    userData,
   };
 
   return (

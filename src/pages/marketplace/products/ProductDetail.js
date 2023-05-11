@@ -19,7 +19,7 @@ import PrimaryButton from "../../../components/buttons/PrimaryButton";
 import * as ROUTES from "../../../constants/routes";
 import { useNavigate } from "react-router-dom";
 
-function ProductDetail({ currentUser, userDesc }) {
+function ProductDetail() {
   const [isLoading, setIsLoading] = useState(true);
   const [viewPicture, setViewPicture] = useState(false);
   const [status, setStatus] = useState({});
@@ -29,6 +29,7 @@ function ProductDetail({ currentUser, userDesc }) {
   const { fetchData, addProductToCart, authErrorHandler } = useAuth();
   const navigate = useNavigate();
   const URL = window.location.href;
+  const { currentUser } = useAuth();
 
   const handleViewPicture = (index) => {
     setPictureIndex(index);
@@ -160,9 +161,7 @@ function ProductDetail({ currentUser, userDesc }) {
       )}
       <Stack className="container">
         <MarketplaceHeader
-          currentUser={currentUser}
-          userDesc={userDesc}
-          showSearhIcon={false}
+          showSearchIcon={false}
           showCartIcon={true}
           showCategoriesList={false}
         />

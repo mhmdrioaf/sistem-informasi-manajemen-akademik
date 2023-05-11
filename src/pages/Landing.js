@@ -3,6 +3,7 @@ import React, { Suspense, lazy, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FullPageLoading from "../components/indicators/PrimaryLoading";
 import Header from "../components/layouts/Header";
+import { useAuth } from "../contexts/FirebaseContext";
 
 const Home = lazy(() => import("./home/Home"));
 const FoundationProfilePage = lazy(() =>
@@ -13,10 +14,11 @@ const FoundationContactPage = lazy(() =>
 );
 const FoundationMajorPage = lazy(() => import("./foundation/FoundationMajor"));
 
-function Landing({ currentUser }) {
+function Landing() {
   const [page, setPage] = useState("home");
   const [activePage, setActivePage] = useState(0);
   const [scrollValue, setScrollValue] = useState(0);
+  const { currentUser } = useAuth();
 
   const navigate = useNavigate();
 
@@ -93,7 +95,7 @@ export default Landing;
 export { default as AdminIndexPage } from "./admin/Admin";
 export { default as AdminDashboardPage } from "./admin/dashboard/AdminDashboard";
 export { default as AdminStudentPage } from "./admin/student/AdminStudent";
-export { default as NoAccessPage } from "./error/NoAccess";
+export { default as NotFoundPage } from "./error/NotFound";
 export { default as LoginPage } from "./login/Login";
 export { default as MarketplacePage } from "./marketplace/Marketplace";
 export { default as ProductDetailPage } from "./marketplace/products/ProductDetail";

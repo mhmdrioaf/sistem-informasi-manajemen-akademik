@@ -15,11 +15,11 @@ import * as ROUTES from "../../../constants/routes";
 import "../User.scss";
 import CartItem from "./CartItem";
 
-function UserCart({ currentUser, userDesc }) {
+function UserCart() {
   const [cartItems, setCartItems] = useState([]);
   const [totalCost, setTotalCost] = useState(15000);
   const [selectedProducts, setSelectedProducts] = useState([]);
-  const { fetchData } = useAuth();
+  const { fetchData, currentUser } = useAuth();
 
   const handleProductSelect = (product, isChecked) => {
     if (isChecked) {
@@ -127,8 +127,6 @@ function UserCart({ currentUser, userDesc }) {
   return (
     <>
       <MarketplaceHeader
-        currentUser={currentUser}
-        userDesc={userDesc}
         showSearchIcon={false}
         showCartIcon={false}
         showCategoriesList={false}

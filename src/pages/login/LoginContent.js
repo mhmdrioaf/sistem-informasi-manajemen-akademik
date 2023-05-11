@@ -43,7 +43,7 @@ function LoginContent() {
     await login(user?.email, user?.password)
       .then(() => {
         setIsButtonDisabled(false);
-        navigate("/");
+        navigate(-1);
       })
       .catch((error) => {
         setIsButtonDisabled(false);
